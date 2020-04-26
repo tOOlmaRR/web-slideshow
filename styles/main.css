@@ -2,23 +2,45 @@
     box-sizing: border-box
 }
 
+form {
+    display: inline;
+}
+
 /* Slideshow Options */
+.publicOption {
+    color: green;
+}
+
+.privateOption {
+    color: red;
+}
+
 .slideshowOptions {
     width: 100%;
     margin-bottom: 10px;
 }
 
+.slideshowSelection select {
+    margin-right: 25px;
+}
+
 .randomizeToggle {
+    margin-left: 50px;
     text-align: left;
 }
 
 #slideshowSpeed {
     margin-left: 10px;
+    width: 250px;
 }
 
 .slideshowSpeed {
     text-align: right;
     margin-left: 30px;
+}
+
+.haltSlideshow {
+    margin-left: 10px;
 }
 
 /* Slideshow container */

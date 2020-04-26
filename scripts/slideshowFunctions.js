@@ -42,7 +42,7 @@ function showSlides(n)
         slideIndex++;
         
         // if we're at the end, start back at the beginning
-        if (slideIndexes[slideIndex] > slides.length) {
+        if (slideIndex > slides.length) {
             slideIndex = 1
         }
         
@@ -90,4 +90,14 @@ function randomize_change(checkbox)
         slideIndex = 0;
     }
     showSlides();
+}
+
+function haltSlideshow(checkbox) {
+    if (checkbox.checked) {
+        clearInterval(slideShowIntervalID);
+    } else {
+        configuredIntervalText = document.getElementById("currentSlideshowSpeed").innerText;
+        configuredInterval = +configuredIntervalText * 1000;
+        slideShowIntervalID = setTimeout(showSlides, configuredInterval);
+    }
 }
