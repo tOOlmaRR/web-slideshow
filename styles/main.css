@@ -4,8 +4,21 @@
 
 /* Slideshow Options */
 .slideshowOptions {
-    text-align: center;
+    width: 100%;
     margin-bottom: 10px;
+}
+
+.randomizeToggle {
+    text-align: left;
+}
+
+#slideshowSpeed {
+    margin-left: 10px;
+}
+
+.slideshowSpeed {
+    text-align: right;
+    margin-left: 30px;
 }
 
 /* Slideshow container */
@@ -82,22 +95,6 @@
     padding: 8px 12px;
     position: absolute;
     top: 0;
-}
-
-/* The dots/bullets/indicators */
-.dot {
-    cursor: pointer;
-    height: 15px;
-    width: 15px;
-    margin: 0 2px;
-    background-color: #bbb;
-    border-radius: 50%;
-    display: inline-block;
-    transition: background-color 0.6s ease;
-}
-
-.active, .dot:hover {
-    background-color: #717171;
 }
 
 /* Fading animation */

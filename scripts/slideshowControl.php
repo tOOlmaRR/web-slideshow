@@ -3,7 +3,7 @@ function renderSlideShow()
 {
     // security
     $currentHourAndMinutes = date('Gi');
-    if (isset($_GET) && $_GET["in"] === $currentHourAndMinutes) {
+    if (isset($_GET) && isset($_GET["in"]) && $_GET["in"] === $currentHourAndMinutes) {
         $rootFolder = "E:\\MyPhotos\\Private\\";
         $physicalPath = "Honeymoon\\";
     } else {
@@ -18,7 +18,7 @@ function renderSlideShow()
     } else {
         $virtualRoot = "/myphotos/";
     }
-    $virualFolderLocation = $virtualRoot . str_replace("\\", "/", $physicalPath);
+    $virtualFolderLocation = $virtualRoot . str_replace("\\", "/", $physicalPath);
 
     // get all photos in provided folder
     $allPhotos = scandir($physicalFolderLocation);
@@ -34,7 +34,7 @@ function renderSlideShow()
 
     // render the output
     foreach ($photosToDisplay as $number => $filename) {
-        $filePath = $virualFolderLocation . $filename;
+        $filePath = $virtualFolderLocation . $filename;
         $slidehowHtml = "";
         $slidehowHtml = $slidehowHtml . "            <div class=\"mySlides fade c" . $number . "\">";
         $slidehowHtml = $slidehowHtml . "                <div class=\"numbertext\">" . ($number + 1) . " / " . count($photosToDisplay) . "</div>";

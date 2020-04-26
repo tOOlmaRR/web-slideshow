@@ -8,11 +8,21 @@
         <?php include "scripts/slideshowControl.php" ?>
     </head>
     <body>
-        <!-- Slideshow container -->
         <div class="slideshowOptions">
-            <label for="randomizeToggle">Randomize!</label>
-            <input type="checkbox" id="randomizeToggle" name="randomizeToggle" value="randomize" onclick="randomize_change(this)" />    
+            <span class="randomizeToggle">
+                <input type="checkbox" id="randomizeToggle" name="randomizeToggle" value="randomize" onclick="randomize_change(this)" />
+                <label for="randomizeToggle">Randomize!</label>
+            </span>
+            <span class="slideshowSpeed">
+                <label for="slideshowSpeed">Slideshow Speed: </label>
+                <span class="currentSlideshowSpeed">
+                    <output id="currentSlideshowSpeed" name="currentSlideshowSpeed">10</output><span> seconds</span
+                </span>
+                <input type="range" id="slideshowSpeed" name="slideshowSpeed" min="0" max="120" step="5" value="10" oninput="currentSlideshowSpeed.value = slideshowSpeed.value" />
+
+            </span>
         </div>
+        <!-- Slideshow container -->
         <div class="slideshow-container">
             <!-- Full-width images with number and caption text -->        
             <?php renderSlideShow() ?>

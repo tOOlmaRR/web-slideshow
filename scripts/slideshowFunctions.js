@@ -14,12 +14,16 @@ function plusSlides(n)
 
 function showSlides(n)
 {
+    configuredIntervalText = document.getElementById("currentSlideshowSpeed").innerText;
+    configuredInterval = +configuredIntervalText * 1000;
+
+    if (slides === undefined) {
+        slides = document.getElementsByClassName("mySlides");
+    }
+    
     if (n === undefined) {
         // get all slides from the source HTML
         let i;
-        if (slides === undefined) {
-            slides = document.getElementsByClassName("mySlides");
-        }
         
         // load up initial list of indexes (used for randomization)
         if (slideIndexes === undefined) {
@@ -46,13 +50,8 @@ function showSlides(n)
         slides[slideIndexes[slideIndex-1]].style.display = "block";
         
         // continue the slideshow after the configured pause
-        slideShowIntervalID = setTimeout(showSlides, 8000);
+        slideShowIntervalID = setTimeout(showSlides, configuredInterval);
     } else {
-        // get all slides from the source HTML
-        if (slides === undefined) {
-            slides = document.getElementsByClassName("mySlides");
-        }
-
         // if we're at the end, start back at the beginning
         if (n > slides.length) {
             slideIndex = 1
@@ -72,7 +71,7 @@ function showSlides(n)
         slides[slideIndexes[slideIndex-1]].style.display = "block";
         
         // continue the slideshow after the configured pause
-        slideShowIntervalID = setTimeout(showSlides, 8000);
+        slideShowIntervalID = setTimeout(showSlides, configuredInterval);
     }
 }
 
