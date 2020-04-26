@@ -2,6 +2,12 @@
     box-sizing: border-box
 }
 
+/* Slideshow Options */
+.slideshowOptions {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
 /* Slideshow container */
 .slideshow-container {
     max-width: 1000px;
