@@ -22,7 +22,6 @@ function plusSlides(n)
 function showSlides(n)
 {
     if (n === undefined) {
-        //alert(n);
         var i;
         var slides = document.getElementsByClassName("mySlides");
         for (i = 0; i < slides.length; i++) {
@@ -32,9 +31,8 @@ function showSlides(n)
         if (slideIndex > slides.length) {
             slideIndex = 1}
         slides[slideIndex-1].style.display = "block";
-        slideShowIntervalID = setTimeout(showSlides, 3000);
+        slideShowIntervalID = setTimeout(showSlides, 10000);
     } else {
-        //alert(n);
         var i;
         var slides = document.getElementsByClassName("mySlides");
         //var dots = document.getElementsByClassName("dot");
@@ -50,6 +48,6 @@ function showSlides(n)
         }*/
         slides[slideIndex-1].style.display = "block";
         //dots[slideIndex-1].className += " active";
-        slideShowIntervalID = setTimeout(showSlides, 3000);
+        slideShowIntervalID = setTimeout(showSlides, 10000);
     }    
 }

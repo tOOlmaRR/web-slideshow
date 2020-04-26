@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>JavaScript Slideshow - Test 1</title>
+        <title>JavaScript Slideshow - Wedding</title>
         <meta charset="utf-8">
         <link href="styles/main.css" media="all" rel="Stylesheet" type="text/css" />
         <script type="text/javascript" language="javascript" src="scripts/slideshowFunctions.js"></script>
@@ -12,7 +12,9 @@
         
             <!-- Full-width images with number and caption text -->
             <?php
-                $allPhotos = scandir(dirname(__FILE__) . '/photos/');
+                //$allPhotos = scandir(dirname(__FILE__) . '/photos/');
+                $rootFolder = "E:\\MyPhotos\\Wedding\\";
+                $allPhotos = scandir($rootFolder);
                 $photosToDisplay = array();
                 for ($i = 0; $i < count($allPhotos); $i++) {
                     if (is_dir($allPhotos[$i])) {
@@ -23,11 +25,13 @@
                 }
                 
                 foreach ($photosToDisplay as $number => $filename) {
+                    //$fullFilePath = 'File:\\\\\\' . $rootFolder . $filename;
+                    $fullFilePath = '/myphotos/wedding/' . $filename;
             ?>
-            <div class="mySlides fade" style="height: 1000px; width: 100%; background-color: black; text-align: center;">
+            <div class="mySlides fade">
                 <div class="numbertext"><?=$number + 1 ?> / <?=count($photosToDisplay) ?></div>
-                <img src="photos/<?=$filename ?>" style="max-width: 100%; max-height: 100%; object-fit:contain; position: relative; top: 50%; transform: translateY(-50%);">
-                <div class="text"><?=$filename?></div>
+                    <img src="<?=$fullFilePath?>">
+                <div class="text"><span class="filename"><?=$filename?></span></div>
             </div>
             <?php } ?>
             
