@@ -14,6 +14,15 @@ $allSlideshows["Wedding"] = [
     "physicalPath" => "Wedding\\",
 ];
 
+$allSlideshows["WeddingAll"] = [
+    "name" => "Wedding - ALL",
+    "public" => true,
+    "physicalPaths" => [
+        "Wedding\\Disc1\\",
+        "Wedding\\Disc2\\"
+    ]
+];
+
 
 
 // determine chosen slideshow - use the first valid available slidehow by default

@@ -37,8 +37,14 @@ function renderSlideshowDropdown($allSlideshows, $selectedSlideshow) {
 
 function renderSlideShow($chosenSlideshow)
 {
-    // determine physical and virtual locations of chosen slideshow
-    $physicalPath = $chosenSlideshow["physicalPath"];
+    $slideshowPaths = array();
+    if (array_key_exists("physicalPaths", $chosenSlideshow)) {
+        $slideshowPaths = $chosenSlideshow["physicalPaths"];
+    } else {
+        $slideshowPaths[] = $chosenSlideshow["physicalPath"];
+    }
+
+    // determine physical and virtual root folders based on security settings (use the first folder)
     if ($chosenSlideshow["public"] == false) {
         $virtualRoot = "/myphotos/private/";
         $rootFolder = "E:\\MyPhotos\\Private\\";
@@ -47,31 +53,38 @@ function renderSlideShow($chosenSlideshow)
         $rootFolder = "E:\\MyPhotos\\";
     }
 
-    // build physical and virtual locations
-    $physicalFolderLocation = $rootFolder . $physicalPath;
-    $physicalFolderLocation = str_replace("\ ", "%20", $physicalFolderLocation);
-    $virtualFolderLocation = $virtualRoot . str_replace("\\", "/", $physicalPath);
-    
-    // get all photos in provided folder
-    $allPhotos = scandir($physicalFolderLocation);
+    // gather a collection of all relevant photos, including all data needed to render them in the webpage
+    $photosToDisplay = array();
+    foreach ($slideshowPaths as $slideshowPath) {
+        // build physical and virtual locations
+        $physicalPath = $slideshowPath;
+        $physicalFolderLocation = $rootFolder . $physicalPath;
+        $physicalFolderLocation = str_replace("\ ", "%20", $physicalFolderLocation);
+        $virtualFolderLocation = $virtualRoot . str_replace("\\", "/", $physicalPath);
+        
+        // get all photos in provided folder
+        $allPhotos = scandir($physicalFolderLocation);
 
-    // determine which to display (for now, weed out directories)
-    for ($i = 0; $i < count($allPhotos); $i++) {
-        if (is_dir($allPhotos[$i])) {
-            continue;
-        } else {
-            $photosToDisplay[] = $allPhotos[$i];
+        // determine which to display (for now, weed out directories)
+        for ($i = 0; $i < count($allPhotos); $i++) {
+            if (is_dir($allPhotos[$i])) {
+                continue;
+            } else {
+                $photoToDisplay["filename"] = $allPhotos[$i];
+                $photoToDisplay["virtualFolderLocation"] = $virtualFolderLocation;
+                $photosToDisplay[] = $photoToDisplay;
+            }
         }
     }
 
-    // render the output
-    foreach ($photosToDisplay as $number => $filename) {
-        $filePath = $virtualFolderLocation . $filename;
+    // render the output for all valid phptos
+    foreach ($photosToDisplay as $number => $photoToDisplay) {
+        $filePath = $photoToDisplay["virtualFolderLocation"] . $photoToDisplay["filename"];
         $slidehowHtml = "";
         $slidehowHtml = $slidehowHtml . "            <div class=\"mySlides fade c" . $number . "\">";
         $slidehowHtml = $slidehowHtml . "                <div class=\"numbertext\">" . ($number + 1) . " / " . count($photosToDisplay) . "</div>";
         $slidehowHtml = $slidehowHtml . "                <img src=\"" . $filePath . "\">";
-        $slidehowHtml = $slidehowHtml . "                <div class=\"text\"><span class=\"filename\">" . $filename . "</span></div>";
+        $slidehowHtml = $slidehowHtml . "                <div class=\"text\"><span class=\"filename\">" . $photoToDisplay["filename"] . "</span></div>";
         $slidehowHtml = $slidehowHtml . "            </div>";
         echo $slidehowHtml;
     }
