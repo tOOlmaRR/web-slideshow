@@ -20,7 +20,8 @@ $allSlideshows["WeddingAll"] = [
     "physicalPaths" => [
         "Wedding\\Disc1\\",
         "Wedding\\Disc2\\"
-    ]
+    ],
+    "includeSubfolders" => true
 ];
 
 
