@@ -67,7 +67,8 @@ function renderSlideShow($chosenSlideshow)
 
         // determine which to display (for now, weed out directories)
         for ($i = 0; $i < count($allPhotos); $i++) {
-            if (is_dir($allPhotos[$i])) {
+            $fullPhysicalLocation = $physicalFolderLocation . $allPhotos[$i];
+            if (is_dir($fullPhysicalLocation)) {
                 continue;
             } else {
                 $photoToDisplay["filename"] = $allPhotos[$i];
@@ -77,7 +78,7 @@ function renderSlideShow($chosenSlideshow)
         }
     }
 
-    // render the output for all valid phptos
+    // render the output for all valid photos
     foreach ($photosToDisplay as $number => $photoToDisplay) {
         $filePath = $photoToDisplay["virtualFolderLocation"] . $photoToDisplay["filename"];
         $slidehowHtml = "";
