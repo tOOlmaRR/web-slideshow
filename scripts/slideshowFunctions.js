@@ -1,7 +1,7 @@
 let slideIndex = 0;
 let slideShowIntervalID;
-var slides;
-var slideIndexes;
+let slides;
+let slideIndexes;
 
 // Next/previous controls
 function plusSlides(n)
@@ -14,8 +14,8 @@ function plusSlides(n)
 
 function showSlides(n)
 {
-    configuredIntervalText = document.getElementById("currentSlideshowSpeed").innerText;
-    configuredInterval = +configuredIntervalText * 1000;
+    const configuredIntervalText = document.getElementById("currentSlideshowSpeed").innerText;
+    const configuredInterval = +configuredIntervalText * 1000;
 
     if (slides === undefined) {
         slides = document.getElementsByClassName("mySlides");
@@ -81,7 +81,7 @@ function randomize_change(checkbox)
     if (checkbox.checked) {
         slideIndexes = new Array();
         for (let i = 0; i < slides.length; i++) {
-            randomIndex = Math.floor(Math.random() * slides.length);
+            const randomIndex = Math.floor(Math.random() * slides.length);
             slideIndexes.push(randomIndex);
         }
     } else {
