@@ -12,16 +12,19 @@ function renderSlideshowDropdown($allSlideshows, $selectedSlideshow) {
     $slidehowDropdownHtml = $slidehowDropdownHtml . "<label for \"Slideshow\">Choose a Slideshow to start: </label>";
     $slidehowDropdownHtml = $slidehowDropdownHtml . "<select id=\"slideshowSelection\" name=\"chosenSlideshow\">";
 
-    // Build list items for each available slideshow
+    // Build list of items for each available slideshow
     foreach ($allSlideshows as $key => $slideshow) {
         $color = "green";
         $selected = "";
+        $slideshowIsPublic = $slideshow["public"];
         if ($selectedSlideshow["name"] == $slideshow["name"]) {
             $selected = " selected ";
         }
 
-        if ($slideshow["public"] == true || $includeSecureConfigurationOptions == true) {
-            if ($slideshow["public"] == false) $color = "red";
+        if ($slideshowIsPublic || $includeSecureConfigurationOptions == true) {
+            if (!$slideshowIsPublic) {
+                $color = "red";
+            }
             $slidehowDropdownHtml = $slidehowDropdownHtml . "    <option style=\"color:" . $color . ";\" value=\"" . $key . "\" " . $selected . ">" . $slideshow["name"] . "</option>";
         }
     }
@@ -53,7 +56,24 @@ function renderSlideShow($chosenSlideshow)
         $rootFolder = "E:\\MyPhotos\\";
     }
 
+    // Do we want to include subfolders?
+    $includeSubFolders = isset($chosenSlideshow["includeSubfolders"]) && $chosenSlideshow["includeSubfolders"];
+
     // gather a collection of all relevant photos, including all data needed to render them in the webpage
+    $imagesToDisplay = determinePhotosToDisplay($slideshowPaths, $rootFolder, $virtualRoot, $includeSubFolders);
+
+    // render the output for all valid photos
+    $slidesHtml = buildSlidesHtml($imagesToDisplay);
+    echo $slidesHtml;
+}
+
+
+
+// iterates through all configfured slideshows paths and builds a list of images to display
+// - does not include the director objects in the slideshow
+// - recursively includes images within subfolders if configured to do so
+function determinePhotosToDisplay($slideshowPaths, $rootFolder, $virtualRoot, $includeSubFolders)
+{
     $photosToDisplay = array();
     foreach ($slideshowPaths as $slideshowPath) {
         // build physical and virtual locations
@@ -63,7 +83,7 @@ function renderSlideShow($chosenSlideshow)
         $virtualFolderLocation = $virtualRoot . str_replace("\\", "/", $physicalPath);
         
         // Recursively include subfolders if configured to do so; otherwise, skip them
-        if (isset($chosenSlideshow["includeSubfolders"]) && $chosenSlideshow["includeSubfolders"] === true) {
+        if ($includeSubFolders) {
             $objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($physicalFolderLocation), RecursiveIteratorIterator::SELF_FIRST);
             foreach ($objects as $name => $object){
                 // weed out directories
@@ -94,15 +114,21 @@ function renderSlideShow($chosenSlideshow)
             }
         }
     }
+    return $photosToDisplay;
+}
 
-    // render the output for all valid photos
+
+
+// Builds the HTML for all slides
+function buildSlidesHtml($photosToDisplay) : string
+{
+    $slideshowHtml = "";
     foreach ($photosToDisplay as $number => $photoToDisplay) {
-        $slidehowHtml = "";
-        $slidehowHtml = $slidehowHtml . "            <div class=\"mySlides fade c" . $number . "\">";
-        $slidehowHtml = $slidehowHtml . "                <div class=\"numbertext\">" . ($number + 1) . " / " . count($photosToDisplay) . "</div>";
-        $slidehowHtml = $slidehowHtml . "                <img src=\"" . $photoToDisplay["virtualLocation"] . "\">";
-        $slidehowHtml = $slidehowHtml . "                <div class=\"text\"><span class=\"filename\">" . $photoToDisplay["filename"] . "</span></div>";
-        $slidehowHtml = $slidehowHtml . "            </div>";
-        echo $slidehowHtml;
+        $slideshowHtml = $slideshowHtml . "            <div class=\"mySlides fade c" . $number . "\">";
+        $slideshowHtml = $slideshowHtml . "                <div class=\"numbertext\">" . ($number + 1) . " / " . count($photosToDisplay) . "</div>";
+        $slideshowHtml = $slideshowHtml . "                <img src=\"" . $photoToDisplay["virtualLocation"] . "\">";
+        $slideshowHtml = $slideshowHtml . "                <div class=\"text\"><span class=\"filename\">" . $photoToDisplay["filename"] . "</span></div>";
+        $slideshowHtml = $slideshowHtml . "            </div>";
     }
+    return $slideshowHtml;
 }

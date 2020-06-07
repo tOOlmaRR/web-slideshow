@@ -30,14 +30,14 @@ $allSlideshows["WeddingAll"] = [
 $currentHourAndMinutes = date('Gi');
 if (isset($_GET) && isset($_GET["in"]) && ($_GET["in"] >= $currentHourAndMinutes - 1) && ($_GET["in"] <= $currentHourAndMinutes + 1)) {
     foreach ($allSlideshows as $slideshow) {
-        if ($slideshow["public"] == false) {
+        if (!$slideshow["public"]) {
             $chosenSlideshow = $slideshow;
             break;
         }
     }
 } else {
     foreach ($allSlideshows as $slideshow) {
-        if ($slideshow["public"] == true) {
+        if ($slideshow["public"]) {
             $chosenSlideshow = $slideshow;
             break;
         }
