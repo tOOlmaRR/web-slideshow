@@ -84,6 +84,10 @@ In the case that you've configured a slideshow to include subfolders, you cannot
 
 ## History
 
+### v1.2
+- addressed code smells and bugs resulting from SonarCloud scans
+- addressed some PSR-2 compliance issues
+
 ### v1.1
 - added feature to configuratively allow images in subfolders for a slideshow, through a new configuration element
 - fixed a bug that causes an attempt to render folders in the slideshow

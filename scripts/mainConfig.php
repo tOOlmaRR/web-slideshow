@@ -1,19 +1,30 @@
 <?php
+$configuration = array();
 
+// Configure public and private root paths
+$virtualRoots = array();
+$virtualRoots["public"] = "/myphotos/";
+$virtualRoots["private"] = "/myphotos/private/";
+$configuration["virtualRoots"] = $virtualRoots;
+
+$physicalRoots = array();
+$physicalRoots["public"] = "E:\\MyPhotos\\";
+$physicalRoots["private"] = "E:\\MyPhotos\\Private\\";
+$configuration["physicalRoots"] = $physicalRoots;
+
+
+// Configure All Slideshows
 $allSlideshows = array();
-
 $allSlideshows["Honeymoon"] = [
     "name" => "Honeymoon",
     "public" => false,
     "physicalPath" => "Honeymoon\\",
 ];
-
 $allSlideshows["Wedding"] = [
     "name" => "Wedding",
     "public" => true,
     "physicalPath" => "Wedding\\",
 ];
-
 $allSlideshows["WeddingAll"] = [
     "name" => "Wedding - ALL",
     "public" => true,
@@ -23,6 +34,7 @@ $allSlideshows["WeddingAll"] = [
     ],
     "includeSubfolders" => true
 ];
+$configuration["allSlideshows"] = $allSlideshows;
 
 
 
