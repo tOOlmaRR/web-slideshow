@@ -13,7 +13,9 @@ This is a web application that can display custom slideshows in a browser for lo
 1. **Recursive Folders** - via slideshow configuration, you can also choose to include all subfolders of each folder configured for a slideshow.
 
 ## Slideshow Configuration
-Configuration of available slideshows is defined in the */mainConfig.php* file. For now, it is a separate PHP file that includes associative arrays for the configuration elements of each slideshow and also includes some logic to determine the default slideshow to run if there are multiple slideshows defined and available, and determines the currently chosen slideshow - either the desired default or the chosen one from the dropdown and subsequent form submission.
+All configuration elements are defined in the */mainConfig.php* file. There is an overlying $configuration array which is designed to contain all configuration elements, and then within, there are separate arrays that contain all slideshow configurations as well as the root physical and virtual folders to use for both private and public slideshows.
+
+This file also contains some logic to determine the default slideshow to run if there are multiple slideshows defined and available, and determines the currently chosen slideshow - either the desired default or the chosen one from the dropdown and subsequent form submission.
 
 A sample is included in the repo, but here's a couple of slideshow configuration elements:
 1. Single Folder Private Slideshow
@@ -39,13 +41,26 @@ A sample is included in the repo, but here's a couple of slideshow configuration
     ];
     ```
 
-Each configuration element is documented below (keep in mind that the keys are case-sensitive):
+Each slideshow configuration element is documented below (keep in mind that the keys are case-sensitive):
 - **array index**: This value uniquely idenfities the slideshow and must be a unique value.
 - **name**: This is the visible name of the slideshow and appears in the UI.
 - **public**: This is a boolean value that indicates if the slideshow is public (*true*) or private (*false*).
 - **physicalPath**: This is the physical path, relative to the root folder, including the folder in which the images are located. This path is appended to the currently hardcoded *$rootFolder* value to build the full physical path to the folder being included in the slideshow. Use this key if you want to include only one folder of images, or if the other folders in your slideshow are subfolders of a single parent folder.
 - **physicalPaths**: This is a separate key that you can use to define multiple folders for your slideshow. Instead of including a single value (path), you can define an array of values (paths). This key-value pair overrides the older physicalPath element.
 - **includeSubfolders**: This is a boolean element that defines whether subfolders should be included in the slideshow (*true*) or not (*false*).
+
+Also, here's an example of how to define the virtual and private roots to use:
+```php
+$virtualRoots = array();
+$virtualRoots["public"] = "/myphotos/";
+$virtualRoots["private"] = "/myphotos/private/";
+$configuration["virtualRoots"] = $virtualRoots;
+
+$physicalRoots = array();
+$physicalRoots["public"] = "E:\\MyPhotos\\";
+$physicalRoots["private"] = "E:\\MyPhotos\\Private\\";
+$configuration["physicalRoots"] = $physicalRoots;
+```
 
 ## Currently Known Bugs and Limitations
 ### Root Folders and Virtual Paths are Hardcoded
@@ -83,6 +98,11 @@ The Slideshow Control doesn't restrict itself to only images. If the folder(s) i
 In the case that you've configured a slideshow to include subfolders, you cannot exclude certain folders from the resulting directory tree.
 
 ## History
+
+### v2.0
+- configuration restructuring to include all config elements in their own array
+- updates to the main slideshow page and the underlying PHP control to pass the full configuration from the front-end to the back-end when populating the slideshows dropdown and rendering the slideshow
+- updates to make the root folders configurable
 
 ### v1.2
 - addressed code smells and bugs resulting from SonarCloud scans
