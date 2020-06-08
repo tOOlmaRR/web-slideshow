@@ -1,6 +1,6 @@
 <?php require_once "scripts/mainConfig.php" ?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xml:lang="en">
     <head>
         <title>JavaScript Slideshow</title>
         <meta charset="utf-8">
