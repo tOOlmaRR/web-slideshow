@@ -62,7 +62,11 @@ function renderSlideShow($chosenSlideshow)
     $includeSubFolders = isset($chosenSlideshow["includeSubfolders"]) && $chosenSlideshow["includeSubfolders"];
 
     // gather a collection of all relevant photos, including all data needed to render them in the webpage
-    $imagesToDisplay = determinePhotosToDisplay($slideshowPaths, $rootFolder, $virtualRoot, $includeSubFolders);
+    $imagesToDisplay = array();
+    foreach ($slideshowPaths as $slideshowPath) {
+        $imagesToDisplayForThisPath = determinePhotosToDisplayForPath($slideshowPath, $rootFolder, $virtualRoot, $includeSubFolders);
+        $imagesToDisplay = array_merge($imagesToDisplay, $imagesToDisplayForThisPath);
+    }
 
     // render the output for all valid photos
     $slidesHtml = buildSlidesHtml($imagesToDisplay);
@@ -71,44 +75,43 @@ function renderSlideShow($chosenSlideshow)
 
 
 
-// iterates through all configfured slideshows paths and builds a list of images to display
-// - does not include the director objects in the slideshow
+// iterates through all configured slideshow paths and builds a list of images to display
+// - omits the directory objects from the slideshow
 // - recursively includes images within subfolders if configured to do so
-function determinePhotosToDisplay($slideshowPaths, $rootFolder, $virtualRoot, $includeSubFolders)
+function determinePhotosToDisplayForPath($slideshowPath, $rootFolder, $virtualRoot, $includeSubFolders)
 {
     $photosToDisplay = array();
-    foreach ($slideshowPaths as $slideshowPath) {
-        // build physical and virtual locations
-        $physicalPath = $slideshowPath;
-        $physicalFolderLocation = $rootFolder . $physicalPath;
-        $physicalFolderLocation = str_replace("\ ", "%20", $physicalFolderLocation);
-        $virtualFolderLocation = $virtualRoot . str_replace("\\", "/", $physicalPath);
+    
+    // build physical and virtual locations
+    $physicalPath = $slideshowPath;
+    $physicalFolderLocation = $rootFolder . $physicalPath;
+    $physicalFolderLocation = str_replace("\ ", "%20", $physicalFolderLocation);
+    $virtualFolderLocation = $virtualRoot . str_replace("\\", "/", $physicalPath);
 
-        // Recursively include subfolders if configured to do so; otherwise, skip them
-        if ($includeSubFolders) {
-            $objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($physicalFolderLocation), RecursiveIteratorIterator::SELF_FIRST);
-            foreach ($objects as $name => $object) {
-                // weed out directories
-                if (!is_dir($name)) {
-                    $photoToDisplay["filename"] = $object->getFileName();
-                    // build the virtual location
-                    $virtualLocation = $virtualFolderLocation . substr($object->getPathName(), strpos($object->getPathName(), $physicalPath) + strlen($physicalPath));
-                    $virtualLocation = str_replace("\\", "/", $virtualLocation);
-                    $photoToDisplay["virtualLocation"] = $virtualLocation;
-                    $photosToDisplay[] = $photoToDisplay;
-                }
+    // Recursively include subfolders if configured to do so; otherwise, skip them
+    if ($includeSubFolders) {
+        $objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($physicalFolderLocation), RecursiveIteratorIterator::SELF_FIRST);
+        foreach ($objects as $name => $object) {
+            // weed out directories
+            if (!is_dir($name)) {
+                $photoToDisplay["filename"] = $object->getFileName();
+                // build the virtual location
+                $virtualLocation = $virtualFolderLocation . substr($object->getPathName(), strpos($object->getPathName(), $physicalPath) + strlen($physicalPath));
+                $virtualLocation = str_replace("\\", "/", $virtualLocation);
+                $photoToDisplay["virtualLocation"] = $virtualLocation;
+                $photosToDisplay[] = $photoToDisplay;
             }
-        } else {
-            $allPhotos = scandir($physicalFolderLocation);
-            for ($i = 0; $i < count($allPhotos); $i++) {
-                $fullPhysicalLocation = $physicalFolderLocation . $allPhotos[$i];
-                // weed out directories
-                if (!is_dir($fullPhysicalLocation)) {
-                    // this is a file... assume it's a photo and add it to the collection of photos to be displayed
-                    $photoToDisplay["filename"] = $allPhotos[$i];
-                    $photoToDisplay["virtualLocation"] = $virtualFolderLocation . $photoToDisplay["filename"];
-                    $photosToDisplay[] = $photoToDisplay;
-                }
+        }
+    } else {
+        $allPhotos = scandir($physicalFolderLocation);
+        for ($i = 0; $i < count($allPhotos); $i++) {
+            $fullPhysicalLocation = $physicalFolderLocation . $allPhotos[$i];
+            // weed out directories
+            if (!is_dir($fullPhysicalLocation)) {
+                // this is a file... assume it's a photo and add it to the collection of photos to be displayed
+                $photoToDisplay["filename"] = $allPhotos[$i];
+                $photoToDisplay["virtualLocation"] = $virtualFolderLocation . $photoToDisplay["filename"];
+                $photosToDisplay[] = $photoToDisplay;
             }
         }
     }
