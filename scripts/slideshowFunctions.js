@@ -97,8 +97,8 @@ function haltSlideshow(checkbox) {
     if (checkbox.checked) {
         clearInterval(slideShowIntervalID);
     } else {
-        configuredIntervalText = document.getElementById("currentSlideshowSpeed").innerText;
-        configuredInterval = +configuredIntervalText * 1000;
+        const configuredIntervalText = document.getElementById("currentSlideshowSpeed").innerText;
+        const configuredInterval = +configuredIntervalText * 1000;
         slideShowIntervalID = setTimeout(showSlides, configuredInterval);
     }
 }
