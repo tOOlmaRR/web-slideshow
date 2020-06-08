@@ -22,7 +22,7 @@ function renderSlideshowDropdown($allSlideshows, $selectedSlideshow)
             $selected = " selected ";
         }
 
-        if ($slideshowIsPublic || $includeSecureConfigurationOptions == true) {
+        if ($slideshowIsPublic || $includeSecureConfigurationOptions) {
             if (!$slideshowIsPublic) {
                 $color = "red";
             }
@@ -50,7 +50,7 @@ function renderSlideShow($chosenSlideshow)
     }
 
     // determine physical and virtual root folders based on security settings (use the first folder)
-    if ($chosenSlideshow["public"] == false) {
+    if (!$chosenSlideshow["public"]) {
         $virtualRoot = "/myphotos/private/";
         $rootFolder = "E:\\MyPhotos\\Private\\";
     } else {
@@ -103,9 +103,7 @@ function determinePhotosToDisplay($slideshowPaths, $rootFolder, $virtualRoot, $i
             for ($i = 0; $i < count($allPhotos); $i++) {
                 $fullPhysicalLocation = $physicalFolderLocation . $allPhotos[$i];
                 // weed out directories
-                if (is_dir($fullPhysicalLocation)) {
-                    continue;
-                } else {
+                if (!is_dir($fullPhysicalLocation)) {
                     // this is a file... assume it's a photo and add it to the collection of photos to be displayed
                     $photoToDisplay["filename"] = $allPhotos[$i];
                     $photoToDisplay["virtualLocation"] = $virtualFolderLocation . $photoToDisplay["filename"];
