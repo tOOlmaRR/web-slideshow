@@ -1,7 +1,7 @@
 let slideIndex = 0;
 let slideShowIntervalID;
-var slides;
-var slideIndexes;
+let slides;
+let slideIndexes;
 
 // Next/previous controls
 function plusSlides(n)
@@ -14,17 +14,16 @@ function plusSlides(n)
 
 function showSlides(n)
 {
-    configuredIntervalText = document.getElementById("currentSlideshowSpeed").innerText;
-    configuredInterval = +configuredIntervalText * 1000;
+    const configuredIntervalText = document.getElementById("currentSlideshowSpeed").innerText;
+    const configuredInterval = +configuredIntervalText * 1000;
 
+    // retrieve all slides from the source HTML if not already retrieved
     if (slides === undefined) {
         slides = document.getElementsByClassName("mySlides");
     }
     
+    // not asked to display a specific slide (continue the slideshow)
     if (n === undefined) {
-        // get all slides from the source HTML
-        let i;
-        
         // load up initial list of indexes (used for randomization)
         if (slideIndexes === undefined) {
             slideIndexes = new Array();
@@ -51,6 +50,8 @@ function showSlides(n)
         
         // continue the slideshow after the configured pause
         slideShowIntervalID = setTimeout(showSlides, configuredInterval);
+    
+    // display a specified slide
     } else {
         // if we're at the end, start back at the beginning
         if (n > slides.length) {
@@ -81,7 +82,7 @@ function randomize_change(checkbox)
     if (checkbox.checked) {
         slideIndexes = new Array();
         for (let i = 0; i < slides.length; i++) {
-            randomIndex = Math.floor(Math.random() * slides.length);
+            const randomIndex = Math.floor(Math.random() * slides.length);
             slideIndexes.push(randomIndex);
         }
     } else {

@@ -1,5 +1,5 @@
 <?php require_once "scripts/mainConfig.php" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>JavaScript Slideshow</title>
@@ -22,7 +22,8 @@
                 <span class="currentSlideshowSpeed">
                     <output id="currentSlideshowSpeed" name="currentSlideshowSpeed">5</output><span> seconds</span>
                 </span>
-                <input type="range" id="slideshowSpeed" name="slideshowSpeed" min="1" max="120" step="1" value="5" oninput="currentSlideshowSpeed.value = slideshowSpeed.value" />
+                <input type="range" id="slideshowSpeed" name="slideshowSpeed" min="1" max="120" step="1" value="5"
+                    oninput="currentSlideshowSpeed.value = slideshowSpeed.value" />
                 <span>
                     <input type="checkbox" id="haltSlideshow" name="haltSlideshowToggle" value="halt" onclick="haltSlideshow(this)" />
                     <label for="randomizeToggle">Halt!</label>
