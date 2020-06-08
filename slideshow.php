@@ -11,7 +11,7 @@
     <body>
         <div class="slideshowOptions">
             <span class="slideshowSelection">
-                <?php renderSlideshowDropdown($allSlideshows, $chosenSlideshow) ?>
+                <?php renderSlideshowDropdown($configuration, $chosenSlideshow) ?>
             </span>
             <span class="randomizeToggle">
                 <input type="checkbox" id="randomizeToggle" name="randomizeToggle" value="randomize" onclick="randomize_change(this)" />
@@ -34,7 +34,7 @@
         <!-- Slideshow container -->
         <div class="slideshow-container">
             <!-- Full-width images with number and caption text -->   
-            <?php renderSlideShow($chosenSlideshow) ?>
+            <?php renderSlideShow($configuration, $chosenSlideshow) ?>
 
             <!-- Next and previous buttons -->
             <a class="prev" onclick="plusSlides(-1)">&#10094;</a>

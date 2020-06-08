@@ -1,6 +1,8 @@
 <?php
-function renderSlideshowDropdown($allSlideshows, $selectedSlideshow)
+function renderSlideshowDropdown($config, $selectedSlideshow)
 {
+    $allSlideshows = $config["allSlideshows"];
+    
     // security
     $includeSecureConfigurationOptions = false;
     $currentHourAndMinutes = date('Gi');
@@ -40,7 +42,7 @@ function renderSlideshowDropdown($allSlideshows, $selectedSlideshow)
     echo $slidehowDropdownHtml;
 }
 
-function renderSlideShow($chosenSlideshow)
+function renderSlideShow($config, $chosenSlideshow)
 {
     $slideshowPaths = array();
     if (array_key_exists("physicalPaths", $chosenSlideshow)) {
@@ -50,13 +52,9 @@ function renderSlideShow($chosenSlideshow)
     }
 
     // determine physical and virtual root folders based on security settings (use the first folder)
-    if (!$chosenSlideshow["public"]) {
-        $virtualRoot = "/myphotos/private/";
-        $rootFolder = "E:\\MyPhotos\\Private\\";
-    } else {
-        $virtualRoot = "/myphotos/";
-        $rootFolder = "E:\\MyPhotos\\";
-    }
+    $isPublicSlideshow = $chosenSlideshow["public"];
+    $virtualRoot = $isPublicSlideshow ? $config["virtualRoots"]["public"] : $config["virtualRoots"]["private"];
+    $rootFolder = $isPublicSlideshow ? $config["physicalRoots"]["public"] : $config["physicalRoots"]["private"];
 
     // Do we want to include subfolders?
     $includeSubFolders = isset($chosenSlideshow["includeSubfolders"]) && $chosenSlideshow["includeSubfolders"];
