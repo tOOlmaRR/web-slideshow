@@ -1,5 +1,6 @@
 <?php
-function renderSlideshowDropdown($allSlideshows, $selectedSlideshow) {
+function renderSlideshowDropdown($allSlideshows, $selectedSlideshow)
+{
     // security
     $includeSecureConfigurationOptions = false;
     $currentHourAndMinutes = date('Gi');
@@ -25,7 +26,8 @@ function renderSlideshowDropdown($allSlideshows, $selectedSlideshow) {
             if (!$slideshowIsPublic) {
                 $color = "red";
             }
-            $slidehowDropdownHtml = $slidehowDropdownHtml . "    <option style=\"color:" . $color . ";\" value=\"" . $key . "\" " . $selected . ">" . $slideshow["name"] . "</option>";
+            $slidehowDropdownHtml = $slidehowDropdownHtml . "    <option style=\"color:" . $color . ";\" value=\"" .
+                $key . "\" " . $selected . ">" . $slideshow["name"] . "</option>";
         }
     }
 
@@ -81,11 +83,11 @@ function determinePhotosToDisplay($slideshowPaths, $rootFolder, $virtualRoot, $i
         $physicalFolderLocation = $rootFolder . $physicalPath;
         $physicalFolderLocation = str_replace("\ ", "%20", $physicalFolderLocation);
         $virtualFolderLocation = $virtualRoot . str_replace("\\", "/", $physicalPath);
-        
+
         // Recursively include subfolders if configured to do so; otherwise, skip them
         if ($includeSubFolders) {
             $objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($physicalFolderLocation), RecursiveIteratorIterator::SELF_FIRST);
-            foreach ($objects as $name => $object){
+            foreach ($objects as $name => $object) {
                 // weed out directories
                 if (!is_dir($name)) {
                     $photoToDisplay["filename"] = $object->getFileName();
@@ -99,14 +101,12 @@ function determinePhotosToDisplay($slideshowPaths, $rootFolder, $virtualRoot, $i
         } else {
             $allPhotos = scandir($physicalFolderLocation);
             for ($i = 0; $i < count($allPhotos); $i++) {
-                // weed out directories
                 $fullPhysicalLocation = $physicalFolderLocation . $allPhotos[$i];
+                // weed out directories
                 if (is_dir($fullPhysicalLocation)) {
                     continue;
-                }
-    
-                // this is a file... assume it's a photo and add it to the collection of photos to be displayed
-                else {
+                } else {
+                    // this is a file... assume it's a photo and add it to the collection of photos to be displayed
                     $photoToDisplay["filename"] = $allPhotos[$i];
                     $photoToDisplay["virtualLocation"] = $virtualFolderLocation . $photoToDisplay["filename"];
                     $photosToDisplay[] = $photoToDisplay;

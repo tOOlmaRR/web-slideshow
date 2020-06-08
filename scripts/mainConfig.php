@@ -1,6 +1,6 @@
 <?php
 
-$allSlideshows = Array();
+$allSlideshows = array();
 
 $allSlideshows["Honeymoon"] = [
     "name" => "Honeymoon",
