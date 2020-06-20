@@ -1,8 +1,8 @@
 <?php
-    require_once "vendor/autoload.php";
-    require_once "scripts/mainConfig.php";
+    require_once('vendor/autoload.php');
+    require_once('scripts/mainConfig.php');
 
-    use toolmarr\webSlideshow\WebSlideshow;
+    use toolmarr\WebSlideshow\WebSlideshow;
     
     // instantiate the Slideshow
     $slideshow = new WebSlideshow();

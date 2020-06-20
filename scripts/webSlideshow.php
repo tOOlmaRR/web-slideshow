@@ -1,5 +1,5 @@
 <?php
-namespace toolmarr\webSlideshow;
+namespace toolmarr\WebSlideshow;
 
 class WebSlideshow
 {
@@ -123,7 +123,7 @@ class WebSlideshow
 
 
     // Builds the HTML for all slides
-    private function buildSlidesHtml($photosToDisplay) : string
+    private function buildSlidesHtml(array $photosToDisplay) : string
     {
         $slideshowHtml = "";
         foreach ($photosToDisplay as $number => $photoToDisplay) {

@@ -10,7 +10,8 @@
     },
     "autoload": {
         "psr-4": {
-            "toolmarr\\webSlideshow\\": "scripts/"
+            "toolmarr\\WebSlideshow\\": "scripts/",
+            "toolmarr\\WebSlideshowTests\\": "tests/"
         }
     }
 }
