@@ -1,4 +1,8 @@
-<?php require_once "scripts/mainConfig.php" ?>
+<?php
+    require_once "vendor/autoload.php";
+    require_once "scripts/mainConfig.php";
+    require_once "scripts/slideshowControl.php";
+?>
 <!DOCTYPE html>
 <html lang="en" xml:lang="en">
     <head>
@@ -6,7 +10,6 @@
         <meta charset="utf-8">
         <link href="styles/main.css" media="all" rel="Stylesheet" type="text/css" />
         <script type="text/javascript" language="javascript" src="scripts/slideshowFunctions.js"></script>
-        <?php require_once "scripts/slideshowControl.php" ?>
     </head>
     <body>
         <div class="slideshowOptions">

@@ -1,0 +1,11 @@
+{
+    "name": "toolmarr/web-slideshow",
+    "description": "a web application to display slideshows of images in a browser",
+    "require": {
+        "php": "~7.4",
+        "symfony/yaml": "~5.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~9.2"
+    }
+}
