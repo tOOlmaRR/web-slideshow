@@ -1,7 +1,11 @@
 <?php
     require_once "vendor/autoload.php";
     require_once "scripts/mainConfig.php";
-    require_once "scripts/slideshowControl.php";
+
+    use toolmarr\webSlideshow\WebSlideshow;
+    
+    // instantiate the Slideshow
+    $slideshow = new WebSlideshow();
 ?>
 <!DOCTYPE html>
 <html lang="en" xml:lang="en">
@@ -14,7 +18,7 @@
     <body>
         <div class="slideshowOptions">
             <span class="slideshowSelection">
-                <?php renderSlideshowDropdown($configuration, $chosenSlideshow) ?>
+                <?php $slideshow->renderSlideshowDropdown($configuration, $chosenSlideshow) ?>
             </span>
             <span class="randomizeToggle">
                 <input type="checkbox" id="randomizeToggle" name="randomizeToggle" value="randomize" onclick="randomize_change(this)" />
@@ -37,7 +41,7 @@
         <!-- Slideshow container -->
         <div class="slideshow-container">
             <!-- Full-width images with number and caption text -->   
-            <?php renderSlideShow($configuration, $chosenSlideshow) ?>
+            <?php $slideshow->renderSlideShow($configuration, $chosenSlideshow) ?>
 
             <!-- Next and previous buttons -->
             <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
