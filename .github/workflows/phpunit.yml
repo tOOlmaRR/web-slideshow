@@ -1,4 +1,4 @@
-name: PHP Unit Testing and Coverage
+name: PhpUnit Testing
 
 on:
   push:
@@ -7,17 +7,15 @@ on:
     branches: [ master ]
 
 jobs:
-  build-test:
+  build:
     runs-on: ubuntu-latest
 
-  steps:
-  - uses: actions/checkout@v1
-  - uses: php-actions/composer@v1 # or alternative dependency management
-  - uses: php-actions/phpunit@v1
+    steps:
+      - name: Checkout
+      uses: actions/checkout@v1
 
-  unit-tests:
-  - name: WebSlideshow
-    uses: php-actions/phpunit@v1
-    with:
-      config: /phpunit.xml
-      bootstrap: /vendor/autoload.php
+      - name: Composer Install
+      uses: php-actions/composer@v1 # or alternative dependency management
+
+      - name: PHP Unit Tests
+      uses: php-actions/phpunit@v1
