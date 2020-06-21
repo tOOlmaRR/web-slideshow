@@ -3,6 +3,11 @@ namespace toolmarr\WebSlideshow;
 
 class WebSlideshow
 {
+    const SLIDE_VIRTUAL_LOCATION_KEY = "virtualLocation";
+    const SLIDE_FILENAME_KEY = "filename";
+    
+    const CONFIG_SLIDESHOW_VISIBILITY_PUBLIC_KEY = "public";
+
     public function renderSlideshowDropdown($config, $selectedSlideshow)
     {
         $allSlideshows = $config["allSlideshows"];
@@ -23,7 +28,7 @@ class WebSlideshow
         foreach ($allSlideshows as $key => $slideshow) {
             $color = "green";
             $selected = "";
-            $slideshowIsPublic = $slideshow["public"];
+            $slideshowIsPublic = $slideshow[WebSlideshow::CONFIG_SLIDESHOW_VISIBILITY_PUBLIC_KEY];
             if ($selectedSlideshow["name"] == $slideshow["name"]) {
                 $selected = " selected ";
             }
@@ -56,7 +61,7 @@ class WebSlideshow
         }
 
         // determine physical and virtual root folders based on security settings (use the first folder)
-        $isPublicSlideshow = $chosenSlideshow["public"];
+        $isPublicSlideshow = $chosenSlideshow[WebSlideshow::CONFIG_SLIDESHOW_VISIBILITY_PUBLIC_KEY];
         $virtualRoot = $isPublicSlideshow ? $config["virtualRoots"]["public"] : $config["virtualRoots"]["private"];
         $rootFolder = $isPublicSlideshow ? $config["physicalRoots"]["public"] : $config["physicalRoots"]["private"];
 
@@ -96,11 +101,11 @@ class WebSlideshow
             foreach ($objects as $name => $object) {
                 // weed out directories
                 if (!is_dir($name)) {
-                    $photoToDisplay["filename"] = $object->getFileName();
+                    $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY] = $object->getFileName();
                     // build the virtual location
                     $virtualLocation = $virtualFolderLocation . substr($object->getPathName(), strpos($object->getPathName(), $physicalPath) + strlen($physicalPath));
                     $virtualLocation = str_replace("\\", "/", $virtualLocation);
-                    $photoToDisplay["virtualLocation"] = $virtualLocation;
+                    $photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] = $virtualLocation;
                     $photosToDisplay[] = $photoToDisplay;
                 }
             }
@@ -111,8 +116,8 @@ class WebSlideshow
                 // weed out directories
                 if (!is_dir($fullPhysicalLocation)) {
                     // this is a file... assume it's a photo and add it to the collection of photos to be displayed
-                    $photoToDisplay["filename"] = $allPhotos[$i];
-                    $photoToDisplay["virtualLocation"] = $virtualFolderLocation . $photoToDisplay["filename"];
+                    $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY] = $allPhotos[$i];
+                    $photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] = $virtualFolderLocation . $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY];
                     $photosToDisplay[] = $photoToDisplay;
                 }
             }
@@ -129,8 +134,8 @@ class WebSlideshow
         foreach ($photosToDisplay as $number => $photoToDisplay) {
             $slideshowHtml = $slideshowHtml . "            <div class=\"mySlides fade c" . $number . "\">";
             $slideshowHtml = $slideshowHtml . "                <div class=\"numbertext\">" . ($number + 1) . " / " . count($photosToDisplay) . "</div>";
-            $slideshowHtml = $slideshowHtml . "                <img src=\"" . $photoToDisplay["virtualLocation"] . "\">";
-            $slideshowHtml = $slideshowHtml . "                <div class=\"text\"><span class=\"filename\">" . $photoToDisplay["filename"] . "</span></div>";
+            $slideshowHtml = $slideshowHtml . "                <img src=\"" . $photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] . "\">";
+            $slideshowHtml = $slideshowHtml . "                <div class=\"text\"><span class=\"filename\">" . $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY] . "</span></div>";
             $slideshowHtml = $slideshowHtml . "            </div>";
         }
         return $slideshowHtml;

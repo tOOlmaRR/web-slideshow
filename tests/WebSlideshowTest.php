@@ -9,6 +9,11 @@ final class WebSlideshowTest extends TestCase
 {
     use TestHelpers;
 
+    const SLIDE_VIRTUAL_LOCATION_KEY = "virtualLocation";
+    const SLIDE_FILENAME_KEY = "filename";
+
+    const FUNCTION_NAME_BUILDSLIDESHTML = 'buildSlidesHtml';
+
     // construct tests
     public function test_constructor_noParametersCreatesAnObject(): void
     {
@@ -34,7 +39,7 @@ final class WebSlideshowTest extends TestCase
         $photosToDisplay = array();
 
         // assert that this will return no HTML
-        $htmlReturned = $this->invokeMethod($slideshow, "buildSlidesHtml", [$photosToDisplay]);
+        $htmlReturned = $this->invokeMethod($slideshow, WebSlideshowTest::FUNCTION_NAME_BUILDSLIDESHTML, [$photosToDisplay]);
         $this->assertEmpty($htmlReturned);
     }
 
@@ -48,7 +53,7 @@ final class WebSlideshowTest extends TestCase
 
         // assert that this will raise an TypeError
         $this->expectException(\TypeError::class);
-        $htmlReturned = $this->invokeMethod($slideshow, "buildSlidesHtml", [$photosToDisplay]);
+        $this->invokeMethod($slideshow, WebSlideshowTest::FUNCTION_NAME_BUILDSLIDESHTML, [$photosToDisplay]);
     }
 
     public function test_buildSlidesHtml_singleValidPhoto(): void
@@ -59,18 +64,18 @@ final class WebSlideshowTest extends TestCase
         // create an array of slides containing a single 'valid' slide
         $photosToDisplay = [
             [
-                'filename' => 'someFilename.jpg',
-                'virtualLocation' => '/some/virtual/location'
+                WebSlideshow::SLIDE_FILENAME_KEY => 'someFilename.jpg',
+                WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY => '/some/virtual/location'
             ]
         ];
 
         // assert that this will return a non-empty string
-        $htmlReturned = $this->invokeMethod($slideshow, "buildSlidesHtml", [$photosToDisplay]);
+        $htmlReturned = $this->invokeMethod($slideshow, WebSlideshowTest::FUNCTION_NAME_BUILDSLIDESHTML, [$photosToDisplay]);
         $this->assertNotEmpty($htmlReturned);
         $this->assertIsString($htmlReturned);
 
         // assert that the HTML that is being built contains an image tag with the specified virtual location
-        $this->assertStringContainsString("img src=\"" . $photosToDisplay[0]['virtualLocation'] . "\"", $htmlReturned);
+        $this->assertStringContainsString("img src=\"" . $photosToDisplay[0][WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] . "\"", $htmlReturned);
     }
 
     public function test_buildSlidesHtml_missingVirtualLocation(): void
@@ -81,12 +86,12 @@ final class WebSlideshowTest extends TestCase
         // create a array of slides with a single slide that is missing the 'virtualLocation' index
         $photosToDisplay = [
             [
-                'filename' => 'someFilename.jpg'
+                WebSlideshow::SLIDE_FILENAME_KEY => 'someFilename.jpg'
             ]
         ];
 
         // assert that this will return an empty string
-        $htmlReturned = $this->invokeMethod($slideshow, "buildSlidesHtml", [$photosToDisplay]);
+        $htmlReturned = $this->invokeMethod($slideshow, WebSlideshowTest::FUNCTION_NAME_BUILDSLIDESHTML, [$photosToDisplay]);
         $this->assertEmpty($htmlReturned);
     }
 
@@ -98,12 +103,12 @@ final class WebSlideshowTest extends TestCase
         // create a array of slides with a single slide that is missing the 'filename' index
         $photosToDisplay = [
             [
-                'virtualLocation' => '/some/virtual/location'
+                WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY => '/some/virtual/location'
             ]
         ];
 
         // assert that this will return an empty string
-        $htmlReturned = $this->invokeMethod($slideshow, "buildSlidesHtml", [$photosToDisplay]);
+        $htmlReturned = $this->invokeMethod($slideshow, WebSlideshowTest::FUNCTION_NAME_BUILDSLIDESHTML, [$photosToDisplay]);
         $this->assertEmpty($htmlReturned);
     }
 }
