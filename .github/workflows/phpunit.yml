@@ -18,4 +18,4 @@ jobs:
         uses: php-actions/composer@v1
 
       - name: PHP Unit Tests
-        run: vendor/bin/phpunit tests --configuration ./tests --coverage-clover ./tests/results/coverage.xml --debug --testdox-xml ./tests/results/testResults.xml --verbose
+        run: vendor/bin/phpunit tests --configuration ./tests --coverage-clover ./tests/results/coverage.xml --debug --log-junit ./tests/results/testResults.xml --verbose
