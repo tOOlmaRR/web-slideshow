@@ -17,5 +17,8 @@ jobs:
       - name: Composer Install
         uses: php-actions/composer@v1
 
+      - name: Display Composer version
+        run: composer --version
+
       - name: PHP Unit Tests
-        uses: php-actions/phpunit@v1
+        run: vendor/bin/phpunit tests
