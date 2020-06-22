@@ -1,7 +1,7 @@
 <phpunit>
   <testsuites>
     <testsuite name="WebSlideshow">
-      <directory>tests/WebSlideshow</directory>
+      <directory>WebSlideshow</directory>
     </testsuite>
   </testsuites>
   <filter>

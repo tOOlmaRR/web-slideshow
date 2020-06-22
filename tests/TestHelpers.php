@@ -3,7 +3,7 @@ namespace toolmarr\WebSlideshowTests;
 
 trait TestHelpers
 {
-/**
+    /**
      * Call protected/private method of a class.
      *
      * @param object &$object    Instantiated object that we will run method on.
@@ -20,5 +20,47 @@ trait TestHelpers
         $method->setAccessible(true);
 
         return $method->invokeArgs($object, $parameters);
+    }
+
+    public function createTestFilesAndFolders(array $testFolders, array $testPhotos = []) : void
+    {
+        foreach ($testFolders as $testFolder) {
+            echo PHP_EOL;
+            echo $testFolder . PHP_EOL;
+
+            if (!\is_dir($testFolder)) {
+                mkdir($testFolder);
+            }
+        }
+
+        foreach ($testPhotos as $testPhoto) {
+            echo PHP_EOL;
+            echo $testPhoto . PHP_EOL;
+
+            if (!\file_exists($testPhoto)) {
+                fopen($testPhoto, "w");
+            }
+        }
+    }
+
+    public function destroyTestFilesAndFolders(array $testFolders, array $testPhotos = []) : void
+    {
+        foreach ($testPhotos as $testPhoto) {
+            echo PHP_EOL;
+            echo $testPhoto . PHP_EOL;
+            
+            if (\file_exists($testPhoto)) {
+                unlink($testPhoto);
+            }
+        }
+
+        foreach ($testFolders as $testFolder) {
+            echo PHP_EOL;
+            echo $testFolder . PHP_EOL;
+
+            if (\is_dir($testFolder)) {
+                rmdir($testFolder);
+            }
+        }
     }
 }
