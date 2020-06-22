@@ -1,4 +1,4 @@
-name: PhpUnit Testing
+name: PHP Unit Testing
 
 on:
   push:
@@ -17,8 +17,5 @@ jobs:
       - name: Composer Install
         uses: php-actions/composer@v1
 
-      - name: Display Composer version
-        run: composer --version
-
       - name: PHP Unit Tests
-        run: vendor/bin/phpunit tests
+        run: vendor/bin/phpunit tests --testdox-xml ./tests/results/testResults.xml --coverage-clover ./tests/results/coverage.xml
