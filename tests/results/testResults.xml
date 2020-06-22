@@ -1,24 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tests>
-  <test className="toolmarr\WebSlideshowTests\WebSlideshowTest" methodName="test_constructor_noParametersCreatesAnObject" prettifiedClassName="Web Slideshow (toolmarr\WebSlideshowTests\WebSlideshow)" prettifiedMethodName="Constructor noParametersCreatesAnObject" status="0" time="0.0638819" size="-1" groups="default">
-    <group name="default"/>
-  </test>
-  <test className="toolmarr\WebSlideshowTests\WebSlideshowTest" methodName="test_constructor_noParametersCreatesAWebSlideshowObject" prettifiedClassName="Web Slideshow (toolmarr\WebSlideshowTests\WebSlideshow)" prettifiedMethodName="Constructor noParametersCreatesAWebSlideshowObject" status="0" time="0.0061647" size="-1" groups="default">
-    <group name="default"/>
-  </test>
-  <test className="toolmarr\WebSlideshowTests\WebSlideshowTest" methodName="test_buildSlidesHtml_emptyPhotosArray" prettifiedClassName="Web Slideshow (toolmarr\WebSlideshowTests\WebSlideshow)" prettifiedMethodName="BuildSlidesHtml emptyPhotosArray" status="0" time="0.0066611" size="-1" groups="default">
-    <group name="default"/>
-  </test>
-  <test className="toolmarr\WebSlideshowTests\WebSlideshowTest" methodName="test_buildSlidesHtml_nullPhotosArray" prettifiedClassName="Web Slideshow (toolmarr\WebSlideshowTests\WebSlideshow)" prettifiedMethodName="BuildSlidesHtml nullPhotosArray" status="0" time="0.0089396" size="-1" groups="default">
-    <group name="default"/>
-  </test>
-  <test className="toolmarr\WebSlideshowTests\WebSlideshowTest" methodName="test_buildSlidesHtml_singleValidPhoto" prettifiedClassName="Web Slideshow (toolmarr\WebSlideshowTests\WebSlideshow)" prettifiedMethodName="BuildSlidesHtml singleValidPhoto" status="0" time="0.0143586" size="-1" groups="default">
-    <group name="default"/>
-  </test>
-  <test className="toolmarr\WebSlideshowTests\WebSlideshowTest" methodName="test_buildSlidesHtml_missingVirtualLocation" prettifiedClassName="Web Slideshow (toolmarr\WebSlideshowTests\WebSlideshow)" prettifiedMethodName="BuildSlidesHtml missingVirtualLocation" status="4" time="0.0104556" size="-1" groups="default" exceptionLine="94" exceptionMessage="Undefined index: virtualLocation">
-    <group name="default"/>
-  </test>
-  <test className="toolmarr\WebSlideshowTests\WebSlideshowTest" methodName="test_buildSlidesHtml_missingFilename" prettifiedClassName="Web Slideshow (toolmarr\WebSlideshowTests\WebSlideshow)" prettifiedMethodName="BuildSlidesHtml missingFilename" status="4" time="0.0085048" size="-1" groups="default" exceptionLine="111" exceptionMessage="Undefined index: filename">
-    <group name="default"/>
-  </test>
-</tests>
+<testsuites>
+  <testsuite name="C:\Users\georg\OneDrive\Documents\LocalGitCode\web-slideshow\tests" tests="10" assertions="13" errors="0" warnings="0" failures="0" skipped="0" time="0.316489">
+    <testsuite name="toolmarr\WebSlideshowTests\WebSlideshowTest" file="C:\Users\georg\OneDrive\Documents\LocalGitCode\web-slideshow\tests\WebSlideshow\WebSlideshowTest.php" tests="10" assertions="13" errors="0" warnings="0" failures="0" skipped="0" time="0.316489">
+      <testcase name="test_constructor_noParametersCreatesAnObject" class="toolmarr\WebSlideshowTests\WebSlideshowTest" classname="toolmarr.WebSlideshowTests.WebSlideshowTest" file="C:\Users\georg\OneDrive\Documents\LocalGitCode\web-slideshow\tests\WebSlideshow\WebSlideshowTest.php" line="18" assertions="1" time="0.129715"/>
+      <testcase name="test_constructor_noParametersCreatesAWebSlideshowObject" class="toolmarr\WebSlideshowTests\WebSlideshowTest" classname="toolmarr.WebSlideshowTests.WebSlideshowTest" file="C:\Users\georg\OneDrive\Documents\LocalGitCode\web-slideshow\tests\WebSlideshow\WebSlideshowTest.php" line="24" assertions="1" time="0.084945"/>
+      <testcase name="test_buildSlidesHtml_emptyPhotosArray" class="toolmarr\WebSlideshowTests\WebSlideshowTest" classname="toolmarr.WebSlideshowTests.WebSlideshowTest" file="C:\Users\georg\OneDrive\Documents\LocalGitCode\web-slideshow\tests\WebSlideshow\WebSlideshowTest.php" line="33" assertions="1" time="0.015414"/>
+      <testcase name="test_buildSlidesHtml_nullPhotosArray" class="toolmarr\WebSlideshowTests\WebSlideshowTest" classname="toolmarr.WebSlideshowTests.WebSlideshowTest" file="C:\Users\georg\OneDrive\Documents\LocalGitCode\web-slideshow\tests\WebSlideshow\WebSlideshowTest.php" line="46" assertions="1" time="0.011325"/>
+      <testcase name="test_buildSlidesHtml_singleValidPhoto" class="toolmarr\WebSlideshowTests\WebSlideshowTest" classname="toolmarr.WebSlideshowTests.WebSlideshowTest" file="C:\Users\georg\OneDrive\Documents\LocalGitCode\web-slideshow\tests\WebSlideshow\WebSlideshowTest.php" line="59" assertions="3" time="0.015791"/>
+      <testcase name="test_buildSlidesHtml_missingVirtualLocationIndex" class="toolmarr\WebSlideshowTests\WebSlideshowTest" classname="toolmarr.WebSlideshowTests.WebSlideshowTest" file="C:\Users\georg\OneDrive\Documents\LocalGitCode\web-slideshow\tests\WebSlideshow\WebSlideshowTest.php" line="81" assertions="1" time="0.031175"/>
+      <testcase name="test_buildSlidesHtml_missingFilenameIndex" class="toolmarr\WebSlideshowTests\WebSlideshowTest" classname="toolmarr.WebSlideshowTests.WebSlideshowTest" file="C:\Users\georg\OneDrive\Documents\LocalGitCode\web-slideshow\tests\WebSlideshow\WebSlideshowTest.php" line="98" assertions="1" time="0.004692"/>
+      <testcase name="test_buildSlidesHtml_missingVirtualLocationData" class="toolmarr\WebSlideshowTests\WebSlideshowTest" classname="toolmarr.WebSlideshowTests.WebSlideshowTest" file="C:\Users\georg\OneDrive\Documents\LocalGitCode\web-slideshow\tests\WebSlideshow\WebSlideshowTest.php" line="115" assertions="1" time="0.004943"/>
+      <testcase name="test_buildSlidesHtml_missingFilenameData" class="toolmarr\WebSlideshowTests\WebSlideshowTest" classname="toolmarr.WebSlideshowTests.WebSlideshowTest" file="C:\Users\georg\OneDrive\Documents\LocalGitCode\web-slideshow\tests\WebSlideshow\WebSlideshowTest.php" line="133" assertions="1" time="0.004820"/>
+      <testcase name="test_buildSlidesHtml_invalidSlideDoesNotAbortHtmlBuilding" class="toolmarr\WebSlideshowTests\WebSlideshowTest" classname="toolmarr.WebSlideshowTests.WebSlideshowTest" file="C:\Users\georg\OneDrive\Documents\LocalGitCode\web-slideshow\tests\WebSlideshow\WebSlideshowTest.php" line="151" assertions="2" time="0.013669"/>
+    </testsuite>
+  </testsuite>
+</testsuites>
