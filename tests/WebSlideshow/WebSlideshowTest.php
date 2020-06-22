@@ -56,13 +56,13 @@ final class WebSlideshowTest extends TestCase
 
         // invoke the function
         $photosReturned = $this->invokeMethod($slideshow, WebSlideshowTest::FUNCTION_NAME_DETERMINEPHOTOSTODISPLAYFORPATH, $inputs);
-        $this->assertEmpty($photosReturned);
-        foreach($photosReturned as $key => $photo) {
+        foreach ($photosReturned as $key => $photo) {
             print_r($photo);
             foreach ($photo as $key => $value) {
                 echo $key . ' => ' . $value . PHP_EOL;
             }
         }
+        $this->assertEmpty($photosReturned);
 
         // destroy test folders
         $this->destroyTestFilesAndFolders([$testPublicFolder_fullPath, $testPrivateFolder_fullPath]);
