@@ -99,6 +99,17 @@ In the case that you've configured a slideshow to include subfolders, you cannot
 
 ## History
 
+### v3.0
+- transformed the slideshowControl file into a class and updated the application as needed
+- added unit tests for the new WebSlideshow class
+- added a couple of GitHub workflows
+    - PHP Composer - to build/validate Composer dependencies
+    - PHP Unit Tests - to run PHPUnit tests and generate test and coverage reports
+
+### v2.1
+- added composer
+- added phpunit and symfony/yaml packages
+
 ### v2.0
 - configuration restructuring to include all config elements in their own array
 - updates to the main slideshow page and the underlying PHP control to pass the full configuration from the front-end to the back-end when populating the slideshows dropdown and rendering the slideshow
