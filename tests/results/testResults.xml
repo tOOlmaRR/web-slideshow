@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tests>
-  <test className="toolmarr\WebSlideshowTests\WebSlideshowTest" methodName="test_constructor_noParametersCreatesAnObject" prettifiedClassName="Web Slideshow (toolmarr\WebSlideshowTests\WebSlideshow)" prettifiedMethodName="Constructor noParametersCreatesAnObject" status="0" time="0.0259713" size="-1" groups="default">
+  <test className="toolmarr\WebSlideshowTests\WebSlideshowTest" methodName="test_constructor_noParametersCreatesAnObject" prettifiedClassName="Web Slideshow (toolmarr\WebSlideshowTests\WebSlideshow)" prettifiedMethodName="Constructor noParametersCreatesAnObject" status="0" time="0.0638819" size="-1" groups="default">
     <group name="default"/>
   </test>
-  <test className="toolmarr\WebSlideshowTests\WebSlideshowTest" methodName="test_constructor_noParametersCreatesAWebSlideshowObject" prettifiedClassName="Web Slideshow (toolmarr\WebSlideshowTests\WebSlideshow)" prettifiedMethodName="Constructor noParametersCreatesAWebSlideshowObject" status="0" time="0.0057348" size="-1" groups="default">
+  <test className="toolmarr\WebSlideshowTests\WebSlideshowTest" methodName="test_constructor_noParametersCreatesAWebSlideshowObject" prettifiedClassName="Web Slideshow (toolmarr\WebSlideshowTests\WebSlideshow)" prettifiedMethodName="Constructor noParametersCreatesAWebSlideshowObject" status="0" time="0.0061647" size="-1" groups="default">
     <group name="default"/>
   </test>
-  <test className="toolmarr\WebSlideshowTests\WebSlideshowTest" methodName="test_buildSlidesHtml_emptyPhotosArray" prettifiedClassName="Web Slideshow (toolmarr\WebSlideshowTests\WebSlideshow)" prettifiedMethodName="BuildSlidesHtml emptyPhotosArray" status="0" time="0.0173256" size="-1" groups="default">
+  <test className="toolmarr\WebSlideshowTests\WebSlideshowTest" methodName="test_buildSlidesHtml_emptyPhotosArray" prettifiedClassName="Web Slideshow (toolmarr\WebSlideshowTests\WebSlideshow)" prettifiedMethodName="BuildSlidesHtml emptyPhotosArray" status="0" time="0.0066611" size="-1" groups="default">
     <group name="default"/>
   </test>
-  <test className="toolmarr\WebSlideshowTests\WebSlideshowTest" methodName="test_buildSlidesHtml_nullPhotosArray" prettifiedClassName="Web Slideshow (toolmarr\WebSlideshowTests\WebSlideshow)" prettifiedMethodName="BuildSlidesHtml nullPhotosArray" status="0" time="0.0094487" size="-1" groups="default">
+  <test className="toolmarr\WebSlideshowTests\WebSlideshowTest" methodName="test_buildSlidesHtml_nullPhotosArray" prettifiedClassName="Web Slideshow (toolmarr\WebSlideshowTests\WebSlideshow)" prettifiedMethodName="BuildSlidesHtml nullPhotosArray" status="0" time="0.0089396" size="-1" groups="default">
     <group name="default"/>
   </test>
-  <test className="toolmarr\WebSlideshowTests\WebSlideshowTest" methodName="test_buildSlidesHtml_singleValidPhoto" prettifiedClassName="Web Slideshow (toolmarr\WebSlideshowTests\WebSlideshow)" prettifiedMethodName="BuildSlidesHtml singleValidPhoto" status="0" time="0.0076415" size="-1" groups="default">
+  <test className="toolmarr\WebSlideshowTests\WebSlideshowTest" methodName="test_buildSlidesHtml_singleValidPhoto" prettifiedClassName="Web Slideshow (toolmarr\WebSlideshowTests\WebSlideshow)" prettifiedMethodName="BuildSlidesHtml singleValidPhoto" status="0" time="0.0143586" size="-1" groups="default">
     <group name="default"/>
   </test>
-  <test className="toolmarr\WebSlideshowTests\WebSlideshowTest" methodName="test_buildSlidesHtml_missingVirtualLocation" prettifiedClassName="Web Slideshow (toolmarr\WebSlideshowTests\WebSlideshow)" prettifiedMethodName="BuildSlidesHtml missingVirtualLocation" status="4" time="0.0070925" size="-1" groups="default" exceptionLine="94" exceptionMessage="Undefined index: virtualLocation">
+  <test className="toolmarr\WebSlideshowTests\WebSlideshowTest" methodName="test_buildSlidesHtml_missingVirtualLocation" prettifiedClassName="Web Slideshow (toolmarr\WebSlideshowTests\WebSlideshow)" prettifiedMethodName="BuildSlidesHtml missingVirtualLocation" status="4" time="0.0104556" size="-1" groups="default" exceptionLine="94" exceptionMessage="Undefined index: virtualLocation">
     <group name="default"/>
   </test>
-  <test className="toolmarr\WebSlideshowTests\WebSlideshowTest" methodName="test_buildSlidesHtml_missingFilename" prettifiedClassName="Web Slideshow (toolmarr\WebSlideshowTests\WebSlideshow)" prettifiedMethodName="BuildSlidesHtml missingFilename" status="4" time="0.0060249" size="-1" groups="default" exceptionLine="111" exceptionMessage="Undefined index: filename">
+  <test className="toolmarr\WebSlideshowTests\WebSlideshowTest" methodName="test_buildSlidesHtml_missingFilename" prettifiedClassName="Web Slideshow (toolmarr\WebSlideshowTests\WebSlideshow)" prettifiedMethodName="BuildSlidesHtml missingFilename" status="4" time="0.0085048" size="-1" groups="default" exceptionLine="111" exceptionMessage="Undefined index: filename">
     <group name="default"/>
   </test>
 </tests>
