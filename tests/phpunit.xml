@@ -6,10 +6,10 @@
   </testsuites>
   <filter>
     <whitelist processUncoveredFilesFromWhitelist="true">
-      <directory suffix=".php">scripts</directory>
+      <directory suffix=".php">../scripts</directory>
       <exclude>
-        <file>scripts/mainConfig.php</file>
-        <file>scripts/myConfig.php</file>
+        <file>../scripts/mainConfig.php</file>
+        <file>../scripts/myConfig.php</file>
       </exclude>
     </whitelist>
   </filter>
