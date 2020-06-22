@@ -139,7 +139,7 @@ final class WebSlideshowTest extends TestCase
         $photosToDisplay = [
             [
                 WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY => '/some/virtual/location',
-                WebSlideshow::SLIDE_FILENAME_KEY => ''                
+                WebSlideshow::SLIDE_FILENAME_KEY => ''
             ]
         ];
 
