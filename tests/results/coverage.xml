@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1592834039">
-  <project timestamp="1592834039">
+<coverage generated="1592838575">
+  <project timestamp="1592838575">
     <package name="toolmarr\WebSlideshow">
       <file name="C:\Users\georg\OneDrive\Documents\LocalGitCode\web-slideshow\scripts\WebSlideshow.php">
         <class name="toolmarr\WebSlideshow\WebSlideshow" namespace="toolmarr\WebSlideshow">

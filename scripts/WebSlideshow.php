@@ -132,11 +132,17 @@ class WebSlideshow
     {
         $slideshowHtml = "";
         foreach ($photosToDisplay as $number => $photoToDisplay) {
-            $slideshowHtml = $slideshowHtml . "            <div class=\"mySlides fade c" . $number . "\">";
-            $slideshowHtml = $slideshowHtml . "                <div class=\"numbertext\">" . ($number + 1) . " / " . count($photosToDisplay) . "</div>";
-            $slideshowHtml = $slideshowHtml . "                <img src=\"" . $photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] . "\">";
-            $slideshowHtml = $slideshowHtml . "                <div class=\"text\"><span class=\"filename\">" . $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY] . "</span></div>";
-            $slideshowHtml = $slideshowHtml . "            </div>";
+            if (isset($photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY])
+                && isset($photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY])
+                && !empty($photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY])
+                && !empty($photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY])
+            ) {
+                $slideshowHtml = $slideshowHtml . "            <div class=\"mySlides fade c" . $number . "\">";
+                $slideshowHtml = $slideshowHtml . "                <div class=\"numbertext\">" . ($number + 1) . " / " . count($photosToDisplay) . "</div>";
+                $slideshowHtml = $slideshowHtml . "                <img src=\"" . $photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] . "\">";
+                $slideshowHtml = $slideshowHtml . "                <div class=\"text\"><span class=\"filename\">" . $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY] . "</span></div>";
+                $slideshowHtml = $slideshowHtml . "            </div>";
+            }
         }
         return $slideshowHtml;
     }
