@@ -57,6 +57,7 @@ final class WebSlideshowTest extends TestCase
         // invoke the function
         $photosReturned = $this->invokeMethod($slideshow, WebSlideshowTest::FUNCTION_NAME_DETERMINEPHOTOSTODISPLAYFORPATH, $inputs);
         $this->assertEmpty($photosReturned);
+        var_dump($photosReturned);
 
         // destroy test folders
         $this->destroyTestFilesAndFolders([$testPublicFolder_fullPath, $testPrivateFolder_fullPath]);
@@ -80,7 +81,7 @@ final class WebSlideshowTest extends TestCase
         $virtualRoot = '/myPhotos/';
         $includeSubFolders = false;
         $inputs = [$slideshowPath, $rootFolder, $virtualRoot, $includeSubFolders];
-        var_dump($inputs);
+        // var_dump($inputs);
 
         // invoke the function
         $photosReturned = $this->invokeMethod($slideshow, WebSlideshowTest::FUNCTION_NAME_DETERMINEPHOTOSTODISPLAYFORPATH, $inputs);
