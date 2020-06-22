@@ -1,7 +1,16 @@
-<phpunit bootstrap="vendor/autoload.php">
+<phpunit>
   <testsuites>
     <testsuite name="WebSlideshow">
-      <directory>tests</directory>
+      <directory>tests/WebSlideshow</directory>
     </testsuite>
   </testsuites>
+  <filter>
+    <whitelist processUncoveredFilesFromWhitelist="true">
+      <directory suffix=".php">scripts</directory>
+      <exclude>
+        <file>scripts/mainConfig.php</file>
+        <file>scripts/myConfig.php</file>
+      </exclude>
+    </whitelist>
+  </filter>
 </phpunit>
