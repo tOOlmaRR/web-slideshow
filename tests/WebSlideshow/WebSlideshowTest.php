@@ -64,32 +64,32 @@ final class WebSlideshowTest extends TestCase
     }
 
     // determinePhotosToDisplayForPath()
-    public function test_determinePhotosToDisplayForPath_noRecurse_onePhoto(): void
-    {
-        // instantiate a slideshow
-        $slideshow = new WebSlideshow;
+    // public function test_determinePhotosToDisplayForPath_noRecurse_onePhoto(): void
+    // {
+    //     // instantiate a slideshow
+    //     $slideshow = new WebSlideshow;
 
-        // create test folders and file
-        $testPublicFolder_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_FOLDER;
-        $testPrivateFolder_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PRIVATE_FOLDER;
-        $testPhoto_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_FOLDER . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_PHOTO;
-        $this->createTestFilesAndFolders([$testPublicFolder_fullPath, $testPrivateFolder_fullPath], [$testPhoto_fullPath]);
+    //     // create test folders and file
+    //     $testPublicFolder_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_FOLDER;
+    //     $testPrivateFolder_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PRIVATE_FOLDER;
+    //     $testPhoto_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_FOLDER . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_PHOTO;
+    //     $this->createTestFilesAndFolders([$testPublicFolder_fullPath, $testPrivateFolder_fullPath], [$testPhoto_fullPath]);
 
-        // set up inputs
-        $slideshowPath = WebSlideshowTest::TEST_PUBLIC_FOLDER;
-        $rootFolder = __DIR__ . DIRECTORY_SEPARATOR;
-        $virtualRoot = '/myPhotos/';
-        $includeSubFolders = false;
-        $inputs = [$slideshowPath, $rootFolder, $virtualRoot, $includeSubFolders];
-        // var_dump($inputs);
+    //     // set up inputs
+    //     $slideshowPath = WebSlideshowTest::TEST_PUBLIC_FOLDER;
+    //     $rootFolder = __DIR__ . DIRECTORY_SEPARATOR;
+    //     $virtualRoot = '/myPhotos/';
+    //     $includeSubFolders = false;
+    //     $inputs = [$slideshowPath, $rootFolder, $virtualRoot, $includeSubFolders];
+    //     // var_dump($inputs);
 
-        // invoke the function
-        $photosReturned = $this->invokeMethod($slideshow, WebSlideshowTest::FUNCTION_NAME_DETERMINEPHOTOSTODISPLAYFORPATH, $inputs);
-        $this->assertNotEmpty($photosReturned);
+    //     // invoke the function
+    //     $photosReturned = $this->invokeMethod($slideshow, WebSlideshowTest::FUNCTION_NAME_DETERMINEPHOTOSTODISPLAYFORPATH, $inputs);
+    //     $this->assertNotEmpty($photosReturned);
 
-        // destroy test folders
-        $this->destroyTestFilesAndFolders([$testPublicFolder_fullPath, $testPrivateFolder_fullPath], [$testPhoto_fullPath]);
-    }
+    //     // destroy test folders
+    //     $this->destroyTestFilesAndFolders([$testPublicFolder_fullPath, $testPrivateFolder_fullPath], [$testPhoto_fullPath]);
+    // }
 
 
     
