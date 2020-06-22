@@ -147,4 +147,29 @@ final class WebSlideshowTest extends TestCase
         $htmlReturned = $this->invokeMethod($slideshow, WebSlideshowTest::FUNCTION_NAME_BUILDSLIDESHTML, [$photosToDisplay]);
         $this->assertEmpty($htmlReturned);
     }
+
+    public function test_buildSlidesHtml_invalidSlideDoesNotAbortHtmlBuilding(): void
+    {
+        // instantiate a slideshow
+        $slideshow = new WebSlideshow;
+
+        // create a array of slides with a single slide that is missing the 'filename' index
+        $photosToDisplay = [
+            [
+                WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY => '',
+                WebSlideshow::SLIDE_FILENAME_KEY => 'someFilename.jpg'
+            ],
+            [
+                WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY => '/some/virtual/location',
+                WebSlideshow::SLIDE_FILENAME_KEY => 'someFilename.jpg'
+            ],
+        ];
+
+        // assert that this will still return some HTML
+        $htmlReturned = $this->invokeMethod($slideshow, WebSlideshowTest::FUNCTION_NAME_BUILDSLIDESHTML, [$photosToDisplay]);
+        $this->assertNotEmpty($htmlReturned);
+
+        // assert that the HTML that is being built contains an image tag with the specified virtual location from the second (the valid) slide
+        $this->assertStringContainsString("img src=\"" . $photosToDisplay[1][WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] . "\"", $htmlReturned);
+    }
 }
