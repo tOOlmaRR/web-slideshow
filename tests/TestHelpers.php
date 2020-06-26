@@ -24,9 +24,9 @@ trait TestHelpers
 
     public function createTestFilesAndFolders(array $testFolders, array $testPhotos = []) : void
     {
-        echo PHP_EOL;
+        //echo PHP_EOL;
         foreach ($testFolders as $testFolder) {
-            echo 'Creating the following folder: ' . $testFolder . PHP_EOL;
+            //echo 'Creating the following folder: ' . $testFolder . PHP_EOL;
 
             if (!\is_dir($testFolder)) {
                 mkdir($testFolder);
@@ -34,7 +34,7 @@ trait TestHelpers
         }
 
         foreach ($testPhotos as $testPhoto) {
-            echo 'Creating the following file: ' . $testPhoto . PHP_EOL;
+            //echo 'Creating the following file: ' . $testPhoto . PHP_EOL;
 
             if (!\file_exists($testPhoto)) {
                 fopen($testPhoto, "w");
@@ -44,9 +44,9 @@ trait TestHelpers
 
     public function destroyTestFilesAndFolders(array $testFolders, array $testPhotos = []) : void
     {
-        echo PHP_EOL;
+        //echo PHP_EOL;
         foreach ($testPhotos as $testPhoto) {
-            echo 'Destroying the following file: ' . $testPhoto . PHP_EOL;
+            //echo 'Destroying the following file: ' . $testPhoto . PHP_EOL;
             
             if (\file_exists($testPhoto)) {
                 unlink($testPhoto);
@@ -54,7 +54,7 @@ trait TestHelpers
         }
 
         foreach ($testFolders as $testFolder) {
-            echo 'Destroying the following folder: ' . $testFolder . PHP_EOL;
+            //echo 'Destroying the following folder: ' . $testFolder . PHP_EOL;
 
             if (\is_dir($testFolder)) {
                 rmdir($testFolder);
