@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="C:\Users\georg\OneDrive\Documents\LocalGitCode\web-slideshow\tests" tests="11" assertions="15" errors="0" warnings="0" failures="0" skipped="0" time="0.337068">
+    <testsuite name="toolmarr\WebSlideshowTests\WebSlideshowTest" file="C:\Users\georg\OneDrive\Documents\LocalGitCode\web-slideshow\tests\WebSlideshow\WebSlideshowTest.php" tests="11" assertions="15" errors="0" warnings="0" failures="0" skipped="0" time="0.337068">
+      <testcase name="constructor_noParametersCreatesAnObject" class="toolmarr\WebSlideshowTests\WebSlideshowTest" classname="toolmarr.WebSlideshowTests.WebSlideshowTest" file="C:\Users\georg\OneDrive\Documents\LocalGitCode\web-slideshow\tests\WebSlideshow\WebSlideshowTest.php" line="28" assertions="2" time="0.028650"/>
+      <testsuite name="toolmarr\WebSlideshowTests\WebSlideshowTest::determinePhotosToDisplayForPath_noRecurse_noPhotos" tests="1" assertions="1" errors="0" warnings="0" failures="0" skipped="0" time="0.079466">
+        <testcase name="determinePhotosToDisplayForPath_noRecurse_noPhotos with data set #0" class="toolmarr\WebSlideshowTests\WebSlideshowTest" classname="toolmarr.WebSlideshowTests.WebSlideshowTest" file="C:\Users\georg\OneDrive\Documents\LocalGitCode\web-slideshow\tests\WebSlideshow\WebSlideshowTest.php" line="43" assertions="1" time="0.079466"/>
+      </testsuite>
+      <testcase name="determinePhotosToDisplayForPath_noRecurse_onePhoto" class="toolmarr\WebSlideshowTests\WebSlideshowTest" classname="toolmarr.WebSlideshowTests.WebSlideshowTest" file="C:\Users\georg\OneDrive\Documents\LocalGitCode\web-slideshow\tests\WebSlideshow\WebSlideshowTest.php" line="71" assertions="1" time="0.108218"/>
+      <testsuite name="toolmarr\WebSlideshowTests\WebSlideshowTest::buildSlidesHtml_emptyPhotosArray" tests="1" assertions="1" errors="0" warnings="0" failures="0" skipped="0" time="0.021126">
+        <testcase name="buildSlidesHtml_emptyPhotosArray with data set #0" class="toolmarr\WebSlideshowTests\WebSlideshowTest" classname="toolmarr.WebSlideshowTests.WebSlideshowTest" file="C:\Users\georg\OneDrive\Documents\LocalGitCode\web-slideshow\tests\WebSlideshow\WebSlideshowTest.php" line="106" assertions="1" time="0.021126"/>
+      </testsuite>
+      <testsuite name="toolmarr\WebSlideshowTests\WebSlideshowTest::buildSlidesHtml_nullPhotosArray" tests="1" assertions="1" errors="0" warnings="0" failures="0" skipped="0" time="0.020042">
+        <testcase name="buildSlidesHtml_nullPhotosArray with data set #0" class="toolmarr\WebSlideshowTests\WebSlideshowTest" classname="toolmarr.WebSlideshowTests.WebSlideshowTest" file="C:\Users\georg\OneDrive\Documents\LocalGitCode\web-slideshow\tests\WebSlideshow\WebSlideshowTest.php" line="122" assertions="1" time="0.020042"/>
+      </testsuite>
+      <testsuite name="toolmarr\WebSlideshowTests\WebSlideshowTest::buildSlidesHtml_singleValidPhoto" tests="1" assertions="3" errors="0" warnings="0" failures="0" skipped="0" time="0.041185">
+        <testcase name="buildSlidesHtml_singleValidPhoto with data set #0" class="toolmarr\WebSlideshowTests\WebSlideshowTest" classname="toolmarr.WebSlideshowTests.WebSlideshowTest" file="C:\Users\georg\OneDrive\Documents\LocalGitCode\web-slideshow\tests\WebSlideshow\WebSlideshowTest.php" line="138" assertions="3" time="0.041185"/>
+      </testsuite>
+      <testsuite name="toolmarr\WebSlideshowTests\WebSlideshowTest::buildSlidesHtml_missingVirtualLocationIndex" tests="1" assertions="1" errors="0" warnings="0" failures="0" skipped="0" time="0.006424">
+        <testcase name="buildSlidesHtml_missingVirtualLocationIndex with data set #0" class="toolmarr\WebSlideshowTests\WebSlideshowTest" classname="toolmarr.WebSlideshowTests.WebSlideshowTest" file="C:\Users\georg\OneDrive\Documents\LocalGitCode\web-slideshow\tests\WebSlideshow\WebSlideshowTest.php" line="158" assertions="1" time="0.006424"/>
+      </testsuite>
+      <testsuite name="toolmarr\WebSlideshowTests\WebSlideshowTest::buildSlidesHtml_missingFilenameIndex" tests="1" assertions="1" errors="0" warnings="0" failures="0" skipped="0" time="0.007043">
+        <testcase name="buildSlidesHtml_missingFilenameIndex with data set #0" class="toolmarr\WebSlideshowTests\WebSlideshowTest" classname="toolmarr.WebSlideshowTests.WebSlideshowTest" file="C:\Users\georg\OneDrive\Documents\LocalGitCode\web-slideshow\tests\WebSlideshow\WebSlideshowTest.php" line="174" assertions="1" time="0.007043"/>
+      </testsuite>
+      <testsuite name="toolmarr\WebSlideshowTests\WebSlideshowTest::buildSlidesHtml_missingVirtualLocationData" tests="1" assertions="1" errors="0" warnings="0" failures="0" skipped="0" time="0.006193">
+        <testcase name="buildSlidesHtml_missingVirtualLocationData with data set #0" class="toolmarr\WebSlideshowTests\WebSlideshowTest" classname="toolmarr.WebSlideshowTests.WebSlideshowTest" file="C:\Users\georg\OneDrive\Documents\LocalGitCode\web-slideshow\tests\WebSlideshow\WebSlideshowTest.php" line="190" assertions="1" time="0.006193"/>
+      </testsuite>
+      <testsuite name="toolmarr\WebSlideshowTests\WebSlideshowTest::buildSlidesHtml_missingFilenameData" tests="1" assertions="1" errors="0" warnings="0" failures="0" skipped="0" time="0.007025">
+        <testcase name="buildSlidesHtml_missingFilenameData with data set #0" class="toolmarr\WebSlideshowTests\WebSlideshowTest" classname="toolmarr.WebSlideshowTests.WebSlideshowTest" file="C:\Users\georg\OneDrive\Documents\LocalGitCode\web-slideshow\tests\WebSlideshow\WebSlideshowTest.php" line="206" assertions="1" time="0.007025"/>
+      </testsuite>
+      <testsuite name="toolmarr\WebSlideshowTests\WebSlideshowTest::buildSlidesHtml_invalidSlideDoesNotAbortHtmlBuilding" tests="1" assertions="2" errors="0" warnings="0" failures="0" skipped="0" time="0.011696">
+        <testcase name="buildSlidesHtml_invalidSlideDoesNotAbortHtmlBuilding with data set #0" class="toolmarr\WebSlideshowTests\WebSlideshowTest" classname="toolmarr.WebSlideshowTests.WebSlideshowTest" file="C:\Users\georg\OneDrive\Documents\LocalGitCode\web-slideshow\tests\WebSlideshow\WebSlideshowTest.php" line="222" assertions="2" time="0.011696"/>
+      </testsuite>
+    </testsuite>
+  </testsuite>
+</testsuites>

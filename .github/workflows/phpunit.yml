@@ -1,0 +1,21 @@
+name: PHP Unit Testing
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Composer Install
+        uses: php-actions/composer@v1
+
+      - name: PHP Unit Tests
+        run: vendor/bin/phpunit tests --configuration ./tests --coverage-clover ./tests/results/coverage.xml --debug --log-junit ./tests/results/testResults.xml --verbose
