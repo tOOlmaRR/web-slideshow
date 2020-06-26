@@ -15,9 +15,9 @@ final class WebSlideshowTest extends TestCase
     const FUNCTION_NAME_BUILDSLIDESHTML = 'buildSlidesHtml';
     const FUNCTION_NAME_DETERMINEPHOTOSTODISPLAYFORPATH = 'determinePhotosToDisplayForPath';
 
-    const TEST_PUBLIC_FOLDER = 'publicPhotosTestFolder';
-    const TEST_PRIVATE_FOLDER = 'privatePhotosTestFolder';
-    const TEST_PUBLIC_SUBFOLDER = 'publicSubFolder';
+    const TEST_PUBLIC_FOLDER = 'publicPhotosTestFolder' . DIRECTORY_SEPARATOR;
+    const TEST_PRIVATE_FOLDER = 'privatePhotosTestFolder' . DIRECTORY_SEPARATOR;
+    const TEST_PUBLIC_SUBFOLDER = 'publicSubFolder' . DIRECTORY_SEPARATOR;
     const TEST_PUBLIC_PHOTO = 'testPhoto.png';
 
     /**
@@ -58,7 +58,6 @@ final class WebSlideshowTest extends TestCase
         // invoke the function
         $photosReturned = $this->invokeMethod($slideshow, WebSlideshowTest::FUNCTION_NAME_DETERMINEPHOTOSTODISPLAYFORPATH, $inputs);
         foreach ($photosReturned as $key => $photo) {
-            print_r($photo);
             foreach ($photo as $key => $value) {
                 echo $key . ' => ' . $value . PHP_EOL;
             }
