@@ -24,18 +24,13 @@ trait TestHelpers
 
     public function createTestFilesAndFolders(array $testFolders, array $testPhotos = []) : void
     {
-        //echo PHP_EOL;
         foreach ($testFolders as $testFolder) {
-            //echo 'Creating the following folder: ' . $testFolder . PHP_EOL;
-
             if (!\is_dir($testFolder)) {
                 mkdir($testFolder);
             }
         }
 
         foreach ($testPhotos as $testPhoto) {
-            //echo 'Creating the following file: ' . $testPhoto . PHP_EOL;
-
             if (!\file_exists($testPhoto)) {
                 fopen($testPhoto, "w");
             }
@@ -44,18 +39,13 @@ trait TestHelpers
 
     public function destroyTestFilesAndFolders(array $testFolders, array $testPhotos = []) : void
     {
-        //echo PHP_EOL;
         foreach ($testPhotos as $testPhoto) {
-            //echo 'Destroying the following file: ' . $testPhoto . PHP_EOL;
-            
             if (\file_exists($testPhoto)) {
                 unlink($testPhoto);
             }
         }
 
         foreach ($testFolders as $testFolder) {
-            //echo 'Destroying the following folder: ' . $testFolder . PHP_EOL;
-
             if (\is_dir($testFolder)) {
                 rmdir($testFolder);
             }
