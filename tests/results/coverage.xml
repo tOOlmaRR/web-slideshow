@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1592845631">
-  <project timestamp="1592845631">
+<coverage generated="1593196041">
+  <project timestamp="1593196041">
     <package name="toolmarr\WebSlideshow">
       <file name="C:\Users\georg\OneDrive\Documents\LocalGitCode\web-slideshow\scripts\WebSlideshow.php">
         <class name="toolmarr\WebSlideshow\WebSlideshow" namespace="toolmarr\WebSlideshow">
-          <metrics complexity="28" methods="4" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="73" coveredstatements="12" elements="77" coveredelements="13"/>
+          <metrics complexity="28" methods="4" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="73" coveredstatements="26" elements="77" coveredelements="27"/>
         </class>
         <line num="11" type="method" name="renderSlideshowDropdown" visibility="public" complexity="10" crap="110" count="0"/>
         <line num="13" type="stmt" count="0"/>
@@ -47,13 +47,13 @@
         <line num="79" type="stmt" count="0"/>
         <line num="80" type="stmt" count="0"/>
         <line num="81" type="stmt" count="0"/>
-        <line num="88" type="method" name="determinePhotosToDisplayForPath" visibility="private" complexity="6" crap="42" count="0"/>
-        <line num="90" type="stmt" count="0"/>
-        <line num="93" type="stmt" count="0"/>
-        <line num="94" type="stmt" count="0"/>
-        <line num="95" type="stmt" count="0"/>
-        <line num="96" type="stmt" count="0"/>
-        <line num="99" type="stmt" count="0"/>
+        <line num="88" type="method" name="determinePhotosToDisplayForPath" visibility="private" complexity="6" crap="7.73" count="2"/>
+        <line num="90" type="stmt" count="2"/>
+        <line num="93" type="stmt" count="2"/>
+        <line num="94" type="stmt" count="2"/>
+        <line num="95" type="stmt" count="2"/>
+        <line num="96" type="stmt" count="2"/>
+        <line num="99" type="stmt" count="2"/>
         <line num="100" type="stmt" count="0"/>
         <line num="101" type="stmt" count="0"/>
         <line num="103" type="stmt" count="0"/>
@@ -62,14 +62,14 @@
         <line num="107" type="stmt" count="0"/>
         <line num="108" type="stmt" count="0"/>
         <line num="109" type="stmt" count="0"/>
-        <line num="113" type="stmt" count="0"/>
-        <line num="114" type="stmt" count="0"/>
-        <line num="115" type="stmt" count="0"/>
-        <line num="117" type="stmt" count="0"/>
-        <line num="119" type="stmt" count="0"/>
-        <line num="120" type="stmt" count="0"/>
-        <line num="121" type="stmt" count="0"/>
-        <line num="125" type="stmt" count="0"/>
+        <line num="113" type="stmt" count="2"/>
+        <line num="114" type="stmt" count="2"/>
+        <line num="115" type="stmt" count="2"/>
+        <line num="117" type="stmt" count="2"/>
+        <line num="119" type="stmt" count="1"/>
+        <line num="120" type="stmt" count="1"/>
+        <line num="121" type="stmt" count="1"/>
+        <line num="125" type="stmt" count="2"/>
         <line num="131" type="method" name="buildSlidesHtml" visibility="private" complexity="6" crap="6" count="7"/>
         <line num="133" type="stmt" count="7"/>
         <line num="134" type="stmt" count="7"/>
@@ -83,9 +83,9 @@
         <line num="143" type="stmt" count="2"/>
         <line num="144" type="stmt" count="2"/>
         <line num="147" type="stmt" count="7"/>
-        <metrics loc="149" ncloc="111" classes="1" methods="4" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="73" coveredstatements="12" elements="77" coveredelements="13"/>
+        <metrics loc="149" ncloc="111" classes="1" methods="4" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="73" coveredstatements="26" elements="77" coveredelements="27"/>
       </file>
     </package>
-    <metrics files="1" loc="149" ncloc="111" classes="1" methods="4" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="73" coveredstatements="12" elements="77" coveredelements="13"/>
+    <metrics files="1" loc="149" ncloc="111" classes="1" methods="4" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="73" coveredstatements="26" elements="77" coveredelements="27"/>
   </project>
 </coverage>
