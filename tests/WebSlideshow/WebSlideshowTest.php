@@ -6,7 +6,7 @@ use toolmarr\WebSlideshow\WebSlideshow;
 use toolmarr\WebSlideshowTests\TestHelpers;
 
 /**
- * @testdox A WebSlideshow object
+ * @testdox     A WebSlideshow object
  */
 final class WebSlideshowTest extends TestCase
 {
@@ -17,12 +17,12 @@ final class WebSlideshowTest extends TestCase
 
     const TEST_PUBLIC_FOLDER = 'publicPhotosTestFolder' . DIRECTORY_SEPARATOR;
     const TEST_PRIVATE_FOLDER = 'privatePhotosTestFolder' . DIRECTORY_SEPARATOR;
-    const TEST_PUBLIC_SUBFOLDER = 'publicSubFolder' . DIRECTORY_SEPARATOR;
+    const TEST_PUBLIC_SUBFOLDER = WebSlideshowTest::TEST_PUBLIC_FOLDER . DIRECTORY_SEPARATOR . 'publicSubFolder' . DIRECTORY_SEPARATOR;
     const TEST_PUBLIC_PHOTO = 'testPhoto.png';
 
     /**
      * @test
-     * @group Constructor
+     * @group   Constructor
      * @testdox Constructor should return an object that is an instance of the WebSlideshow class
      */
     public function constructor_noParametersCreatesAnObject(): void
@@ -36,8 +36,9 @@ final class WebSlideshowTest extends TestCase
 
     /**
      * @test
-     * @group determinePhotosToDisplayForPath
-     * @testdox When there are no valid photos in the specified location (ie. public folder), the determinePhotosToDisplayForPath method should return an empty array
+     * @group       determinePhotosToDisplayForPath
+     * @testdox     When there are no valid photos in the specified location (ie. public folder), 
+     *              the determinePhotosToDisplayForPath method should return an empty array
      * @testWith    ["/myPhotos/", false]
      */
     public function determinePhotosToDisplayForPath_noRecurse_noPhotos(string $virtualRoot, bool $includeSubFolders): void
@@ -65,9 +66,12 @@ final class WebSlideshowTest extends TestCase
 
     /**
      * @test
-     * @group determinePhotosToDisplayForPath
+     * @group       determinePhotosToDisplayForPath
+     * @testdox     When there a single valid photo in the specified location (ie. public folder), 
+     *              the determinePhotosToDisplayForPath method should return a non-empty array of photos to display
+     * @testWith    ["/myPhotos/", false]
      */
-    public function determinePhotosToDisplayForPath_noRecurse_onePhoto(): void
+    public function determinePhotosToDisplayForPath_noRecurse_onePhoto(string $virtualRoot, bool $includeSubFolders): void
     {
         // instantiate a slideshow
         $slideshow = new WebSlideshow;
@@ -81,8 +85,6 @@ final class WebSlideshowTest extends TestCase
         // set up inputs
         $slideshowPath = WebSlideshowTest::TEST_PUBLIC_FOLDER;
         $rootFolder = __DIR__ . DIRECTORY_SEPARATOR;
-        $virtualRoot = '/myPhotos/';
-        $includeSubFolders = false;
         $inputs = [$slideshowPath, $rootFolder, $virtualRoot, $includeSubFolders];
 
         // invoke the function
@@ -93,13 +95,45 @@ final class WebSlideshowTest extends TestCase
         $this->destroyTestFilesAndFolders([$testPublicFolder_fullPath, $testPrivateFolder_fullPath], [$testPhoto_fullPath]);
     }
 
+    /**
+     * @test
+     * @group       determinePhotosToDisplayForPath
+     * @testdox     When configuration indicates to include sub-folders, there is a subfolder, but no images, 
+     *              the determinePhotosToDisplayForPath method should return an empty array
+     * @testWith    ["/myPhotos/", true]
+     */
+    public function determinePhotosToDisplayForPath_recurse_noPhotos(string $virtualRoot, bool $includeSubFolders): void
+    {
+        // instantiate a slideshow
+        $slideshow = new WebSlideshow;
+
+        // create test folders and sub-folder
+        $testPublicFolder_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_FOLDER;
+        $testPrivateFolder_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PRIVATE_FOLDER;
+        $testPublicSubFolder_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_SUBFOLDER;
+        $this->createTestFilesAndFolders([$testPublicFolder_fullPath, $testPrivateFolder_fullPath, $testPublicSubFolder_fullPath]);
+
+        // set up inputs
+        $slideshowPath = WebSlideshowTest::TEST_PUBLIC_FOLDER;
+        $rootFolder = __DIR__ . DIRECTORY_SEPARATOR;
+        $inputs = [$slideshowPath, $rootFolder, $virtualRoot, $includeSubFolders];
+
+        // invoke the function
+        $photosReturned = $this->invokeMethod($slideshow, WebSlideshowTest::FUNCTION_NAME_DETERMINEPHOTOSTODISPLAYFORPATH, $inputs);
+        $this->assertEmpty($photosReturned);
+
+        // destroy test folders
+        $this->destroyTestFilesAndFolders([$testPublicSubFolder_fullPath, $testPublicFolder_fullPath, $testPrivateFolder_fullPath]);
+    }
+
 
     
     /**
      * @test
-     * @group buildSlidesHtml
-     * @testdox When an empty array (ie. there are no photos to build HTML for) is received by the buildSlidesHtml method, an empty string should be returned
-     * @testWith [[]]
+     * @group       buildSlidesHtml
+     * @testdox     When an empty array (ie. there are no photos to build HTML for) is received by the buildSlidesHtml method, 
+     *              an empty string should be returned
+     * @testWith    [[]]
      */
     public function buildSlidesHtml_emptyPhotosArray(?array $photosToDisplay): void
     {
@@ -113,9 +147,10 @@ final class WebSlideshowTest extends TestCase
 
     /**
      * @test
-     * @group buildSlidesHtml
-     * @testdox When a NULL input is received by the buildSlidesHtml method, a TypeError should be raised
-     * @testWith [null]
+     * @group       buildSlidesHtml
+     * @testdox     When a NULL input is received by the buildSlidesHtml method, 
+     *              a TypeError should be raised
+     * @testWith    [null]
      */
     public function buildSlidesHtml_nullPhotosArray(?array $photosToDisplay): void
     {
@@ -129,9 +164,11 @@ final class WebSlideshowTest extends TestCase
 
     /**
      * @test
-     * @group buildSlidesHtml
-     * @testdox When a single valid photo is received by the buildSlidesHtml method, a non-empty string should be returned, and it should contain an HTML image tag with the specified virtual path
-     * @testWith [[{"filename":"someFilename.jpg", "virtualLocation":"/some/virtual/location"}]]
+     * @group       buildSlidesHtml
+     * @testdox     When a single valid photo is received by the buildSlidesHtml method, 
+     *              a non-empty string should be returned,
+     *              and it should contain an HTML image tag with the specified virtual path
+     * @testWith    [[{"filename":"someFilename.jpg", "virtualLocation":"/some/virtual/location"}]]
      */
     public function buildSlidesHtml_singleValidPhoto(array $photosToDisplay): void
     {
@@ -149,9 +186,10 @@ final class WebSlideshowTest extends TestCase
 
     /**
      * @test
-     * @group buildSlidesHtml
-     * @testdox When the buildSlidesHtml method receives an array that does not contain the 'virtualLocation' index, an empty string should be returned
-     * @testWith [[{"filename":"someFilename.jpg"}]]
+     * @group       buildSlidesHtml
+     * @testdox     When the buildSlidesHtml method receives an array that does not contain the 'virtualLocation' index, 
+     *              an empty string should be returned
+     * @testWith    [[{"filename":"someFilename.jpg"}]]
      */
     public function buildSlidesHtml_missingVirtualLocationIndex(array $photosToDisplay): void
     {
@@ -165,9 +203,10 @@ final class WebSlideshowTest extends TestCase
 
     /**
      * @test
-     * @group buildSlidesHtml
-     * @testdox When the buildSlidesHtml method receives an array that does not contain the 'filename' index, an empty string should be returned
-     * @testWith [[{"virtualLocation":"/some/virtual/location"}]]
+     * @group       buildSlidesHtml
+     * @testdox     When the buildSlidesHtml method receives an array that does not contain the 'filename' index,
+     *              an empty string should be returned
+     * @testWith    [[{"virtualLocation":"/some/virtual/location"}]]
      */
     public function buildSlidesHtml_missingFilenameIndex(array $photosToDisplay): void
     {
@@ -181,9 +220,10 @@ final class WebSlideshowTest extends TestCase
 
     /**
      * @test
-     * @group buildSlidesHtml
-     * @testDox When the buildSlidesHtml method receives a properly formed array, but the 'virtualLocation' index is empty, an empty string should be returned
-     * @testWith [[{"filename":"someFilename.jpg", "virtualLocation":""}]]
+     * @group       buildSlidesHtml
+     * @testDox     When the buildSlidesHtml method receives a properly formed array, but the 'virtualLocation' index is empty,
+     *              an empty string should be returned
+     * @testWith    [[{"filename":"someFilename.jpg", "virtualLocation":""}]]
      */
     public function buildSlidesHtml_missingVirtualLocationData(array $photosToDisplay): void
     {
@@ -197,9 +237,10 @@ final class WebSlideshowTest extends TestCase
 
     /**
      * @test
-     * @group buildSlidesHtml
-     * @testDox When the buildSlidesHtml method receives a properly formed array, but the 'filename' index is empty, an empty string should be returned
-     * @testWith [[{"filename":"", "virtualLocation":"/some/virtual/location"}]]
+     * @group       buildSlidesHtml
+     * @testDox     When the buildSlidesHtml method receives a properly formed array, but the 'filename' index is empty,
+     *              an empty string should be returned
+     * @testWith    [[{"filename":"", "virtualLocation":"/some/virtual/location"}]]
      */
     public function buildSlidesHtml_missingFilenameData(array $photosToDisplay): void
     {
@@ -213,9 +254,11 @@ final class WebSlideshowTest extends TestCase
 
     /**
      * @test
-     * @group buildSlidesHtml
-     * @testDox When the buildSlidesHtml method receives an invalid slide before a valid one, it should still continue processing after the invalid slide and return HTML for the valid one
-     * @testWith [[{"filename":"someFilename.jpg", "virtualLocation":""}, {"filename":"someFilename.jpg", "virtualLocation":"/some/virtual/location"}]]
+     * @group       buildSlidesHtml
+     * @testDox     When the buildSlidesHtml method receives an invalid slide before a valid one,
+     *              it should still continue processing after the invalid slide
+     *              and return HTML for the valid one
+     * @testWith    [[{"filename":"someFilename.jpg", "virtualLocation":""}, {"filename":"someFilename.jpg", "virtualLocation":"/some/virtual/location"}]]
      */
     public function buildSlidesHtml_invalidSlideDoesNotAbortHtmlBuilding(array $photosToDisplay): void
     {
