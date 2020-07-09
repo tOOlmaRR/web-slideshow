@@ -6,7 +6,7 @@ use toolmarr\WebSlideshow\WebSlideshow;
 use toolmarr\WebSlideshowTests\TestHelpers;
 
 /**
- * @testdox     A WebSlideshow object
+ * @testDox     A WebSlideshow object
  */
 final class WebSlideshowTest extends TestCase
 {
@@ -23,7 +23,7 @@ final class WebSlideshowTest extends TestCase
     /**
      * @test
      * @group   Constructor
-     * @testdox Constructor should return an object that is an instance of the WebSlideshow class
+     * @testDox Constructor should return an object that is an instance of the WebSlideshow class
      */
     public function constructor_noParametersCreatesAnObject(): void
     {
@@ -37,7 +37,33 @@ final class WebSlideshowTest extends TestCase
     /**
      * @test
      * @group       determinePhotosToDisplayForPath
-     * @testdox     When there are no valid photos in the specified location (ie. public folder), 
+     * @testDox     When configuration does NOT include subfolders,
+     *              and the public folder does not exist
+     *              the determinePhotosToDisplayForPath method should return an empty array
+     * @testWith    ["/myPhotos/", false]
+     */
+    public function determinePhotosToDisplayForPath_noRecurse_noFolder(string $virtualRoot, bool $includeSubFolders): void
+    {
+        // instantiate a slideshow
+        $slideshow = new WebSlideshow;
+
+        // set up inputs
+        $slideshowPath = WebSlideshowTest::TEST_PUBLIC_FOLDER;
+        $rootFolder = __DIR__ . DIRECTORY_SEPARATOR;
+        $inputs = [$slideshowPath, $rootFolder, $virtualRoot, $includeSubFolders];
+
+        // invoke the function
+        $photosReturned = $this->invokeMethod($slideshow, WebSlideshowTest::FUNCTION_NAME_DETERMINEPHOTOSTODISPLAYFORPATH, $inputs);
+
+        // test assertions
+        $this->assertEmpty($photosReturned);
+    }
+
+    /**
+     * @test
+     * @group       determinePhotosToDisplayForPath
+     * @testDox     When configuration does NOT include subfolders,
+     *              and there are no valid photos in the public folder,
      *              the determinePhotosToDisplayForPath method should return an empty array
      * @testWith    ["/myPhotos/", false]
      */
@@ -69,7 +95,7 @@ final class WebSlideshowTest extends TestCase
     /**
      * @test
      * @group       determinePhotosToDisplayForPath
-     * @testdox     When configuration does NOT include sub-folders,
+     * @testDox     When configuration does NOT include subfolders,
      *              and there a single valid photo in the public folder,
      *              the determinePhotosToDisplayForPath method should return an array containing one photo
      * @testWith    ["/myPhotos/", false]
@@ -79,7 +105,7 @@ final class WebSlideshowTest extends TestCase
         // instantiate a slideshow
         $slideshow = new WebSlideshow;
 
-        // create test folders and file
+        // create test folders, subfolder, and file
         $testPublicFolder_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_FOLDER;
         $testPrivateFolder_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PRIVATE_FOLDER;
         $testPhoto_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_FOLDER . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_PHOTO;
@@ -104,7 +130,44 @@ final class WebSlideshowTest extends TestCase
     /**
      * @test
      * @group       determinePhotosToDisplayForPath
-     * @testdox     When configuration indicates to include sub-folders,
+     * @testDox     When configuration does NOT include subfolders,
+     *              and there IS a public subfolder,
+     *              and a photo within that subfolder
+     *              but no photos in the root public folder
+     *              the determinePhotosToDisplayForPath method should return an empty array
+     * @testWith    ["/myPhotos/", false]
+     */
+    public function determinePhotosToDisplayForPath_noRecurse_onePhotoInSubfolder(string $virtualRoot, bool $includeSubFolders): void
+    {
+        // instantiate a slideshow
+        $slideshow = new WebSlideshow;
+
+        // create test folders and file
+        $testPublicFolder_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_FOLDER;
+        $testPrivateFolder_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PRIVATE_FOLDER;
+        $testPublicSubFolder_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_SUBFOLDER;
+        $testPhoto_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_SUBFOLDER . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_PHOTO;
+        $this->createTestFilesAndFolders([$testPublicFolder_fullPath, $testPrivateFolder_fullPath, $testPublicSubFolder_fullPath], [$testPhoto_fullPath]);
+
+        // set up inputs
+        $slideshowPath = WebSlideshowTest::TEST_PUBLIC_FOLDER;
+        $rootFolder = __DIR__ . DIRECTORY_SEPARATOR;
+        $inputs = [$slideshowPath, $rootFolder, $virtualRoot, $includeSubFolders];
+        
+        // invoke the function
+        $photosReturned = $this->invokeMethod($slideshow, WebSlideshowTest::FUNCTION_NAME_DETERMINEPHOTOSTODISPLAYFORPATH, $inputs);
+
+        // test assertions
+        $this->assertEmpty($photosReturned);
+
+        // destroy test folders
+        $this->destroyTestFilesAndFolders([$testPublicSubFolder_fullPath, $testPublicFolder_fullPath, $testPrivateFolder_fullPath], [$testPhoto_fullPath]);
+    }
+
+    /**
+     * @test
+     * @group       determinePhotosToDisplayForPath
+     * @testDox     When configuration indicates to include subfolders,
      *              and there is a subfolder,
      *              but there are no photos in either folder, 
      *              the determinePhotosToDisplayForPath method should return an empty array
@@ -115,7 +178,7 @@ final class WebSlideshowTest extends TestCase
         // instantiate a slideshow
         $slideshow = new WebSlideshow;
 
-        // create test folders and sub-folder
+        // create test folders and subfolder
         $testPublicFolder_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_FOLDER;
         $testPrivateFolder_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PRIVATE_FOLDER;
         $testPublicSubFolder_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_SUBFOLDER;
@@ -139,7 +202,7 @@ final class WebSlideshowTest extends TestCase
     /**
      * @test
      * @group       determinePhotosToDisplayForPath
-     * @testDox     When configuration indicates to include sub-folders,
+     * @testDox     When configuration indicates to include subfolders,
      *              and there is a subfolder,
      *              and a single photo in the public root folder
      *              but no images in it's subfolder
@@ -151,7 +214,7 @@ final class WebSlideshowTest extends TestCase
         // instantiate a slideshow
         $slideshow = new WebSlideshow;
 
-        // create test folders and sub-folder
+        // create test folders, subfolder, and file
         $testPublicFolder_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_FOLDER;
         $testPrivateFolder_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PRIVATE_FOLDER;
         $testPublicSubFolder_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_SUBFOLDER;
@@ -179,7 +242,7 @@ final class WebSlideshowTest extends TestCase
     /**
      * @test
      * @group       buildSlidesHtml
-     * @testdox     When an empty array (ie. there are no photos to build HTML for) is received by the buildSlidesHtml method, 
+     * @testDox     When an empty array (ie. there are no photos to build HTML for) is received by the buildSlidesHtml method, 
      *              an empty string should be returned
      * @testWith    [[]]
      */
@@ -196,7 +259,7 @@ final class WebSlideshowTest extends TestCase
     /**
      * @test
      * @group       buildSlidesHtml
-     * @testdox     When a NULL input is received by the buildSlidesHtml method, 
+     * @testDox     When a NULL input is received by the buildSlidesHtml method, 
      *              a TypeError should be raised
      * @testWith    [null]
      */
@@ -213,7 +276,7 @@ final class WebSlideshowTest extends TestCase
     /**
      * @test
      * @group       buildSlidesHtml
-     * @testdox     When a single valid photo is received by the buildSlidesHtml method, 
+     * @testDox     When a single valid photo is received by the buildSlidesHtml method, 
      *              a non-empty string should be returned,
      *              and it should contain an HTML image tag with the specified virtual path
      * @testWith    [[{"filename":"someFilename.jpg", "virtualLocation":"/some/virtual/location"}]]
@@ -235,7 +298,7 @@ final class WebSlideshowTest extends TestCase
     /**
      * @test
      * @group       buildSlidesHtml
-     * @testdox     When the buildSlidesHtml method receives an array that does not contain the 'virtualLocation' index, 
+     * @testDox     When the buildSlidesHtml method receives an array that does not contain the 'virtualLocation' index, 
      *              an empty string should be returned
      * @testWith    [[{"filename":"someFilename.jpg"}]]
      */
@@ -252,7 +315,7 @@ final class WebSlideshowTest extends TestCase
     /**
      * @test
      * @group       buildSlidesHtml
-     * @testdox     When the buildSlidesHtml method receives an array that does not contain the 'filename' index,
+     * @testDox     When the buildSlidesHtml method receives an array that does not contain the 'filename' index,
      *              an empty string should be returned
      * @testWith    [[{"virtualLocation":"/some/virtual/location"}]]
      */
