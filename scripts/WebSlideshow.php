@@ -110,15 +110,21 @@ class WebSlideshow
                 }
             }
         } else {
-            $allPhotos = scandir($physicalFolderLocation);
-            for ($i = 0; $i < count($allPhotos); $i++) {
-                $fullPhysicalLocation = $physicalFolderLocation . $allPhotos[$i];
-                // weed out directories
-                if (!is_dir($fullPhysicalLocation)) {
-                    // this is a file... assume it's a photo and add it to the collection of photos to be displayed
-                    $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY] = $allPhotos[$i];
-                    $photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] = $virtualFolderLocation . $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY];
-                    $photosToDisplay[] = $photoToDisplay;
+            $allPhotos = [];
+            // if the target folder doesn't exist (is not a directory), return an empty array
+            if (!is_dir($physicalFolderLocation)) {
+                $photosToDisplay = [];
+            } else {
+                $allPhotos = scandir($physicalFolderLocation);
+                for ($i = 0; $i < count($allPhotos); $i++) {
+                    $fullPhysicalLocation = $physicalFolderLocation . $allPhotos[$i];
+                    // weed out directories
+                    if (!is_dir($fullPhysicalLocation)) {
+                        // this is a file... assume it's a photo and add it to the collection of photos to be displayed
+                        $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY] = $allPhotos[$i];
+                        $photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] = $virtualFolderLocation . $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY];
+                        $photosToDisplay[] = $photoToDisplay;
+                    }
                 }
             }
         }
