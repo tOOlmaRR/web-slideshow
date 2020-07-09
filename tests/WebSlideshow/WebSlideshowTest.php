@@ -58,6 +58,8 @@ final class WebSlideshowTest extends TestCase
 
         // invoke the function
         $photosReturned = $this->invokeMethod($slideshow, WebSlideshowTest::FUNCTION_NAME_DETERMINEPHOTOSTODISPLAYFORPATH, $inputs);
+
+        // test assertions
         $this->assertEmpty($photosReturned);
 
         // destroy test folders
@@ -67,8 +69,9 @@ final class WebSlideshowTest extends TestCase
     /**
      * @test
      * @group       determinePhotosToDisplayForPath
-     * @testdox     When there a single valid photo in the specified location (ie. public folder), 
-     *              the determinePhotosToDisplayForPath method should return a non-empty array of photos to display
+     * @testdox     When configuration does NOT include sub-folders,
+     *              and there a single valid photo in the public folder,
+     *              the determinePhotosToDisplayForPath method should return an array containing one photo
      * @testWith    ["/myPhotos/", false]
      */
     public function determinePhotosToDisplayForPath_noRecurse_onePhoto(string $virtualRoot, bool $includeSubFolders): void
@@ -89,7 +92,10 @@ final class WebSlideshowTest extends TestCase
 
         // invoke the function
         $photosReturned = $this->invokeMethod($slideshow, WebSlideshowTest::FUNCTION_NAME_DETERMINEPHOTOSTODISPLAYFORPATH, $inputs);
+
+        // test assertions
         $this->assertNotEmpty($photosReturned);
+        $this->assertTrue(sizeof($photosReturned) === 1);
 
         // destroy test folders
         $this->destroyTestFilesAndFolders([$testPublicFolder_fullPath, $testPrivateFolder_fullPath], [$testPhoto_fullPath]);
@@ -98,7 +104,9 @@ final class WebSlideshowTest extends TestCase
     /**
      * @test
      * @group       determinePhotosToDisplayForPath
-     * @testdox     When configuration indicates to include sub-folders, there is a subfolder, but no images, 
+     * @testdox     When configuration indicates to include sub-folders,
+     *              and there is a subfolder,
+     *              but there are no photos in either folder, 
      *              the determinePhotosToDisplayForPath method should return an empty array
      * @testWith    ["/myPhotos/", true]
      */
@@ -120,10 +128,50 @@ final class WebSlideshowTest extends TestCase
 
         // invoke the function
         $photosReturned = $this->invokeMethod($slideshow, WebSlideshowTest::FUNCTION_NAME_DETERMINEPHOTOSTODISPLAYFORPATH, $inputs);
+
+        // test assertions
         $this->assertEmpty($photosReturned);
 
         // destroy test folders
         $this->destroyTestFilesAndFolders([$testPublicSubFolder_fullPath, $testPublicFolder_fullPath, $testPrivateFolder_fullPath]);
+    }
+
+    /**
+     * @test
+     * @group       determinePhotosToDisplayForPath
+     * @testDox     When configuration indicates to include sub-folders,
+     *              and there is a subfolder,
+     *              and a single photo in the public root folder
+     *              but no images in it's subfolder
+     *              an array containing 1 photo should be returned
+     * @testWith    ["/myPhotos/", true]
+     */
+    public function determinePhotosToDisplayForPath_recurse_photoAtPublicRoot(string $virtualRoot, bool $includeSubFolders): void
+    {
+        // instantiate a slideshow
+        $slideshow = new WebSlideshow;
+
+        // create test folders and sub-folder
+        $testPublicFolder_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_FOLDER;
+        $testPrivateFolder_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PRIVATE_FOLDER;
+        $testPublicSubFolder_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_SUBFOLDER;
+        $testPhoto_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_FOLDER . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_PHOTO;
+        $this->createTestFilesAndFolders([$testPublicFolder_fullPath, $testPrivateFolder_fullPath, $testPublicSubFolder_fullPath], [$testPhoto_fullPath]);
+
+        // set up inputs
+        $slideshowPath = WebSlideshowTest::TEST_PUBLIC_FOLDER;
+        $rootFolder = __DIR__ . DIRECTORY_SEPARATOR;
+        $inputs = [$slideshowPath, $rootFolder, $virtualRoot, $includeSubFolders];
+
+        // invoke the function
+        $photosReturned = $this->invokeMethod($slideshow, WebSlideshowTest::FUNCTION_NAME_DETERMINEPHOTOSTODISPLAYFORPATH, $inputs);
+
+        // test assertions
+        $this->assertNotEmpty($photosReturned);
+        $this->assertTrue(sizeof($photosReturned) === 1);
+
+        // destroy test folders
+        $this->destroyTestFilesAndFolders([$testPublicSubFolder_fullPath, $testPublicFolder_fullPath, $testPrivateFolder_fullPath], [$testPhoto_fullPath]);
     }
 
 
