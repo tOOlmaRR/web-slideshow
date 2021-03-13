@@ -44,9 +44,9 @@
             <span class="slideshowSpeed">
                 <label for="slideshowSpeed">Slideshow Speed: </label>
                 <span class="currentSlideshowSpeed">
-                    <output id="currentSlideshowSpeed" name="currentSlideshowSpeed">5</output><span> seconds</span>
+                    <output id="currentSlideshowSpeed" name="currentSlideshowSpeed">30</output><span> seconds</span>
                 </span>
-                <input type="range" id="slideshowSpeed" name="slideshowSpeed" min="1" max="120" step="1" value="5"
+                <input type="range" id="slideshowSpeed" name="slideshowSpeed" min="5" max="120" step="5" value="30"
                     oninput="currentSlideshowSpeed.value = slideshowSpeed.value" />
                 <span>
                     <input type="checkbox" id="haltSlideshow" name="haltSlideshowToggle" value="halt" onclick="haltSlideshow(this)" />
