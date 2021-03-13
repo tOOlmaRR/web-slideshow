@@ -106,8 +106,8 @@ class WebSlideshow
         if ($includeSubFolders) {
             $objects = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($physicalFolderLocation), \RecursiveIteratorIterator::SELF_FIRST);
             foreach ($objects as $name => $object) {
-                // weed out directories
-                if (!is_dir($name)) {
+                // weed out directories and thumbs.db files
+                if (!is_dir($name) && !stripos($name, '.db')) {
                     $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY] = $object->getFileName();
                     
                     // build the virtual location
@@ -138,8 +138,8 @@ class WebSlideshow
                 $allPhotos = scandir($physicalFolderLocation);
                 for ($i = 0; $i < count($allPhotos); $i++) {
                     $fullPhysicalLocation = $physicalFolderLocation . $allPhotos[$i];
-                    // weed out directories
-                    if (!is_dir($fullPhysicalLocation)) {
+                    // weed out directories and thumbs.db files
+                    if (!is_dir($fullPhysicalLocation) && !stripos($fullPhysicalLocation, '.db')) {
                         // this is a file... assume it's a photo and add it to the collection of photos to be displayed
                         $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY] = $allPhotos[$i];
                         $photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] = $virtualFolderLocation . $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY];
