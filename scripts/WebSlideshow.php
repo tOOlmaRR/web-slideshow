@@ -102,6 +102,11 @@ class WebSlideshow
         $physicalFolderLocation = str_replace("\ ", "%20", $physicalFolderLocation);
         $virtualFolderLocation = $virtualRoot . str_replace("\\", "/", $physicalPath);
 
+        // if the target folder doesn't exist (is not a directory), return an empty array
+        if (!is_dir($physicalFolderLocation)) {
+            return [];
+        }
+
         // Recursively include subfolders if configured to do so; otherwise, skip them
         if ($includeSubFolders) {
             $objects = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($physicalFolderLocation), \RecursiveIteratorIterator::SELF_FIRST);
@@ -112,7 +117,7 @@ class WebSlideshow
                 $photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] = $virtualLocation;
                 
                 // determine current image properties; ignore anything that doesn't appear to be an image
-                if (!@list($width, $height, $type, $attr) = getimagesize($name)) {
+                if (!@list($width, $height) = getimagesize($name)) {
                     continue;
                 }
 
@@ -128,35 +133,29 @@ class WebSlideshow
                 $photosToDisplay[] = $photoToDisplay;
             }
         } else {
-            $allPhotos = [];
-            // if the target folder doesn't exist (is not a directory), return an empty array
-            if (!is_dir($physicalFolderLocation)) {
-                $photosToDisplay = [];
-            } else {
-                $allPhotos = scandir($physicalFolderLocation);
-                for ($i = 0; $i < count($allPhotos); $i++) {
-                    // determine full phsyical location
-                    $fullPhysicalLocation = $physicalFolderLocation . $allPhotos[$i];
-                    
-                    // build the virtual location
-                    $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY] = $allPhotos[$i];
-                    $photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] = $virtualFolderLocation . $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY];
+            $allPhotos = scandir($physicalFolderLocation);
+            for ($i = 0; $i < count($allPhotos); $i++) {
+                // determine full phsyical location
+                $fullPhysicalLocation = $physicalFolderLocation . $allPhotos[$i];
+                
+                // build the virtual location
+                $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY] = $allPhotos[$i];
+                $photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] = $virtualFolderLocation . $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY];
 
-                    // determine current image properties; ignore anything that doesn't appear to be an image
-                    if (!@list($width, $height, $type, $attr) = getimagesize($fullPhysicalLocation)) {
-                        continue;
-                    }
-
-                    // proportionally resize the image's dimensions
-                    $newImageDimensions = $this->optimizePhotoSize($width, $height);
-                        
-                    // build the photo object and it to the list
-                    $photoToDisplay['originalWidth'] = $width;
-                    $photoToDisplay['originalHeight'] = $height;
-                    $photoToDisplay['width'] = $newImageDimensions['width'];
-                    $photoToDisplay['height'] = $newImageDimensions['height'];
-                    $photosToDisplay[] = $photoToDisplay;
+                // determine current image properties; ignore anything that doesn't appear to be an image
+                if (!@list($width, $height) = getimagesize($fullPhysicalLocation)) {
+                    continue;
                 }
+
+                // proportionally resize the image's dimensions
+                $newImageDimensions = $this->optimizePhotoSize($width, $height);
+                    
+                // build the photo object and it to the list
+                $photoToDisplay['originalWidth'] = $width;
+                $photoToDisplay['originalHeight'] = $height;
+                $photoToDisplay['width'] = $newImageDimensions['width'];
+                $photoToDisplay['height'] = $newImageDimensions['height'];
+                $photosToDisplay[] = $photoToDisplay;
             }
         }
         return $photosToDisplay;
