@@ -12,8 +12,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@master
-    - uses: nanasess/setup-php@master
+    - name: Checkout
+      uses: actions/checkout@master
+    
+    - name: Set PHP Version
+      uses: nanasess/setup-php@master
       with:
         php-version: '7.4'
 
