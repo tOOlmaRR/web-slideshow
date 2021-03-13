@@ -3,6 +3,7 @@
 This is a web application that can display custom slideshows in a browser for locally-stored photos.
 
 ## Features
+1. **Photo Resizing** - automatically resizes photos and slides based on the client's current viewport height. This is accomplished by a redirect and via query string paramaters.
 1. **Manual Controls** - at any time you can move forward or backward in the current slideshow. This does not halt the slideshow in progress, but it does restart the timer.
 1. **Slideshow Speed** - a slider control in the UI controls how long each slide will be displayed for. Changes take effect after transitioning to the next slide.
 1. **Randomize Option** - allows you to randomize the slides in the current slideshow. Changes take effect immediately.
@@ -64,7 +65,7 @@ $configuration["physicalRoots"] = $physicalRoots;
 
 ## Currently Known Bugs and Limitations
 ### Root Folders and Virtual Paths are Hardcoded
-While this web application does support separate root folders and virtual paths for public and private slideshows, those values are hardcoded in the PHP Slideshow Control. Current settings are:
+This web application supports separate root folders and virtual paths for public and private slideshows. These values are defined in the mainConfig.php file, and out-of-the-box are set to:
 - **Public**
     - Virtual Path: /myphotos/private/
     - Physical Path: E:\\MyPhotos\\
@@ -72,7 +73,7 @@ While this web application does support separate root folders and virtual paths 
     - Virtual Path: /myphotos/
     - Physical Path: E:\\MyPhotos\\Private\\
 
-This means that you'll need to bind these virtual folders to their associated physical paths in your web server configuration. For example, in Apache (httpd.config):
+You will need to bind these virtual folders to their associated physical paths in your web server configuration. For example, in Apache (httpd.config):
 
 ```html
     #-E-drive folders for the TEST Web-Slideshow Web App
@@ -91,13 +92,16 @@ This means that you'll need to bind these virtual folders to their associated ph
 A block of HTML is added to the webpage for every single file within each of the configured folders for a slideshow. This means that the page source can grow uncontrollably if your slideshow simply contains too many images. In addition, all images are loaded in at load time, compounding the issue. In addition, length and width of images aren't specificed in the HTML, so all images are loaded in their original form.<br>
 So how many images are too many you ask? A test run containing 470 images lower resolution images (most were under 1MB) loaded in 23 seconds and loaded 141MB. Another test run with 693 higher quality images (averaging about 5MB per photo) from multiple folders was not so fun, loading 1614MB in just under 5 minutes, and only about half of the images were loaded in memory at this point. So it's safe to say that size matters!
 
-### Slideshows Include All Files Found
-The Slideshow Control doesn't restrict itself to only images. If the folder(s) in your slideshow include other file types, it will try to include those as images in the slideshow.
-
 ### No Exclusion Option
 In the case that you've configured a slideshow to include subfolders, you cannot exclude certain folders from the resulting directory tree.
 
 ## History
+
+### v3.1
+- detect current viewport height, redirect, and use that value to proportionally resize slides and images, taking the 'chrome' into account
+- include original and resized dimensions in the slide
+- ignore out all non-image files
+- adjust default slideshow speed to 30 seconds and increment to 5 seconds
 
 ### v3.0
 - transformed the slideshowControl file into a class and updated the application as needed
