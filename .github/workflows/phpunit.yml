@@ -14,13 +14,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
     
-      - name: Set PHP Version
-        uses: nanasess/setup-php@master
-        with:
-          php-version: '7.4'
-
       - name: Composer Install
         uses: php-actions/composer@v1
+        with:
+          php-version: '7.4'
 
       - name: PHP Unit Tests
         run: vendor/bin/phpunit tests --configuration ./tests --coverage-clover ./tests/results/coverage.xml --debug --log-junit ./tests/results/testResults.xml --verbose
