@@ -8,7 +8,12 @@ class WebSlideshow
     
     const CONFIG_SLIDESHOW_VISIBILITY_PUBLIC_KEY = "public";
 
-    const SLIDE_MAX_HEIGHT = 500;
+    public int $maxHeight;
+
+    public function __construct(int $viewportHeight)
+    {
+        $this->maxHeight = $viewportHeight - 100;
+    }
 
     public function renderSlideshowDropdown($config, $selectedSlideshow)
     {
@@ -161,8 +166,8 @@ class WebSlideshow
     private function optimizePhotoSize($width, $height) : array
     {
         $newImageDimensions = array();
-        $newImageDimensions['width'] = ceil((WebSlideshow::SLIDE_MAX_HEIGHT * $width) / $height);
-        $newImageDimensions['height'] = WebSlideshow::SLIDE_MAX_HEIGHT;
+        $newImageDimensions['width'] = ceil(($this->maxHeight * $width) / $height);
+        $newImageDimensions['height'] = $this->maxHeight;
         return $newImageDimensions;
     }
 

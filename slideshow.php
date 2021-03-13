@@ -1,11 +1,28 @@
 <?php
-    require_once('vendor/autoload.php');
-    require_once('scripts/mainConfig.php');
-
     use toolmarr\WebSlideshow\WebSlideshow;
-    
-    // instantiate the Slideshow
-    $slideshow = new WebSlideshow();
+
+    $maxHeight = 1000;
+    if (!isset($_GET['r'])) {
+        echo "<script language=\"JavaScript\">
+        <!--
+        let maxHeight = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+        document.location=\"$_SERVER[PHP_SELF]?r=1&height=\" + maxHeight;
+        //-->
+        </script>";
+    }
+    else {
+        // Code to be displayed if resolution is detected
+        if (isset($_GET['height'])) {
+            // Resolution detected
+            $maxHeight = $_GET['height'];
+        }
+        
+        require_once('vendor/autoload.php');
+        require_once('scripts/mainConfig.php');
+        
+        // instantiate the Slideshow
+        $slideshow = new WebSlideshow($maxHeight);
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en" xml:lang="en">
