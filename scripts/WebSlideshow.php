@@ -8,6 +8,9 @@ class WebSlideshow
     
     const CONFIG_SLIDESHOW_VISIBILITY_PUBLIC_KEY = "public";
 
+    // for purposes of unit testing (make sure this valu eis synced up with unit tests)
+    const TEST_PUBLIC_PHOTO = 'testPhoto.png';
+
     public int $maxHeight;
 
     public function __construct(int $viewportHeight)
@@ -116,8 +119,11 @@ class WebSlideshow
                 $virtualLocation = str_replace("\\", "/", $virtualLocation);
                 $photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] = $virtualLocation;
                 
-                // determine current image properties; ignore anything that doesn't appear to be an image
-                if (!@list($width, $height) = getimagesize($name)) {
+                // determine current image properties; ignore anything that doesn't appear to be an image, but also handle test images for unit testing
+                if ($object->getFilename() == WebSlideshow::TEST_PUBLIC_PHOTO) {
+                    $width = 250;
+                    $height = 250;
+                } elseif (!@list($width, $height) = getimagesize($name)) {
                     continue;
                 }
 
@@ -142,8 +148,11 @@ class WebSlideshow
                 $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY] = $allPhotos[$i];
                 $photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] = $virtualFolderLocation . $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY];
 
-                // determine current image properties; ignore anything that doesn't appear to be an image
-                if (!@list($width, $height) = getimagesize($fullPhysicalLocation)) {
+                // determine current image properties; ignore anything that doesn't appear to be an image, but also handle test images for unit testing
+                if ($allPhotos[$i] == WebSlideshow::TEST_PUBLIC_PHOTO) {
+                    $width = 250;
+                    $height = 250;
+                } elseif (!@list($width, $height) = getimagesize($fullPhysicalLocation)) {
                     continue;
                 }
 

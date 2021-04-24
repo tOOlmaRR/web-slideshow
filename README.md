@@ -95,12 +95,39 @@ So how many images are too many you ask? A test run containing 470 images lower 
 ### No Exclusion Option
 In the case that you've configured a slideshow to include subfolders, you cannot exclude certain folders from the resulting directory tree.
 
+## Technical Notes
+### Running Unit Tests
+In the terminal / command window, navigate to the root folder and type the following command to run all unit tests:
+```
+vendor/bin/phpunit tests --configuration ./tests --coverage-clover ./tests/results/coverage.xml --debug --log-junit ./tests/results/testResults.xml --verbose
+```
+
+### Setting up Apache Web Server to Allow Requests from LAN
+1. Set the "ServerName" value in the Apache httpd.conf file to your IP (if you connect to the LAN using DHCP, this will change from time to time) on port 80.
+    ```
+    ServerName 192.168.0.29:80
+    ```
+1. Set the "Listen" value to all IP addresses on 80:
+    ```
+    Listen *:80
+    ```
+1. Find your "DocumentRoot" setting and it's accompanying Directory node and set up "Require" statements for each IP address or IP range you want to serve content to:
+    ```
+        Require host localhost
+        Require ip 127.0.0.1
+        Require ip 192.168 
+    ```
+1. Open up your firewall to allow internal incoming requests on port 80 for Apache
+    - In Windows 10, you will likely need to navigate to Update & Security > Windows Security > Firewall & Network Protection, and click on the Advanced Settings link near the bottom.
+    - You then need to go to the Inbound rules, find Apache Web Server, and either change an existing rule or set up a new rule to allow local port 80 and local IP addresses of your choosing (potentially, 192.168.0.0 to 192.168.0.255). You may need to set this for one profile or another (public or private - I needed public apparently).
+
+
 ## History
 
 ### v3.1
 - detect current viewport height, redirect, and use that value to proportionally resize slides and images, taking the 'chrome' into account
 - include original and resized dimensions in the slide
-- ignore out all non-image files
+- ignore all non-image files
 - adjust default slideshow speed to 30 seconds and increment to 5 seconds
 
 ### v3.0
