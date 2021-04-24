@@ -130,7 +130,7 @@ class WebSlideshow
                 // proportionally resize the image's dimensions
                 $newImageDimensions = $this->optimizePhotoSize($width, $height);
                 
-                // build the photo object and it to the list
+                // build the photo object and add it to the list
                 $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY] = $object->getFileName();
                 $photoToDisplay['originalWidth'] = $width;
                 $photoToDisplay['originalHeight'] = $height;
@@ -141,7 +141,7 @@ class WebSlideshow
         } else {
             $allPhotos = scandir($physicalFolderLocation);
             for ($i = 0; $i < count($allPhotos); $i++) {
-                // determine full phsyical location
+                // determine full physical location
                 $fullPhysicalLocation = $physicalFolderLocation . $allPhotos[$i];
                 
                 // build the virtual location
@@ -159,7 +159,7 @@ class WebSlideshow
                 // proportionally resize the image's dimensions
                 $newImageDimensions = $this->optimizePhotoSize($width, $height);
                     
-                // build the photo object and it to the list
+                // build the photo object and add it to the list
                 $photoToDisplay['originalWidth'] = $width;
                 $photoToDisplay['originalHeight'] = $height;
                 $photoToDisplay['width'] = $newImageDimensions['width'];
