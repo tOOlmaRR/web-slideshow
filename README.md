@@ -73,7 +73,7 @@ This web application supports separate root folders and virtual paths for public
     - Virtual Path: /myphotos/
     - Physical Path: E:\\MyPhotos\\Private\\
 
-You will need to bind these virtual folders to their associated physical paths in your web server configuration. For example, in Apache (httpd.config):
+You will need to bind these virtual folders to their associated physical paths in your web server configuration. For example, in Apache (httpd.conf):
 
 ```html
     #-E-drive folders for the TEST Web-Slideshow Web App

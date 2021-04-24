@@ -8,7 +8,7 @@ class WebSlideshow
     
     const CONFIG_SLIDESHOW_VISIBILITY_PUBLIC_KEY = "public";
 
-    // for purposes of unit testing (make sure this valu eis synced up with unit tests)
+    // for purposes of unit testing (ensure this value is synced up with unit tests)
     const TEST_PUBLIC_PHOTO = 'testPhoto.png';
 
     public int $maxHeight;
