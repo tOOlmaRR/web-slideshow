@@ -8,6 +8,16 @@ class WebSlideshow
     
     const CONFIG_SLIDESHOW_VISIBILITY_PUBLIC_KEY = "public";
 
+    // for purposes of unit testing (ensure this value is synced up with unit tests)
+    const TEST_PUBLIC_PHOTO = 'testPhoto.png';
+
+    public int $maxHeight;
+
+    public function __construct(int $viewportHeight)
+    {
+        $this->maxHeight = $viewportHeight - 100;
+    }
+
     public function renderSlideshowDropdown($config, $selectedSlideshow)
     {
         $allSlideshows = $config["allSlideshows"];
@@ -95,37 +105,78 @@ class WebSlideshow
         $physicalFolderLocation = str_replace("\ ", "%20", $physicalFolderLocation);
         $virtualFolderLocation = $virtualRoot . str_replace("\\", "/", $physicalPath);
 
+        // if the target folder doesn't exist (is not a directory), return an empty array
+        if (!is_dir($physicalFolderLocation)) {
+            return [];
+        }
+
         // Recursively include subfolders if configured to do so; otherwise, skip them
         if ($includeSubFolders) {
             $objects = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($physicalFolderLocation), \RecursiveIteratorIterator::SELF_FIRST);
             foreach ($objects as $name => $object) {
-                // weed out directories
-                if (!is_dir($name)) {
-                    $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY] = $object->getFileName();
-                    // build the virtual location
-                    $virtualLocation = $virtualFolderLocation . substr($object->getPathName(), strpos($object->getPathName(), $physicalPath) + strlen($physicalPath));
-                    $virtualLocation = str_replace("\\", "/", $virtualLocation);
-                    $photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] = $virtualLocation;
-                    $photosToDisplay[] = $photoToDisplay;
+                // build the virtual location
+                $virtualLocation = $virtualFolderLocation . substr($object->getPathName(), strpos($object->getPathName(), $physicalPath) + strlen($physicalPath));
+                $virtualLocation = str_replace("\\", "/", $virtualLocation);
+                $photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] = $virtualLocation;
+                
+                // determine current image properties; ignore anything that doesn't appear to be an image, but also handle test images for unit testing
+                if ($object->getFilename() == WebSlideshow::TEST_PUBLIC_PHOTO) {
+                    $width = 250;
+                    $height = 250;
+                } elseif (!@list($width, $height) = getimagesize($name)) {
+                    continue;
                 }
+
+                // proportionally resize the image's dimensions
+                $newImageDimensions = $this->optimizePhotoSize($width, $height);
+                
+                // build the photo object and it to the list
+                $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY] = $object->getFileName();
+                $photoToDisplay['originalWidth'] = $width;
+                $photoToDisplay['originalHeight'] = $height;
+                $photoToDisplay['width'] = $newImageDimensions['width'];
+                $photoToDisplay['height'] = $newImageDimensions['height'];
+                $photosToDisplay[] = $photoToDisplay;
             }
         } else {
             $allPhotos = scandir($physicalFolderLocation);
             for ($i = 0; $i < count($allPhotos); $i++) {
+                // determine full phsyical location
                 $fullPhysicalLocation = $physicalFolderLocation . $allPhotos[$i];
-                // weed out directories
-                if (!is_dir($fullPhysicalLocation)) {
-                    // this is a file... assume it's a photo and add it to the collection of photos to be displayed
-                    $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY] = $allPhotos[$i];
-                    $photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] = $virtualFolderLocation . $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY];
-                    $photosToDisplay[] = $photoToDisplay;
+                
+                // build the virtual location
+                $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY] = $allPhotos[$i];
+                $photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] = $virtualFolderLocation . $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY];
+
+                // determine current image properties; ignore anything that doesn't appear to be an image, but also handle test images for unit testing
+                if ($allPhotos[$i] == WebSlideshow::TEST_PUBLIC_PHOTO) {
+                    $width = 250;
+                    $height = 250;
+                } elseif (!@list($width, $height) = getimagesize($fullPhysicalLocation)) {
+                    continue;
                 }
+
+                // proportionally resize the image's dimensions
+                $newImageDimensions = $this->optimizePhotoSize($width, $height);
+                    
+                // build the photo object and it to the list
+                $photoToDisplay['originalWidth'] = $width;
+                $photoToDisplay['originalHeight'] = $height;
+                $photoToDisplay['width'] = $newImageDimensions['width'];
+                $photoToDisplay['height'] = $newImageDimensions['height'];
+                $photosToDisplay[] = $photoToDisplay;
             }
         }
         return $photosToDisplay;
     }
 
-
+    private function optimizePhotoSize($width, $height) : array
+    {
+        $newImageDimensions = array();
+        $newImageDimensions['width'] = ceil(($this->maxHeight * $width) / $height);
+        $newImageDimensions['height'] = $this->maxHeight;
+        return $newImageDimensions;
+    }
 
     // Builds the HTML for all slides
     private function buildSlidesHtml(array $photosToDisplay) : string
@@ -137,10 +188,10 @@ class WebSlideshow
                 && !empty($photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY])
                 && !empty($photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY])
             ) {
-                $slideshowHtml = $slideshowHtml . "            <div class=\"mySlides fade c" . $number . "\">";
+                $slideshowHtml = $slideshowHtml . "            <div class=\"mySlides fade c" . $number . "\" style=\"height: " . (intval($photoToDisplay['height'])+100) . "px;\">";
                 $slideshowHtml = $slideshowHtml . "                <div class=\"numbertext\">" . ($number + 1) . " / " . count($photosToDisplay) . "</div>";
-                $slideshowHtml = $slideshowHtml . "                <img src=\"" . $photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] . "\">";
-                $slideshowHtml = $slideshowHtml . "                <div class=\"text\"><span class=\"filename\">" . $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY] . "</span></div>";
+                $slideshowHtml = $slideshowHtml . "                <img width=\"$photoToDisplay[width]\" height=\"$photoToDisplay[height]\" src=\"" . $photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] . "\">";
+                $slideshowHtml = $slideshowHtml . "                <div class=\"text\"><span class=\"filename\">" . $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY] . "</span><span class=\"dimensions\">$photoToDisplay[originalWidth]x$photoToDisplay[originalHeight] resized to $photoToDisplay[width]x$photoToDisplay[height]<span></div>";
                 $slideshowHtml = $slideshowHtml . "            </div>";
             }
         }
