@@ -1,6 +1,8 @@
 <?php
 namespace toolmarr\WebSlideshow;
 
+use toolmarr\WebSlideshow\DAL\EntityFactory;
+
 class FileScanner
 {
     public string $scanLog;
@@ -10,12 +12,14 @@ class FileScanner
         $this->scanLog = "Please paste in the full folder path to scan above and click SUBMIT to scan all images into the database";
     }
 
-    public function scanFolders($inputs)
+    public function scanFolders(array $inputs, array $config)
     {
         // pull data from the inputs
         $inputScanFolder = $inputs['folder'];
+        $secureImages = $inputs['secureImages'];
         $recurse = $inputs['recurse'];
         $tags = $inputs['tags'];
+        $secureTags = $inputs['secureTags'];
 
         $this->scanLog = "You requested to scan the following folder: " . $_POST['folder'];
         
@@ -30,19 +34,27 @@ class FileScanner
         // Recursive folder scan?
         $recurse ? $this->scanLog .= PHP_EOL . "You requested to scan this folder and it's sub-folders." 
             : $this->scanLog .= PHP_EOL . "You requested to scan only this folder.";
+
+        // Secure Images?
+        $secureImages ? $this->scanLog .= PHP_EOL . "You requested to keep the images secured." 
+            : $this->scanLog .= PHP_EOL . "Images will be public.";
         
         // Tag images?
         !empty($tags) ? $this->scanLog .= PHP_EOL . "You requested to add the following tags to all scanned images: " . $tags 
             : $this->scanLog .= PHP_EOL . "You did not request to add tags to any scanned images: ";
         
+        // Secure Tags?
+        $secureTags ? $this->scanLog .= PHP_EOL . "You requested to keep the tags secured." 
+            : $this->scanLog .= PHP_EOL . "Tags will be public.";
+        
         if ($recurse) {
-            $this->scanFolderAndSubFolders($inputs);
+            $this->scanFolderAndSubFolders($inputs, $config);
         } else {
-            $this->scanSingleFolder($inputs);
+            $this->scanSingleFolder($inputs, $config);
         }
     }
 
-    public function scanFolderAndSubFolders(array $inputs)
+    public function scanFolderAndSubFolders(array $inputs, array $config)
     {
         $this->scanLog .= PHP_EOL . "Beginning Recursive Scan...";
         $objects = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($inputs['folder']), \RecursiveIteratorIterator::SELF_FIRST);
@@ -52,13 +64,16 @@ class FileScanner
             if ($object->getFilename() == WebSlideshow::TEST_PUBLIC_PHOTO || @list($width, $height) = getimagesize($name)) {
                 $filesToProcess[] = $name;
                 $this->scanLog .= PHP_EOL . "Processing: " . $name;
+                $entityFactory = new EntityFactory($config['database']);
+                $db = $entityFactory->getDatabaseConnection();
+                //$db->beginTransaction();
             } else {
                 $this->scanLog .= PHP_EOL . "Ignoring: " . $name;
             }
         }
     }
 
-    public function scanSingleFolder(array $inputs)
+    public function scanSingleFolder(array $inputs, array $config)
     {
         $this->scanLog .= PHP_EOL . "Beginning Single Folder Scan...";
         $allPhotos = scandir($inputs['folder']);
