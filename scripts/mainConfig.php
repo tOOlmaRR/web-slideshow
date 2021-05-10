@@ -1,6 +1,15 @@
 <?php
 $configuration = array();
 
+// Configure database connection
+$database = array();
+$database['type'] = 'mssql';
+$database['host'] = "MARR2\\GMARRMSSQL1";
+$database['name'] = "WebSlideshow-DEV";
+$database['user'] = "Urgele1";
+$database['password'] = "goldmOOn78!";
+$configuration["database"] = $database;
+
 // Configure public and private root paths
 $virtualRoots = array();
 $virtualRoots["public"] = "/myphotos/";
