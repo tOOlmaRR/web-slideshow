@@ -47,7 +47,7 @@ class BaseEntity implements iEntity
         throw new \Exception("Function has not been implemented");
     }
 
-    public function insert($objectToInsert)
+    public function insert()
     {
         throw new \Exception("Function has not been implemented");
     }

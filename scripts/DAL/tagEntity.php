@@ -3,16 +3,11 @@ namespace toolmarr\WebSlideshow\DAL;
 
 use toolmarr\WebSlideshow\DAL\iEntity;
 
-class ImageEntity extends BaseEntity implements iEntity
+class TagEntity extends BaseEntity implements iEntity
 {
     // private members
-    public $imageID;
-    public $fullFilePath;
-    public $fileName;
-    public $originalFileName;
-    public $width;
-    public $height;
-    public $orientation;
+    public $tagID;
+    public $tag;
     public $secure;
     
     

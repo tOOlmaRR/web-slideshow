@@ -28,8 +28,14 @@ class FileScanner
             $this->scanLog .= PHP_EOL . "ERROR: Requested folder does not exist or is not a folder!";
             return;
         }
-        
         $this->scanLog .= PHP_EOL . "Requested folder has been found!";
+
+        // build tag list from input
+        $rawTagList = explode(',', $tags);
+        foreach ($rawTagList as $rawTag) {
+            $tagList[] = trim($rawTag, ' ');
+        }
+        $inputs['tags'] = $tagList;
         
         // Recursive folder scan?
         $recurse ? $this->scanLog .= PHP_EOL . "You requested to scan this folder and it's sub-folders." 
@@ -40,7 +46,7 @@ class FileScanner
             : $this->scanLog .= PHP_EOL . "Images will be public.";
         
         // Tag images?
-        !empty($tags) ? $this->scanLog .= PHP_EOL . "You requested to add the following tags to all scanned images: " . $tags 
+        !empty($tagList) ? $this->scanLog .= PHP_EOL . "You requested to add the following tags to all scanned images: " . implode(',', $tagList) 
             : $this->scanLog .= PHP_EOL . "You did not request to add tags to any scanned images: ";
         
         // Secure Tags?
@@ -59,13 +65,13 @@ class FileScanner
         $this->scanLog .= PHP_EOL . "Beginning Recursive Scan...";
         $objects = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($inputs['folder']), \RecursiveIteratorIterator::SELF_FIRST);
         $filesToProcess = array();
+        $entityFactory = new EntityFactory($config['database']);
+        $db = $entityFactory->getDatabaseConnection();
         foreach ($objects as $name => $object) {
             // determine current image properties; ignore anything that doesn't appear to be an image, but also handle test images for unit testing
             if ($object->getFilename() == WebSlideshow::TEST_PUBLIC_PHOTO || @list($width, $height) = getimagesize($name)) {
                 $filesToProcess[] = $name;
                 $this->scanLog .= PHP_EOL . "Processing: " . $name;
-                $entityFactory = new EntityFactory($config['database']);
-                $db = $entityFactory->getDatabaseConnection();
                 //$db->beginTransaction();
             } else {
                 $this->scanLog .= PHP_EOL . "Ignoring: " . $name;
@@ -77,6 +83,10 @@ class FileScanner
     {
         $this->scanLog .= PHP_EOL . "Beginning Single Folder Scan...";
         $allPhotos = scandir($inputs['folder']);
+
+        $entityFactory = new EntityFactory($config['database']);
+        $db = $entityFactory->getDatabaseConnection();
+
         for ($i = 0; $i < count($allPhotos); $i++) {
             // determine current image properties; ignore anything that doesn't appear to be an image, but also handle test images for unit testing
             $filename = $allPhotos[$i];
@@ -84,6 +94,36 @@ class FileScanner
             if ($fullFilePath == WebSlideshow::TEST_PUBLIC_PHOTO || @list($width, $height) = getimagesize($fullFilePath)) {
                 $filesToProcess[] = $fullFilePath;
                 $this->scanLog .= PHP_EOL . "Processing: " . $fullFilePath;
+                //$db->beginTransaction();
+                
+                // build image
+                $imageEntity = $entityFactory->getEntity('image');
+                $imageEntity->fullFilePath = $fullFilePath;
+                $imageEntity->fileName = $filename;
+                $imageEntity->originalFileName = $filename;
+                $imageEntity->width = $width;
+                $imageEntity->height = $height;
+                $imageEntity->orientation = $width > $height ? 'landscape' : 'portrait';
+                $imageEntity->secure = $inputs['secureImages'];
+                $imageEntity->insert();
+                //var_dump($imageEntity);
+
+                // build tag and mappings
+                foreach ($inputs['tags'] as $tag) {
+                    $tagEntity = $entityFactory->getEntity('tag');
+                    $tagEntity->tag = $tag;
+                    $tagEntity->secure = $inputs['secureTags'];
+                    $tagEntity->insert();
+                    //var_dump($tagEntity);
+
+                    $taggedImageEntity = $entityFactory->getEntity('taggedImage');
+                    $taggedImageEntity->imageID = $imageEntity->imageID;
+                    $taggedImageEntity->tagID = $tagEntity->tagID;
+                    $taggedImageEntity->insert();
+                    //var_dump($taggedImageEntity);
+                }
+                //$db->commit();
+
             } else {
                 $this->scanLog .= PHP_EOL . "Ignoring: " . $fullFilePath;
             }

@@ -5,5 +5,5 @@ interface iEntity
 {
     public function get($objectToFind);
     
-    public function insert($objectToInsert);
+    public function insert();
 }
