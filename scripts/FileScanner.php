@@ -36,6 +36,10 @@ class FileScanner
             $tagList[] = trim($rawTag, ' ');
         }
         $inputs['tags'] = $tagList;
+
+        // reinterpret the checkboxes and radio buttons as bits
+        $inputs['secureImages'] = $inputs['secureImages'] == 'on' ? 1 : 0;
+        $inputs['secureTags'] = $inputs['secureTags'] == 'on' ? 1 : 0;
         
         // Recursive folder scan?
         $recurse ? $this->scanLog .= PHP_EOL . "You requested to scan this folder and it's sub-folders." 
@@ -96,32 +100,32 @@ class FileScanner
                 $this->scanLog .= PHP_EOL . "Processing: " . $fullFilePath;
                 //$db->beginTransaction();
                 
-                // build image
+                // build image (DOESN'T WORK)
                 $imageEntity = $entityFactory->getEntity('image');
                 $imageEntity->fullFilePath = $fullFilePath;
                 $imageEntity->fileName = $filename;
                 $imageEntity->originalFileName = $filename;
                 $imageEntity->width = $width;
                 $imageEntity->height = $height;
-                $imageEntity->orientation = $width > $height ? 'landscape' : 'portrait';
                 $imageEntity->secure = $inputs['secureImages'];
-                $imageEntity->insert();
                 //var_dump($imageEntity);
-
-                // build tag and mappings
+                $newImageID = $imageEntity->insert();
+                
+                // build tag and mappings (WORKS)
                 foreach ($inputs['tags'] as $tag) {
                     $tagEntity = $entityFactory->getEntity('tag');
                     $tagEntity->tag = $tag;
                     $tagEntity->secure = $inputs['secureTags'];
-                    $tagEntity->insert();
                     //var_dump($tagEntity);
+                    $newTagID = $tagEntity->insert();
 
                     $taggedImageEntity = $entityFactory->getEntity('taggedImage');
-                    $taggedImageEntity->imageID = $imageEntity->imageID;
-                    $taggedImageEntity->tagID = $tagEntity->tagID;
+                    $taggedImageEntity->imageID = $newImageID;
+                    $taggedImageEntity->tagID = $newTagID;
                     $taggedImageEntity->insert();
                     //var_dump($taggedImageEntity);
                 }
+
                 //$db->commit();
 
             } else {
