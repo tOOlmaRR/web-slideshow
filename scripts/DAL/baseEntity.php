@@ -42,7 +42,7 @@ class BaseEntity implements iEntity
     
     
     // methods
-    public function get($objectToFind)
+    public function get()
     {
         throw new \Exception("Function has not been implemented");
     }

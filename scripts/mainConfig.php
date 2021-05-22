@@ -17,6 +17,8 @@ $database['useSPROCS'] = true;
     $database['SPROCS']['insert']['tag'] = 'Tag.Insert';
     $database['SPROCS']['insert']['taggedImage'] = 'TaggedImage.Insert';
 
+    $database['SPROCS']['select']['tag'] = 'Tag.Select';
+
 $configuration["database"] = $database;
 
 // Configure public and private root paths

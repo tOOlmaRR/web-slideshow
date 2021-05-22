@@ -13,9 +13,35 @@ class TagEntity extends BaseEntity implements iEntity
     
     
     // methods
-    public function get($image)
+    public function get()
     {
-        throw new \Exception("Function has not been implemented");
+        // set up the query
+        $db = $this->getDB();
+        if ($this->getUseSPROCs()) {
+            $sproc = $this->getSPROCs()["select"]["tag"];
+            $sql = "EXEC [$sproc] @id=:id, @tag=:tag";
+            $sqlParams = [
+                ":id" => $this->tagID >= 0 ? $this->tagID : null,
+                ":tag" => !empty($this->tag) ? $this->tag : null
+            ];
+        } else {
+            throw new \Exception("This application only supports the use of SPROCs for database queries!");
+        }
+        $getStatement = $db->prepare($sql);
+        
+        // perform the select and retrieve the data
+        $getStatement->execute($sqlParams);
+        $row = $getStatement->fetch();
+        
+        // build/return a business object based on the returned data
+        if ($row != false) {
+            $this->tagID = $row["TagID"];
+            $this->tag = $row["Tag"];
+            $this->secure = $row["Secure"];
+            return true;
+        } else {
+            return false;
+        }
     }
     
     public function insert() : int

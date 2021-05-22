@@ -17,7 +17,7 @@ class ImageEntity extends BaseEntity implements iEntity
     
     
     // methods
-    public function get($image)
+    public function get()
     {
         throw new \Exception("Function has not been implemented");
     }

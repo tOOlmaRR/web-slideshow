@@ -108,24 +108,29 @@ class FileScanner
                 $imageEntity->width = $width;
                 $imageEntity->height = $height;
                 $imageEntity->secure = $inputs['secureImages'];
-                //var_dump($imageEntity);
                 $newImageID = $imageEntity->insert();
                 
                 // build tag and mappings (WORKS)
                 foreach ($inputs['tags'] as $tag) {
+                    // get the tag if it already exists, or insert a new tag if it doesn't
                     $tagEntity = $entityFactory->getEntity('tag');
                     $tagEntity->tag = $tag;
                     $tagEntity->secure = $inputs['secureTags'];
-                    //var_dump($tagEntity);
-                    $newTagID = $tagEntity->insert();
+                    $tagID = null;
+                    if ($tagEntity->get()) {
+                        $tagID = $tagEntity->tagID;
+                    } else {
+                        $tagID = $tagEntity->insert();
+                    }
 
-                    $taggedImageEntity = $entityFactory->getEntity('taggedImage');
-                    $taggedImageEntity->imageID = $newImageID;
-                    $taggedImageEntity->tagID = $newTagID;
-                    $taggedImageEntity->insert();
-                    //var_dump($taggedImageEntity);
+                    // associate the tag to the image
+                    if ($tagID != null) {
+                        $taggedImageEntity = $entityFactory->getEntity('taggedImage');
+                        $taggedImageEntity->imageID = $newImageID;
+                        $taggedImageEntity->tagID = $tagID;
+                        $taggedImageEntity->insert();
+                    }
                 }
-
                 //$db->commit();
 
             } else {
