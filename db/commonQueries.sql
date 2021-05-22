@@ -3,7 +3,7 @@ select * from Images
 select * from Tags
 select * from TaggedImages
 
-select Images.FileName, Images.width, Images.height, Tags.Tag
+select Images.FullFilePath, Images.FileName, Images.width, Images.height, Tags.Tag
 from Images
 join TaggedImages on Images.ImageID = TaggedImages.ImageID
 join Tags on TaggedImages.TagID = Tags.TagID

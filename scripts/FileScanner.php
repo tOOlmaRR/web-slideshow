@@ -74,43 +74,20 @@ class FileScanner
         foreach ($objects as $name => $object) {
             // determine current image properties; ignore anything that doesn't appear to be an image, but also handle test images for unit testing
             if ($object->getFilename() == WebSlideshow::TEST_PUBLIC_PHOTO || @list($width, $height) = getimagesize($name)) {
-                $filesToProcess[] = $name;
                 $this->scanLog .= PHP_EOL . "Processing: " . $name;
                 //$db->beginTransaction();
-            } else {
-                $this->scanLog .= PHP_EOL . "Ignoring: " . $name;
-            }
-        }
-    }
-
-    public function scanSingleFolder(array $inputs, array $config)
-    {
-        $this->scanLog .= PHP_EOL . "Beginning Single Folder Scan...";
-        $allPhotos = scandir($inputs['folder']);
-
-        $entityFactory = new EntityFactory($config['database']);
-        $db = $entityFactory->getDatabaseConnection();
-
-        for ($i = 0; $i < count($allPhotos); $i++) {
-            // determine current image properties; ignore anything that doesn't appear to be an image, but also handle test images for unit testing
-            $filename = $allPhotos[$i];
-            $fullFilePath = $inputs['folder'] . '\\' . $filename;
-            if ($fullFilePath == WebSlideshow::TEST_PUBLIC_PHOTO || @list($width, $height) = getimagesize($fullFilePath)) {
-                $filesToProcess[] = $fullFilePath;
-                $this->scanLog .= PHP_EOL . "Processing: " . $fullFilePath;
-                //$db->beginTransaction();
                 
-                // build image (DOESN'T WORK)
+                // build image
                 $imageEntity = $entityFactory->getEntity('image');
-                $imageEntity->fullFilePath = $fullFilePath;
-                $imageEntity->fileName = $filename;
-                $imageEntity->originalFileName = $filename;
+                $imageEntity->fullFilePath = $name;
+                $imageEntity->fileName = $object->getFilename();
+                $imageEntity->originalFileName = $object->getFilename();
                 $imageEntity->width = $width;
                 $imageEntity->height = $height;
                 $imageEntity->secure = $inputs['secureImages'];
                 $newImageID = $imageEntity->insert();
-                
-                // build tag and mappings (WORKS)
+
+                // build tag and mappings
                 foreach ($inputs['tags'] as $tag) {
                     // get the tag if it already exists, or insert a new tag if it doesn't
                     $tagEntity = $entityFactory->getEntity('tag');
@@ -132,7 +109,60 @@ class FileScanner
                     }
                 }
                 //$db->commit();
+            } else {
+                $this->scanLog .= PHP_EOL . "Ignoring: " . $name;
+            }
+        }
+    }
 
+    public function scanSingleFolder(array $inputs, array $config)
+    {
+        $this->scanLog .= PHP_EOL . "Beginning Single Folder Scan...";
+        $allPhotos = scandir($inputs['folder']);
+
+        $entityFactory = new EntityFactory($config['database']);
+        $db = $entityFactory->getDatabaseConnection();
+
+        for ($i = 0; $i < count($allPhotos); $i++) {
+            // determine current image properties; ignore anything that doesn't appear to be an image, but also handle test images for unit testing
+            $filename = $allPhotos[$i];
+            $fullFilePath = $inputs['folder'] . '\\' . $filename;
+            if ($fullFilePath == WebSlideshow::TEST_PUBLIC_PHOTO || @list($width, $height) = getimagesize($fullFilePath)) {
+                $this->scanLog .= PHP_EOL . "Processing: " . $fullFilePath;
+                //$db->beginTransaction();
+                
+                // build image
+                $imageEntity = $entityFactory->getEntity('image');
+                $imageEntity->fullFilePath = $fullFilePath;
+                $imageEntity->fileName = $filename;
+                $imageEntity->originalFileName = $filename;
+                $imageEntity->width = $width;
+                $imageEntity->height = $height;
+                $imageEntity->secure = $inputs['secureImages'];
+                $newImageID = $imageEntity->insert();
+                
+                // build tag and mappings
+                foreach ($inputs['tags'] as $tag) {
+                    // get the tag if it already exists, or insert a new tag if it doesn't
+                    $tagEntity = $entityFactory->getEntity('tag');
+                    $tagEntity->tag = $tag;
+                    $tagEntity->secure = $inputs['secureTags'];
+                    $tagID = null;
+                    if ($tagEntity->get()) {
+                        $tagID = $tagEntity->tagID;
+                    } else {
+                        $tagID = $tagEntity->insert();
+                    }
+
+                    // associate the tag to the image
+                    if ($tagID != null) {
+                        $taggedImageEntity = $entityFactory->getEntity('taggedImage');
+                        $taggedImageEntity->imageID = $newImageID;
+                        $taggedImageEntity->tagID = $tagID;
+                        $taggedImageEntity->insert();
+                    }
+                }
+                //$db->commit();
             } else {
                 $this->scanLog .= PHP_EOL . "Ignoring: " . $fullFilePath;
             }
