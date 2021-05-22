@@ -1,7 +1,7 @@
 USE [WebSlideshow-DEV]
 GO
 
-/****** Object:  StoredProcedure [dbo].[Image.Insert]    Script Date: 2021-05-15 8:51:51 PM ******/
+/****** Object:  StoredProcedure [dbo].[Image.Insert]    Script Date: 2021-05-22 5:55:37 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -20,9 +20,9 @@ GO
 -- =============================================
 CREATE PROCEDURE [dbo].[Image.Insert]
 	@ID int OUTPUT,
-	@fullFilePath varchar(250),
-	@fileName varchar(50),
-	@originalFileName varchar(250),
+	@fullFilePath varchar(500),
+	@fileName varchar(200),
+	@originalFileName varchar(200),
 	@width smallint,
 	@height smallint,
 	@secure bit
