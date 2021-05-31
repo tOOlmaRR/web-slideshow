@@ -12,6 +12,8 @@ This is a web application that can display custom slideshows in a browser for lo
 1. **Private Slideshows** - via slideshow configuration, you can limit access to selected slideshows. These slideshows only appear in the dropdown if you include a special query string parameter and value in your web request. Private slideshows appear in a red font, whereas public slideshows appear in green.
 1. **Multiple Folders** - via slideshow configuration, you can specify either a single folder or mutliple folders to include in a slideshow. In each case, the assumption is that there are only valid images in those folders
 1. **Recursive Folders** - via slideshow configuration, you can also choose to include all subfolders of each folder configured for a slideshow.
+### Features Under Development
+1. **Folder Scanner** - via the /scan.php page. This page allows you to scan a folder, with or without it's subfolders, into a database. Data retrieved and added includes the full file path, the file name, the width and height of images, and a bit indicating whether or not the image should be considered secured (to be used for private slideshows). This scanner also includes the option to create and associate tags (comma-delimited set) to each image scanned. Tags are associated to images and tags can also be marked as secured. **Note**: The slideshow page does not load images from the database yet, and there are no admin options to modfify the data in the web UI yet either.
 
 ## Slideshow Configuration
 All configuration elements are defined in the */mainConfig.php* file. There is an overlying $configuration array which is designed to contain all configuration elements, and then within, there are separate arrays that contain all slideshow configurations as well as the root physical and virtual folders to use for both private and public slideshows.
@@ -123,6 +125,13 @@ vendor/bin/phpunit tests --configuration ./tests --coverage-clover ./tests/resul
 
 
 ## History
+
+### v3.2
+- add new scan.php page to scan and load image metadata into the database. Includes options to:
+    - scan all subfolders or just the contents of the requested folder
+    - set images as secured or not secured
+    - add tags to all images being scanned
+    - set each tag as secured or not secured
 
 ### v3.1
 - detect current viewport height, redirect, and use that value to proportionally resize slides and images, taking the 'chrome' into account
