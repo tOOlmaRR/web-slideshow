@@ -85,6 +85,12 @@ class FileScanner
                 $imageEntity->width = $width;
                 $imageEntity->height = $height;
                 $imageEntity->secure = $inputs['secureImages'];
+
+                // skip if the image already exists
+                if ($imageEntity->get()) {
+                    $this->scanLog .= PHP_EOL . "Ignoring Image (already exists): " . $imageEntity->fullFilePath;
+                    continue;
+                }
                 $newImageID = $imageEntity->insert();
 
                 // build tag and mappings
@@ -139,6 +145,13 @@ class FileScanner
                 $imageEntity->width = $width;
                 $imageEntity->height = $height;
                 $imageEntity->secure = $inputs['secureImages'];
+
+                // skip if the image already exists
+                if ($imageEntity->get()) {
+                    $this->scanLog .= PHP_EOL . "Ignoring Image (already exists): " . $imageEntity->fullFilePath;
+                    continue;
+                }
+
                 $newImageID = $imageEntity->insert();
                 
                 // build tag and mappings
