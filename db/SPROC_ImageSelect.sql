@@ -1,7 +1,7 @@
 USE [WebSlideshow-DEV]
 GO
 
-/****** Object:  StoredProcedure [dbo].[Image.Select]    Script Date: 2021-05-30 9:08:03 PM ******/
+/****** Object:  StoredProcedure [dbo].[Image.Select]    Script Date: 2021-06-25 5:08:34 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -21,7 +21,7 @@ GO
 -- Description:	Selects an Image from the database, either by Id or by Full File Path
 -- =============================================
 CREATE PROCEDURE [dbo].[Image.Select]
-	@id int,
+	@ID int,
 	@fullFilePath varchar(500)
 AS
 BEGIN
@@ -37,7 +37,7 @@ BEGIN
 	ELSE
 		BEGIN
 			SELECT * FROM [dbo].[Images] with (nolock)
-			WHERE ImageID = @id
+			WHERE ImageID = @ID
 		END
 END
 GO

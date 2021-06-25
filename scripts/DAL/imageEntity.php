@@ -23,7 +23,7 @@ class ImageEntity extends BaseEntity implements iEntity
         $db = $this->getDB();
         if ($this->getUseSPROCs()) {
             $sproc = $this->getSPROCs()["select"]["image"];
-            $sql = "EXEC [$sproc] @id=:id, @fullFilePath=:path";
+            $sql = "EXEC [$sproc] @ID=:id, @fullFilePath=:path";
             $sqlParams = [
                 ":id" => $this->imageID >= 0 ? $this->imageID : null,
                 ":path" => !empty($this->fullFilePath) ? $this->fullFilePath : null
