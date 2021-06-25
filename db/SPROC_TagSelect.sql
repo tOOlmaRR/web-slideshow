@@ -1,7 +1,7 @@
 USE [WebSlideshow-DEV]
 GO
 
-/****** Object:  StoredProcedure [dbo].[Tag.Select]    Script Date: 2021-05-22 5:57:55 PM ******/
+/****** Object:  StoredProcedure [dbo].[Tag.Select]    Script Date: 2021-06-25 5:11:19 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -20,7 +20,7 @@ GO
 -- Description:	Selects a Tag from the database, either by Id or by Tag
 -- =============================================
 CREATE PROCEDURE [dbo].[Tag.Select]
-	@id int,
+	@ID int,
 	@tag varchar(50)
 AS
 BEGIN
@@ -36,7 +36,7 @@ BEGIN
 	ELSE
 		BEGIN
 			SELECT * FROM [dbo].[Tags] with (nolock)
-			WHERE TagID = @id
+			WHERE TagID = @ID
 		END
 END
 GO

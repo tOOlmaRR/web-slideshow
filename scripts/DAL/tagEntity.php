@@ -19,7 +19,7 @@ class TagEntity extends BaseEntity implements iEntity
         $db = $this->getDB();
         if ($this->getUseSPROCs()) {
             $sproc = $this->getSPROCs()["select"]["tag"];
-            $sql = "EXEC [$sproc] @id=:id, @tag=:tag";
+            $sql = "EXEC [$sproc] @ID=:id, @tag=:tag";
             $sqlParams = [
                 ":id" => $this->tagID >= 0 ? $this->tagID : null,
                 ":tag" => !empty($this->tag) ? $this->tag : null
