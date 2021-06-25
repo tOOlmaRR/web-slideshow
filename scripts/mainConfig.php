@@ -1,6 +1,27 @@
 <?php
 $configuration = array();
 
+// Configure database connection
+$database = array();
+$database['type'] = 'mssql';
+$database['host'] = "MARR2\\GMARRMSSQL1";
+$database['name'] = "WebSlideshow-DEV";
+$database['user'] = "Urgele1";
+$database['password'] = "goldmOOn78!";
+$database['useSPROCS'] = true;
+
+    // Configure SPROC names
+    $database['SPROCS'] = array();
+    $database['SPROCS']['insert'] = array();
+    $database['SPROCS']['insert']['image'] = 'Image.Insert';
+    $database['SPROCS']['insert']['tag'] = 'Tag.Insert';
+    $database['SPROCS']['insert']['taggedImage'] = 'TaggedImage.Insert';
+
+    $database['SPROCS']['select']['image'] = 'Image.Select';
+    $database['SPROCS']['select']['tag'] = 'Tag.Select';
+
+$configuration["database"] = $database;
+
 // Configure public and private root paths
 $virtualRoots = array();
 $virtualRoots["public"] = "/myphotos/";
