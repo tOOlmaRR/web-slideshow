@@ -1,7 +1,7 @@
 <?php
 namespace toolmarr\WebSlideshow\DAL;
 
-interface iEntity
+interface IEntity
 {
     public function get();
     

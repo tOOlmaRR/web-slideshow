@@ -35,7 +35,7 @@
     <body>
         <div id="scanForm">
             <form action="" method="POST" enctype="multipart/form-data">
-                <table>
+                <table role="presentation">
                     <tr>
                         <td><label for="folder">Folder Path: </label></td>
                         <td><input type="text" name="folder" /></td>

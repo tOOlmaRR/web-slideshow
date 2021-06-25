@@ -1,10 +1,10 @@
 <?php
 namespace toolmarr\WebSlideshow\DAL;
-use toolmarr\WebSlideshow\DAL\iEntity;
+use toolmarr\WebSlideshow\DAL\IEntity;
 
 use PDO;
 
-class BaseEntity implements iEntity
+class BaseEntity implements IEntity
 {
     private $db;
     private $useSPROCs;

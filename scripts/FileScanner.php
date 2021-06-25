@@ -73,7 +73,6 @@ class FileScanner
     {
         $this->scanLog .= PHP_EOL . "Beginning Recursive Scan...";
         $objects = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($inputs['folder']), \RecursiveIteratorIterator::SELF_FIRST);
-        $filesToProcess = array();
         $entityFactory = new EntityFactory($config['database']);
         $db = $entityFactory->getDatabaseConnection();
         $db->beginTransaction();
