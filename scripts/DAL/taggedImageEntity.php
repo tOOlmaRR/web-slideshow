@@ -1,9 +1,9 @@
 <?php
 namespace toolmarr\WebSlideshow\DAL;
 
-use toolmarr\WebSlideshow\DAL\iEntity;
+use toolmarr\WebSlideshow\DAL\IEntity;
 
-class TaggedImageEntity extends BaseEntity implements iEntity
+class TaggedImageEntity extends BaseEntity implements IEntity
 {
     // properties
     public $imageID;

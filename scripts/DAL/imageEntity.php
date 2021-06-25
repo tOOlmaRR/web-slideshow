@@ -1,9 +1,9 @@
 <?php
 namespace toolmarr\WebSlideshow\DAL;
 
-use toolmarr\WebSlideshow\DAL\iEntity;
+use toolmarr\WebSlideshow\DAL\IEntity;
 
-class ImageEntity extends BaseEntity implements iEntity
+class ImageEntity extends BaseEntity implements IEntity
 {
     // properties
     public $imageID;
@@ -38,7 +38,7 @@ class ImageEntity extends BaseEntity implements iEntity
         $row = $getStatement->fetch();
         
         // build/return a business object based on the returned data
-        if ($row != false) {
+        if ($row) {
             $this->imageID = $row["ImageID"];
             $this->fullFilePath = $row["FullFilePath"];
             $this->fileName = $row["FileName"];

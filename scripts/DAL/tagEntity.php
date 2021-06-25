@@ -1,9 +1,9 @@
 <?php
 namespace toolmarr\WebSlideshow\DAL;
 
-use toolmarr\WebSlideshow\DAL\iEntity;
+use toolmarr\WebSlideshow\DAL\IEntity;
 
-class TagEntity extends BaseEntity implements iEntity
+class TagEntity extends BaseEntity implements IEntity
 {
     // properties
     public $tagID;
@@ -34,7 +34,7 @@ class TagEntity extends BaseEntity implements iEntity
         $row = $getStatement->fetch();
         
         // build/return a business object based on the returned data
-        if ($row != false) {
+        if ($row) {
             $this->tagID = $row["TagID"];
             $this->tag = $row["Tag"];
             $this->secure = $row["Secure"];
