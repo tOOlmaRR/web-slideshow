@@ -1,4 +1,7 @@
 <?php
+    // increase maximum execution time beyond default value of 30 seconds to handle longer file system scans
+    ini_set('max_execution_time', '300'); // 300 seconds = 5 minutes
+
     use toolmarr\WebSlideshow\FileScanner;
     require_once('vendor/autoload.php');
     require_once('scripts/mainConfig.php');
