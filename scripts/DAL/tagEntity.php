@@ -8,7 +8,7 @@ class TagEntity extends BaseEntity implements IEntity
     // properties
     public $tagID;
     public $tag;
-    public $secure;
+    public bool $secure;
     
     
     
@@ -37,7 +37,7 @@ class TagEntity extends BaseEntity implements IEntity
         if ($row) {
             $this->tagID = $row["TagID"];
             $this->tag = $row["Tag"];
-            $this->secure = $row["Secure"];
+            $this->secure = $row["Secure"] === '1' ? true : false;
             return true;
         } else {
             return false;
