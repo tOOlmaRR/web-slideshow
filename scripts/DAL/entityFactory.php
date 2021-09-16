@@ -78,6 +78,9 @@ class EntityFactory
                 
             case "tag":
                 return new TagEntity($this->getDatabaseConnection(), $this->useSPROCs, $this->SPROCS);
+
+            case "tags":
+                return new TagsEntity($this->getDatabaseConnection(), $this->useSPROCs, $this->SPROCS);
                 
             case "taggedImage":
                 return new TaggedImageEntity($this->getDatabaseConnection(), $this->useSPROCs, $this->SPROCS);

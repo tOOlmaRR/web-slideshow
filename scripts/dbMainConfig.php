@@ -18,6 +18,7 @@ $database['useSPROCS'] = true;
     $database['SPROCS']['insert']['taggedImage'] = 'TaggedImage.Insert';
 
     $database['SPROCS']['select']['image'] = 'Image.Select';
+    $database['SPROCS']['select']['tags'] = 'Tags.Select';
     $database['SPROCS']['select']['tag'] = 'Tag.Select';
 
 $configuration["database"] = $database;
