@@ -6,6 +6,10 @@ form {
     display: inline;
 }
 
+legend {
+    text-align: left;
+}
+
 
 /* Slideshow Options */
 .publicOption {
@@ -14,6 +18,16 @@ form {
 
 .privateOption {
     color: red;
+}
+
+#tagSelection span {
+    float: left;
+    padding-right: 5px;
+}
+
+#tagSelectionSubmit {
+    clear: both;
+    padding-top: 5px;
 }
 
 #slideshowOptions {

@@ -22,6 +22,9 @@
         
         // instantiate the Slideshow
         $dbSlideshow = new DbWebSlideshow($maxHeight);
+
+        // load available tags
+        $availableTags = $dbSlideshow->getAvailableTags($configuration);
     }
 ?>
 <!DOCTYPE html>
@@ -37,7 +40,7 @@
             <fieldset>
                 <legend>Slideshow Options:</legend>
                 <div class="slideshowSelection">             
-                    <?php $dbSlideshow->renderSlideshowTags($configuration) ?>
+                    <?php $dbSlideshow->renderSlideshowTags($availableTags) ?>
                 </div>
                 
                 <div class="randomizeToggle">
@@ -51,13 +54,14 @@
         </div>
         <!-- Slideshow container -->
         <div class="slideshow-container">
+            <fieldset>
+                <legend>Slide:</legend>
+            </fieldset>
             <!-- Full-width images with number and caption text -->   
 
             <!-- Next and previous buttons -->
             <!--<a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-            <a class="next" onclick="plusSlides(1)">&#10095;</a>-->
-            <a class="prev">&#10094;</a>
-            <a class="next">&#10095;</a>
+            <a class="next" onclick="plusSlides(1)">&#10095;</a>-->            
         </div>        
         <!--script type="text/javascript" language="javascript">showSlides();</script>-->
     </body>
