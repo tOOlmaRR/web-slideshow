@@ -17,6 +17,7 @@ $database['useSPROCS'] = true;
     $database['SPROCS']['insert']['tag'] = 'Tag.Insert';
     $database['SPROCS']['insert']['taggedImage'] = 'TaggedImage.Insert';
 
+    $database['SPROCS']['select']['images'] = 'Images.Select';
     $database['SPROCS']['select']['image'] = 'Image.Select';
     $database['SPROCS']['select']['tags'] = 'Tags.Select';
     $database['SPROCS']['select']['tag'] = 'Tag.Select';
@@ -24,7 +25,7 @@ $database['useSPROCS'] = true;
 $configuration["database"] = $database;
 
 // Configure public and private root paths
-/*$virtualRoots = array();
+$virtualRoots = array();
 $virtualRoots["public"] = "/myphotos/";
 $virtualRoots["private"] = "/myphotos/private/";
 $configuration["virtualRoots"] = $virtualRoots;
@@ -33,7 +34,7 @@ $physicalRoots = array();
 $physicalRoots["public"] = "E:\\MyPhotos\\";
 $physicalRoots["private"] = "E:\\MyPhotos\\Private\\";
 $configuration["physicalRoots"] = $physicalRoots;
-
+/*
 
 // Configure All Slideshows
 $allSlideshows = array();
@@ -77,7 +78,12 @@ if (isset($_GET) && isset($_GET["in"]) && ($_GET["in"] >= $currentHourAndMinutes
         }
     }
 }
+*/
 
-if (isset($_POST) && isset($_POST["chosenSlideshow"])) {
-    $chosenSlideshow = $allSlideshows[$_POST["chosenSlideshow"]];
-}*/
+/* Determine Slideshow Configuration */
+// determine chosen tags
+if (isset($_POST) && isset($_POST["chosenSlideshowTags"])) {
+    $configuration["chosenTags"] = $_POST["chosenSlideshowTags"];
+} else {
+    $configuration["chosenTags"] = [];
+}

@@ -57,7 +57,8 @@
             <fieldset>
                 <legend>Slide:</legend>
             </fieldset>
-            <!-- Full-width images with number and caption text -->   
+            <!-- Full-width images with number and caption text -->
+            <?php $dbSlideshow->renderSlideShow($configuration) ?>
 
             <!-- Next and previous buttons -->
             <!--<a class="prev" onclick="plusSlides(-1)">&#10094;</a>

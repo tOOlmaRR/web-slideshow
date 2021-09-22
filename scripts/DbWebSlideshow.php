@@ -55,7 +55,7 @@ class DbWebSlideshow
         foreach ($tags as $tag) {
             $cssClass = $tag->secure ? 'privateOption' : 'publicOption';
             $slidehowTagsHtml = $slidehowTagsHtml . "<span>";
-            $slidehowTagsHtml = $slidehowTagsHtml . "<input type=\"checkbox\" name=\"chosenSlideshowTags\" value=\"" . $tag->tag . "\" id=\"" . $tag->tag . "" . $tag->tag . "\">";
+            $slidehowTagsHtml = $slidehowTagsHtml . "<input type=\"checkbox\" name=\"chosenSlideshowTags[]\" value=\"" . $tag->tag . "\" id=\"" . $tag->tag . "\">";
             $slidehowTagsHtml = $slidehowTagsHtml . "<label class=\"" . $cssClass . "\" for=\"" . $tag->tag . "\">" . $tag->tag . "</label>";
             $slidehowTagsHtml = $slidehowTagsHtml . "</span>";
         }
@@ -99,6 +99,72 @@ class DbWebSlideshow
 
         // display the built HTML to the page
         echo $slideshowSpeedHtml;
+    }
+
+    public function renderSlideShow($configuration)
+    {
+        $allImages = [];
+        foreach ($configuration['chosenTags'] as $tag) {
+            $entityFactory = new EntityFactory($configuration['database']);
+            $imagesEntity = $entityFactory->getEntity("images");
+            $imagesEntity->tag = $tag;
+            $imagesEntity->includeSecureImages = $this->privateAcessGranted ? 1 : 0;
+            if ($imagesEntity->get())
+            {
+                $newImages = $imagesEntity->images;
+                foreach ($newImages as $image) {
+                    if (!array_key_exists($image->imageID, $allImages)) {
+                        $allImages[$image->imageID] = $image;
+                    }
+                }
+            }
+        }
+
+        // determine physical and virtual root folders based on security settings (use the first folder)
+        $number = 0;
+        $slideshowHtml = '';
+        foreach ($allImages as $image) {
+            $virtualRoot = $image->secure ? $configuration["virtualRoots"]["public"] : $configuration["virtualRoots"]["private"];
+            $rootFolder = $image->secure ? $configuration["physicalRoots"]["public"] : $configuration["physicalRoots"]["private"];
+            
+            $slideshowHtml = $slideshowHtml . "<div>" . $image->fileName . "(" . $image->width . "x" . $image->height . ")</div>";
+            /*$slideshowHtml = $slideshowHtml . "            <div class=\"mySlides fade c" . $number . "\" style=\"height: " . intval($image->height+100) . "px;\">";
+                $slideshowHtml = $slideshowHtml . "                <div class=\"numbertext\">" . ($number + 1) . " / " . count($allImages) . "</div>";
+                $slideshowHtml = $slideshowHtml . "                <img width=\"$image->width\" height=\"$image->height\" src=\"" . $virtualRoot . $image->fileName . "\">";
+                $slideshowHtml = $slideshowHtml . "                <div class=\"text\"><span class=\"filename\">" . $image->fileName . "</span>";
+                $slideshowHtml = $slideshowHtml . "            </div>";*/
+
+            $number++;
+        }
+        echo $slideshowHtml;
+
+
+
+        /*$slideshowPaths = array();
+        if (array_key_exists("physicalPaths", $chosenSlideshow)) {
+            $slideshowPaths = $chosenSlideshow["physicalPaths"];
+        } else {
+            $slideshowPaths[] = $chosenSlideshow["physicalPath"];
+        }
+
+        // determine physical and virtual root folders based on security settings (use the first folder)
+        $isPublicSlideshow = $chosenSlideshow[WebSlideshow::CONFIG_SLIDESHOW_VISIBILITY_PUBLIC_KEY];
+        $virtualRoot = $isPublicSlideshow ? $config["virtualRoots"]["public"] : $config["virtualRoots"]["private"];
+        $rootFolder = $isPublicSlideshow ? $config["physicalRoots"]["public"] : $config["physicalRoots"]["private"];
+
+        // Do we want to include subfolders?
+        $includeSubFolders = isset($chosenSlideshow["includeSubfolders"]) && $chosenSlideshow["includeSubfolders"];
+
+        // gather a collection of all relevant photos, including all data needed to render them in the webpage
+        $imagesToDisplay = array();
+        foreach ($slideshowPaths as $slideshowPath) {
+            $imagesToDisplayForThisPath = $this->determinePhotosToDisplayForPath($slideshowPath, $rootFolder, $virtualRoot, $includeSubFolders);
+            $imagesToDisplay = array_merge($imagesToDisplay, $imagesToDisplayForThisPath);
+        }
+
+        // render the output for all valid photos
+        $slidesHtml = $this->buildSlidesHtml($imagesToDisplay);
+        echo $slidesHtml;*/
     }
 
 
