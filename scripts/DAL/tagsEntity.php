@@ -34,13 +34,13 @@ class TagsEntity extends BaseEntity implements IEntity
             $tag->tagID = $row["TagID"];
             $tag->tag = $row["Tag"];
             $tag->secure = $row["Secure"] === '1' ? true : false;
-            $this->tags[] = $tag;
+            $this->tags[$row["TagID"]] = $tag;
         }
         return true;
     }
     
     public function insert() : int
     {
-        throw new \Exception("This has been implemneted yet");
+        throw new \Exception("This has not been implemneted yet");
     }
 }
