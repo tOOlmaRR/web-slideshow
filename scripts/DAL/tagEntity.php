@@ -54,7 +54,8 @@ class TagEntity extends BaseEntity implements IEntity
             $insertStatement = $db->prepare($sql);
             $insertStatement->bindParam(":id", $newID, \PDO::PARAM_INT, 10);
             $insertStatement->bindParam(":tag", $this->tag);
-            $insertStatement->bindParam(":secure", $this->secure);
+            $secure = $this->secure ? '1' : '0';
+            $insertStatement->bindParam(":secure", $secure);
         } else {
             throw new \Exception("This application only supports the use of SPROCs for database queries!");
         }
