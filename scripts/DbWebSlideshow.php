@@ -7,6 +7,10 @@ use toolmarr\WebSlideshow\DAL\TagEntity;
 
 class DbWebSlideshow
 {
+    const SLIDE_FILENAME_KEY = "filename";
+    const SLIDE_FULLPATH_KEY = "fullpath";
+    const SLIDE_VIRTUAL_LOCATION_KEY = "virtualLocation";
+
     public int $maxHeight;
     public bool $privateAcessGranted = false;
 
@@ -120,23 +124,60 @@ class DbWebSlideshow
             }
         }
 
-        // determine physical and virtual root folders based on security settings (use the first folder)
         $number = 0;
         $slideshowHtml = '';
         foreach ($allImages as $image) {
-            $virtualRoot = $image->secure ? $configuration["virtualRoots"]["public"] : $configuration["virtualRoots"]["private"];
-            $rootFolder = $image->secure ? $configuration["physicalRoots"]["public"] : $configuration["physicalRoots"]["private"];
-            
-            $slideshowHtml = $slideshowHtml . "<div>" . $image->fileName . "(" . $image->width . "x" . $image->height . ")</div>";
-            /*$slideshowHtml = $slideshowHtml . "            <div class=\"mySlides fade c" . $number . "\" style=\"height: " . intval($image->height+100) . "px;\">";
-                $slideshowHtml = $slideshowHtml . "                <div class=\"numbertext\">" . ($number + 1) . " / " . count($allImages) . "</div>";
-                $slideshowHtml = $slideshowHtml . "                <img width=\"$image->width\" height=\"$image->height\" src=\"" . $virtualRoot . $image->fileName . "\">";
-                $slideshowHtml = $slideshowHtml . "                <div class=\"text\"><span class=\"filename\">" . $image->fileName . "</span>";
-                $slideshowHtml = $slideshowHtml . "            </div>";*/
+            $photosToDisplay = array();
 
+            // determine physical and virtual roots based on configuration
+            $virtualRoot = $image->secure ? $configuration["virtualRoots"]["private"] : $configuration["virtualRoots"]["public"];
+            $rootFolder = $image->secure ? $configuration["physicalRoots"]["private"] : $configuration["physicalRoots"]["public"];
+
+            // proportionally resize the image's dimensions
+            $newImageDimensions = $this->optimizePhotoSize($image->width, $image->height);
+
+            // build the photo object and add it to the list
+            $photoToDisplay[DbWebSlideshow::SLIDE_FILENAME_KEY] = $image->fileName;
+            $photoToDisplay[DbWebSlideshow::SLIDE_FULLPATH_KEY] = $image->fullFilePath;
+            $photoToDisplay['originalWidth'] = $image->width;
+            $photoToDisplay['originalHeight'] = $image->height;
+            $photoToDisplay['width'] = $newImageDimensions['width'];
+            $photoToDisplay['height'] = $newImageDimensions['height'];
+            //var_dump($photoToDisplay);
+            
+            /* get the path */
+            //echo $rootFolder . '<br/>';
+            // take the full physical path and trim off the root folder
+            $path =  substr($image->fullFilePath, strlen($rootFolder));
+            //echo $path . '<br/>';
+            // trim off the filename
+            $path = substr($path, 0, strpos($path, $image->fileName));
+            //echo $path . '<br/>';
+            // append remainder to the virtualRoot
+            $virtualLocation = $virtualRoot . $path;
+            //echo $virtualLocation . '<br/>';
+            // replace the \ with a /
+            $virtualLocation = str_replace("\\", "/", $virtualLocation);
+            //echo $virtualLocation . '<br/>';
+            // append the filename
+            $virtualFullPath = $virtualLocation . $image->fileName;
+            //echo $virtualFullPath . '<br/>';
+            
+            $photoToDisplay[DbWebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] = $virtualFullPath;
+            $photosToDisplay[] = $photoToDisplay;
+            
+            $slideshowHtml = $slideshowHtml . "            <div class=\"mySlides fade c" . $number . "\" style=\"height: " . (intval($photoToDisplay['height'])+55) . "px;\">";
+            $slideshowHtml = $slideshowHtml . "                <div class=\"numbertext\">" . ($number + 1) . " / " . count($photosToDisplay) . "</div>";
+            $slideshowHtml = $slideshowHtml . "                <img width=\"$photoToDisplay[width]\" height=\"$photoToDisplay[height]\" src=\"" . $photoToDisplay[DbWebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] . "\">";
+            $slideshowHtml = $slideshowHtml . "                <div class=\"text\"><span class=\"filename\">" . $photoToDisplay[DbWebSlideshow::SLIDE_FILENAME_KEY] . "</span><span class=\"dimensions\">$photoToDisplay[originalWidth]x$photoToDisplay[originalHeight] resized to $photoToDisplay[width]x$photoToDisplay[height]<span></div>";
+            $slideshowHtml = $slideshowHtml . "            </div>";
+            echo $slideshowHtml;
+            exit();
+            
+            $photosToDisplay[] = $photoToDisplay;
             $number++;
         }
-        echo $slideshowHtml;
+
 
 
 
@@ -169,7 +210,13 @@ class DbWebSlideshow
 
 
 
-
+    private function optimizePhotoSize($width, $height) : array
+    {
+        $newImageDimensions = array();
+        $newImageDimensions['width'] = intval(ceil(($this->maxHeight * $width) / $height));
+        $newImageDimensions['height'] = $this->maxHeight;
+        return $newImageDimensions;
+    }
 
     private function isPrivateAccessGranted()
     {
