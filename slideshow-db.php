@@ -54,12 +54,11 @@
         </div>
         <!-- Slideshow container -->
         <div class="slideshow-container">
+            <!-- Full-width images with number and caption text -->
             <fieldset>
                 <legend>Slide:</legend>
+                <?php $dbSlideshow->renderSlideShow($configuration) ?>
             </fieldset>
-            <!-- Full-width images with number and caption text -->
-            <?php $dbSlideshow->renderSlideShow($configuration) ?>
-
             <!-- Next and previous buttons -->
             <!--<a class="prev" onclick="plusSlides(-1)">&#10094;</a>
             <a class="next" onclick="plusSlides(1)">&#10095;</a>-->            
