@@ -126,7 +126,6 @@ class DbWebSlideshow
 
         $photosToDisplay = array();
         foreach ($allImages as $image) {
-
             // determine physical and virtual roots based on configuration
             $virtualRoot = $image->secure ? $configuration["virtualRoots"]["private"] : $configuration["virtualRoots"]["public"];
             $rootFolder = $image->secure ? $configuration["physicalRoots"]["private"] : $configuration["physicalRoots"]["public"];
@@ -171,9 +170,9 @@ class DbWebSlideshow
             $slideshowHtml = $slideshowHtml . "                <img width=\"$photoToDisplay[width]\" height=\"$photoToDisplay[height]\" src=\"" . $photoToDisplay[DbWebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] . "\">";
             $slideshowHtml = $slideshowHtml . "                <div class=\"text\"><span class=\"filename\">" . $photoToDisplay[DbWebSlideshow::SLIDE_FILENAME_KEY] . "</span><span class=\"dimensions\">$photoToDisplay[originalWidth]x$photoToDisplay[originalHeight] resized to $photoToDisplay[width]x$photoToDisplay[height]<span></div>";
             $slideshowHtml = $slideshowHtml . "            </div>";
-            echo $slideshowHtml;
             $number++;
         }
+        echo $slideshowHtml;
     }
 
 
