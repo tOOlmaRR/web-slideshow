@@ -83,7 +83,7 @@ legend {
     position: absolute;
     top: 50%;
     width: auto;
-    margin-top: -22px;
+    margin-right: 16px;
     padding: 16px;
     color: white;
     font-weight: bold;
@@ -130,7 +130,7 @@ legend {
 .numbertext {
     color: #f2f2f2;
     font-size: 12px;
-    padding: 8px 12px;
+    padding: 30px 12px;
     position: absolute;
     top: 0;
 }

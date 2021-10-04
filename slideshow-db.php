@@ -33,7 +33,7 @@
         <title>JavaScript Slideshow v2</title>
         <meta charset="utf-8">
         <link href="styles/main-db.css" media="all" rel="Stylesheet" type="text/css" />
-        <!--<script type="text/javascript" language="javascript" src="scripts/slideshowFunctions.js"></script>-->
+        <script type="text/javascript" language="javascript" src="scripts/slideshowFunctions.js"></script>
     </head>
     <body>
         <div id="slideshowOptions">
@@ -58,11 +58,12 @@
             <fieldset>
                 <legend>Slide:</legend>
                 <?php $dbSlideshow->renderSlideShow($configuration) ?>
+                <!-- Next and previous buttons -->
+                <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+                <a class="next" onclick="plusSlides(1)">&#10095;</a>
             </fieldset>
-            <!-- Next and previous buttons -->
-            <!--<a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-            <a class="next" onclick="plusSlides(1)">&#10095;</a>-->            
+            
         </div>        
-        <!--script type="text/javascript" language="javascript">showSlides();</script>-->
+        <script type="text/javascript" language="javascript">showSlides();</script>
     </body>
 </html>

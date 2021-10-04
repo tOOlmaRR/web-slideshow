@@ -124,10 +124,8 @@ class DbWebSlideshow
             }
         }
 
-        $number = 0;
-        $slideshowHtml = '';
+        $photosToDisplay = array();
         foreach ($allImages as $image) {
-            $photosToDisplay = array();
 
             // determine physical and virtual roots based on configuration
             $virtualRoot = $image->secure ? $configuration["virtualRoots"]["private"] : $configuration["virtualRoots"]["public"];
@@ -143,69 +141,39 @@ class DbWebSlideshow
             $photoToDisplay['originalHeight'] = $image->height;
             $photoToDisplay['width'] = $newImageDimensions['width'];
             $photoToDisplay['height'] = $newImageDimensions['height'];
-            //var_dump($photoToDisplay);
             
             /* get the path */
-            //echo $rootFolder . '<br/>';
             // take the full physical path and trim off the root folder
             $path =  substr($image->fullFilePath, strlen($rootFolder));
-            //echo $path . '<br/>';
+
             // trim off the filename
             $path = substr($path, 0, strpos($path, $image->fileName));
-            //echo $path . '<br/>';
+
             // append remainder to the virtualRoot
             $virtualLocation = $virtualRoot . $path;
-            //echo $virtualLocation . '<br/>';
+
             // replace the \ with a /
             $virtualLocation = str_replace("\\", "/", $virtualLocation);
-            //echo $virtualLocation . '<br/>';
+
             // append the filename
             $virtualFullPath = $virtualLocation . $image->fileName;
-            //echo $virtualFullPath . '<br/>';
             
             $photoToDisplay[DbWebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] = $virtualFullPath;
             $photosToDisplay[] = $photoToDisplay;
-            
+        }
+
+        /* Render the slides */
+        $number = 0;
+        $slideshowHtml = '';
+        foreach ($photosToDisplay as $photoToDisplay) {
             $slideshowHtml = $slideshowHtml . "            <div class=\"mySlides fade c" . $number . "\" style=\"height: " . (intval($photoToDisplay['height'])+55) . "px;\">";
             $slideshowHtml = $slideshowHtml . "                <div class=\"numbertext\">" . ($number + 1) . " / " . count($photosToDisplay) . "</div>";
             $slideshowHtml = $slideshowHtml . "                <img width=\"$photoToDisplay[width]\" height=\"$photoToDisplay[height]\" src=\"" . $photoToDisplay[DbWebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] . "\">";
             $slideshowHtml = $slideshowHtml . "                <div class=\"text\"><span class=\"filename\">" . $photoToDisplay[DbWebSlideshow::SLIDE_FILENAME_KEY] . "</span><span class=\"dimensions\">$photoToDisplay[originalWidth]x$photoToDisplay[originalHeight] resized to $photoToDisplay[width]x$photoToDisplay[height]<span></div>";
             $slideshowHtml = $slideshowHtml . "            </div>";
             echo $slideshowHtml;
-            exit();
-            
-            $photosToDisplay[] = $photoToDisplay;
             $number++;
         }
-
-
-
-
-        /*$slideshowPaths = array();
-        if (array_key_exists("physicalPaths", $chosenSlideshow)) {
-            $slideshowPaths = $chosenSlideshow["physicalPaths"];
-        } else {
-            $slideshowPaths[] = $chosenSlideshow["physicalPath"];
-        }
-
-        // determine physical and virtual root folders based on security settings (use the first folder)
-        $isPublicSlideshow = $chosenSlideshow[WebSlideshow::CONFIG_SLIDESHOW_VISIBILITY_PUBLIC_KEY];
-        $virtualRoot = $isPublicSlideshow ? $config["virtualRoots"]["public"] : $config["virtualRoots"]["private"];
-        $rootFolder = $isPublicSlideshow ? $config["physicalRoots"]["public"] : $config["physicalRoots"]["private"];
-
-        // Do we want to include subfolders?
-        $includeSubFolders = isset($chosenSlideshow["includeSubfolders"]) && $chosenSlideshow["includeSubfolders"];
-
-        // gather a collection of all relevant photos, including all data needed to render them in the webpage
-        $imagesToDisplay = array();
-        foreach ($slideshowPaths as $slideshowPath) {
-            $imagesToDisplayForThisPath = $this->determinePhotosToDisplayForPath($slideshowPath, $rootFolder, $virtualRoot, $includeSubFolders);
-            $imagesToDisplay = array_merge($imagesToDisplay, $imagesToDisplayForThisPath);
-        }
-
-        // render the output for all valid photos
-        $slidesHtml = $this->buildSlidesHtml($imagesToDisplay);
-        echo $slidesHtml;*/
     }
 
 
