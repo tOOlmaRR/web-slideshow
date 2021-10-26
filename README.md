@@ -14,6 +14,14 @@ This is a web application that can display custom slideshows in a browser for lo
 1. **Recursive Folders** - via slideshow configuration, you can also choose to include all subfolders of each folder configured for a slideshow.
 ### Features Under Development
 1. **Folder Scanner** - via the /scan.php page. This page allows you to scan a folder, with or without it's subfolders, into a database. Data retrieved and added includes the full file path, the file name, the width and height of images, and a bit indicating whether or not the image should be considered secured (to be used for private slideshows). This scanner also includes the option to create and associate tags (comma-delimited set) to each image scanned. Tags are associated to images and tags can also be marked as secured. **Note**: The slideshow page does not load images from the database yet, and there are no admin options to modify the data in the web UI yet either.
+1. **Database-Driven Slideshow** - via the /slideshow-db.php page. This page has very similar features to the main slideshow.php page, except that it is driven off of the database and by tags rather than physical folders of photos/images. The UI has also been redesigned slightly. For the moment, this page has the following features, but should be considered as a beta version for the moment:
+   - **Available Tags** - determines all tags that are available to you and allows you to create a slideshow by combining all photos in the database associated to the chosen tags. Photos will only be added once if a photo has more than one of the chosen tags.
+   - **Private Tags** - tags can be defined as 'secure' in the database, and secure tags will only be displayed if you are authorized to view them.
+   - **Private Images** - images stored in the database can also be marked as 'secure'. These images will only be included in slideshows if you are authorized to view them.
+   - **Manual Controls** - at any time you can move forward or backward in the current slideshow. This does not halt the slideshow in progress, but it does restart the timer.
+   - **Slideshow Speed** - a slider control in the UI controls how long each slide will be displayed for. Changes take effect after transitioning to the next slide.
+   - **Randomize Option** - allows you to randomize the slides in the current slideshow. Changes take effect immediately.
+   - **Halt** - allows you to stop the slidehow on the current slide and pick up where you left off afterwards.
 
 ## Slideshow Configuration
 All configuration elements are defined in the */mainConfig.php* file. There is an overlying $configuration array which is designed to contain all configuration elements, and then within, there are separate arrays that contain all slideshow configurations as well as the root physical and virtual folders to use for both private and public slideshows.
