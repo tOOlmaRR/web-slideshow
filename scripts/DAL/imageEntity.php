@@ -66,7 +66,8 @@ class ImageEntity extends BaseEntity implements IEntity
             $insertStatement->bindParam(":originalFileName", $this->originalFileName);
             $insertStatement->bindParam(":width", $this->width);
             $insertStatement->bindParam(":height", $this->height);
-            $insertStatement->bindParam(":secure", $this->secure);
+            $secure = $this->secure ? '1' : '0';
+            $insertStatement->bindParam(":secure", $secure);
         } else {
             throw new \Exception("This application only supports the use of SPROCs for database queries!");
         }

@@ -8,7 +8,7 @@ class TagEntity extends BaseEntity implements IEntity
     // properties
     public $tagID;
     public $tag;
-    public $secure;
+    public bool $secure;
     
     
     
@@ -37,7 +37,7 @@ class TagEntity extends BaseEntity implements IEntity
         if ($row) {
             $this->tagID = $row["TagID"];
             $this->tag = $row["Tag"];
-            $this->secure = $row["Secure"];
+            $this->secure = $row["Secure"] === '1' ? true : false;
             return true;
         } else {
             return false;
@@ -54,7 +54,8 @@ class TagEntity extends BaseEntity implements IEntity
             $insertStatement = $db->prepare($sql);
             $insertStatement->bindParam(":id", $newID, \PDO::PARAM_INT, 10);
             $insertStatement->bindParam(":tag", $this->tag);
-            $insertStatement->bindParam(":secure", $this->secure);
+            $secure = $this->secure ? '1' : '0';
+            $insertStatement->bindParam(":secure", $secure);
         } else {
             throw new \Exception("This application only supports the use of SPROCs for database queries!");
         }
