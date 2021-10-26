@@ -134,6 +134,12 @@ vendor/bin/phpunit tests --configuration ./tests --coverage-clover ./tests/resul
 
 ## History
 
+### v4.0
+- add new slideshow-db.php page to show slideshows based on image metadata in a database rather than physical folders. This includes:
+    - listing all tags available to be included in a slideshow, including private tags only if authorized
+    - compile and include images based on selected tags, including private images only if authorized
+    - same features as the original slidehow page including randomization, halting the slidehow, manual navigation, and adjusting slideshow speed
+
 ### v3.2
 - add new scan.php page to scan and load image metadata into the database. Includes options to:
     - scan all subfolders or just the contents of the requested folder
