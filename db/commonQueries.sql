@@ -1,4 +1,7 @@
 /****** Script for SelectTopNRows command from SSMS  ******/
+USE [WebSlideshow-DEV]
+GO
+
 select * from Images
 select * from Tags
 select * from TaggedImages
