@@ -20,7 +20,7 @@ This is a web application that can display custom slideshows in a browser for lo
    - **Private Images** - images stored in the database can also be marked as 'secure'. These images will only be included in slideshows if you are authorized to view them.
    - **Manual Controls** - at any time you can move forward or backward in the current slideshow. This does not halt the slideshow in progress, but it does restart the timer.
    - **Slideshow Speed** - a slider control in the UI controls how long each slide will be displayed for. Changes take effect after transitioning to the next slide.
-   - **Randomize Option** - allows you to randomize the slides in the current slideshow. Changes take effect immediately.
+   - **Randomize Option** - allows you to randomize the slides in the current slideshow. Changes take effect immediately. Halting randomization will stop at the current slide.
    - **Halt** - allows you to stop the slidehow on the current slide and pick up where you left off afterwards.
 
 ## Slideshow Configuration
@@ -130,9 +130,21 @@ vendor/bin/phpunit tests --configuration ./tests --coverage-clover ./tests/resul
 1. Open up your firewall to allow internal incoming requests on port 80 for Apache
     - In Windows 10, you will likely need to navigate to Update & Security > Windows Security > Firewall & Network Protection, and click on the Advanced Settings link near the bottom.
     - You then need to go to the Inbound rules, find Apache Web Server, and either change an existing rule or set up a new rule to allow local port 80 and local IP addresses of your choosing (potentially, 192.168.0.0 to 192.168.0.255). You may need to set this for one profile or another (public or private - I needed public apparently).
+1. Consider setting up a static IP on your internet connection. You can do this in Windows by:
+    - opening your Network & Internet Settings
+    - clicking on Properties to view your current connection details
+    - finding the IP Settings section and clicking on Edit
+    - editing your IP settings (likely IP v4) to manually specify your IP address. You'll likely want your subnet prefix length to be set to 32.
+    
+**Note**: Be careful when setting your static IP address. Log into your router and ensure that the address is not in the range that your router will use will assigning local IP addresses. If you don't, you may run into weird network issues in cases when the DHCP server assigns your IP address to another device on the network.
 
 
 ## History
+
+### v4.1
+- improved randomization feature in both the static and dynamic (DB-driven) slideshows:
+    - fixed a bug that caused the randomized slideshow to not include all slides, and include some slides multiple times.
+    - when you halt a randomized slideshow, the slideshow now continues from the current slide instead of restarting from the first slide.
 
 ### v4.0
 - add new slideshow-db.php page to show slideshows based on image metadata in a database rather than physical folders. This includes:
