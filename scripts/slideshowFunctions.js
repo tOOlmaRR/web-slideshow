@@ -36,7 +36,7 @@ function showSlides(n)
         for (let i = 0; i < slides.length; i++) {
             slides[i].style.display = "none";
         }
-        
+
         // move forward one slide
         slideIndex++;
         
@@ -82,9 +82,9 @@ function randomize_change(checkbox)
     if (checkbox.checked) {
         shuffleArray(slideIndexes);
     } else {
+        slideIndex = slideIndexes[slideIndex-1];
         slides = undefined;
         slideIndexes = undefined;
-        slideIndex = 0;
     }
     showSlides();
 }
