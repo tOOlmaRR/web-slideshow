@@ -36,7 +36,7 @@ function showSlides(n)
         for (let i = 0; i < slides.length; i++) {
             slides[i].style.display = "none";
         }
-        
+
         // move forward one slide
         slideIndex++;
         
@@ -80,15 +80,11 @@ function randomize_change(checkbox)
 {
     clearInterval(slideShowIntervalID);
     if (checkbox.checked) {
-        slideIndexes = new Array();
-        for (let i = 0; i < slides.length; i++) {
-            const randomIndex = Math.floor(Math.random() * slides.length);
-            slideIndexes.push(randomIndex);
-        }
+        shuffleArray(slideIndexes);
     } else {
+        slideIndex = slideIndexes[slideIndex-1];
         slides = undefined;
         slideIndexes = undefined;
-        slideIndex = 0;
     }
     showSlides();
 }
@@ -100,5 +96,16 @@ function haltSlideshow(checkbox) {
         const configuredIntervalText = document.getElementById("currentSlideshowSpeed").innerText;
         const configuredInterval = +configuredIntervalText * 1000;
         slideShowIntervalID = setTimeout(showSlides, configuredInterval);
+    }
+}
+
+/* Randomize array in-place using Durstenfeld shuffle algorithm */
+/* Source: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array */
+function shuffleArray(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
     }
 }
