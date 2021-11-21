@@ -145,6 +145,10 @@ vendor/bin/phpunit tests --configuration ./tests --coverage-clover ./tests/resul
 - improved randomization feature in both the static and dynamic (DB-driven) slideshows:
     - fixed a bug that caused the randomized slideshow to not include all slides, and include some slides multiple times.
     - when you halt a randomized slideshow, the slideshow now continues from the current slide instead of restarting from the first slide.
+- ui improvements
+    - contrain the slideshow options pane at the left to specific width (300px)
+    - reduce width of the slide footer (file name and dimensions) so that text doesn't overflow the boundaries
+    - reduce padding in fieldsets in the left pane
 
 ### v4.0
 - add new slideshow-db.php page to show slideshows based on image metadata in a database rather than physical folders. This includes:
