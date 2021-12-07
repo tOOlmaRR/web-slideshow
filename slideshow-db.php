@@ -36,34 +36,48 @@
         <script type="text/javascript" language="javascript" src="scripts/slideshowFunctions.js"></script>
     </head>
     <body>
-        <div id="slideshowOptions">
-            <fieldset>
-                <legend>Slideshow Options:</legend>
-                <div class="slideshowSelection">             
-                    <?php $dbSlideshow->renderSlideshowTags($availableTags) ?>
-                </div>
-                
-                <div class="randomizeToggle">
-                    <?php $dbSlideshow->renderRandomizeToggle() ?>
-                </div>
-
-                <div class="slideshowSpeed">
-                    <?php $dbSlideshow->renderSlideshowSpeed() ?>
-                </div>
-            </fieldset>
+        <!-- Left Pane -->
+        <div id="leftPane">
+            <!-- Options re: the Slideshow -->
+            <div id="slideshowOptions">
+                <fieldset>
+                    <legend class="title">Slideshow Options:</legend>
+                    <div class="slideshowSelection">             
+                        <?php echo $dbSlideshow->buildSlideshowTagsHtml($availableTags) ?>
+                    </div>
+                    
+                    <div class="randomizeToggle">
+                        <?php echo $dbSlideshow->buildRandomizeToggleHtml() ?>
+                    </div>
+    
+                    <div class="slideshowSpeed">
+                        <?php echo $dbSlideshow->buildSlideshowSpeedHtml() ?>
+                    </div>
+                </fieldset>
+            </div>
         </div>
-        <!-- Slideshow container -->
+        
+        <!-- Slideshow Container -->
         <div class="slideshow-container">
-            <!-- Full-width images with number and caption text -->
             <fieldset>
                 <legend>Slide:</legend>
-                <?php $dbSlideshow->renderSlideShow($configuration) ?>
+                <?php echo $dbSlideshow->renderSlideShow($configuration) ?>
                 <!-- Next and previous buttons -->
                 <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
                 <a class="next" onclick="plusSlides(1)">&#10095;</a>
             </fieldset>
-            
-        </div>        
+        </div>
+
+        <div id="rightPane">
+            <!-- Information re: the Current Slide -->
+            <div id="slideInfo">
+                <fieldset>
+                    <legend class="title">Slide Information:</legend>
+                    <?php echo $dbSlideshow->buildSlideInfoHtml($dbSlideshow->allSlides, $availableTags) ?>
+                </fieldset>
+            </div>    
+        </div>
+
         <script type="text/javascript" language="javascript">showSlides();</script>
     </body>
 </html>

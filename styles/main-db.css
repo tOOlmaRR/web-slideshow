@@ -11,7 +11,27 @@ legend {
 }
 
 
+/* Left Pane */
+#leftPane {
+    width: 250px;
+    float: left;
+}
+
 /* Slideshow Options */
+#slideshowOptions {
+    margin-bottom: 25px;
+}
+
+#slideshowOptions fieldset
+{
+    padding: 5px;
+}
+
+#slideshowOptions fieldset legend.title
+{
+    font-weight: bold;
+}
+
 .publicOption {
     color: green;
 }
@@ -30,23 +50,12 @@ legend {
     padding-top: 5px;
 }
 
-#slideshowOptions {
-    width: 300px;
-    float: left;
-}
-
-#slideshowOptions fieldset
-{
-    padding: 5px;
-}
-
 .randomizeToggle {
     text-align: left;
 }
 
 #slideshowSpeed {
     margin-left: 10px;
-    width: 100px;
 }
 
 .slideshowSpeed {
@@ -55,6 +64,40 @@ legend {
 
 .haltSlideshow {
     margin-left: 10px;
+}
+
+/* Right Pane */
+#rightPane {
+    float: left;
+    width: 250px;
+}
+
+
+/* Slide Info */
+#slideInfo {
+    margin-bottom: 25px;
+}
+
+#slideInfo fieldset {
+    padding: 5px;
+}
+
+#slideInfo fieldset legend.title {
+    font-weight: bold;
+}
+
+#slideInfo .slideBasicInfo .title {
+    font-weight: bold;
+    font-size: 10pt;
+}
+
+#slideInfo .slideBasicInfo .slide-filename {
+    width: 225px;
+}
+
+#slideTagsSubmit {
+    clear: both;
+    padding-top: 5px;
 }
 
 /* Slideshow container */

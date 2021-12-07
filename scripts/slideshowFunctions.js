@@ -1,6 +1,7 @@
 let slideIndex = 0;
 let slideShowIntervalID;
 let slides;
+let slideInfoPanels;
 let slideIndexes;
 
 // Next/previous controls
@@ -19,7 +20,12 @@ function showSlides(n)
 
     // retrieve all slides from the source HTML if not already retrieved
     if (slides === undefined) {
-        slides = document.getElementsByClassName("mySlides");
+        slides = document.getElementsByClassName("mySlides");        
+    }
+
+    // retrieve all slide info panels from the source HTML
+    if (slideInfoPanels === undefined) {
+        slideInfoPanels = document.getElementsByClassName("mySlideInfo");
     }
     
     // not asked to display a specific slide (continue the slideshow)
@@ -32,9 +38,10 @@ function showSlides(n)
             }
         }
         
-        // hide all slides
+        // hide all slides and info panels
         for (let i = 0; i < slides.length; i++) {
             slides[i].style.display = "none";
+            slideInfoPanels[i].style.display = "none"
         }
 
         // move forward one slide
@@ -45,8 +52,9 @@ function showSlides(n)
             slideIndex = 1
         }
         
-        // show only the current slide
+        // show only the current slide and it's info panel
         slides[slideIndexes[slideIndex-1]].style.display = "block";
+        slideInfoPanels[slideIndexes[slideIndex-1]].style.display = "block";
         
         // continue the slideshow after the configured pause
         slideShowIntervalID = setTimeout(showSlides, configuredInterval);
@@ -63,13 +71,15 @@ function showSlides(n)
             slideIndex = slides.length
         }
         
-        // hide all slides
+        // hide all slides and info panels
         for (let i = 0; i < slides.length; i++) {
             slides[slideIndexes[i]].style.display = "none";
+            slideInfoPanels[slideIndexes[i]].style.display = "none";
         }
         
-        // show only the current slide
+        // show only the current slide and it's info panel
         slides[slideIndexes[slideIndex-1]].style.display = "block";
+        slideInfoPanels[slideIndexes[slideIndex-1]].style.display = "block";
         
         // continue the slideshow after the configured pause
         slideShowIntervalID = setTimeout(showSlides, configuredInterval);
@@ -84,6 +94,7 @@ function randomize_change(checkbox)
     } else {
         slideIndex = slideIndexes[slideIndex-1];
         slides = undefined;
+        slideInfoPanels = undefined;
         slideIndexes = undefined;
     }
     showSlides();
