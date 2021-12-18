@@ -6,7 +6,11 @@ use toolmarr\WebSlideshow\DAL\TagEntity;
 
 class TagsEntity extends BaseEntity implements IEntity
 {
-    // properties
+    // properties - inputs    
+    public $imageID;
+    public $includeSecureTags;
+    
+    // properties - output
     public $tags = [];
     
     
@@ -18,14 +22,18 @@ class TagsEntity extends BaseEntity implements IEntity
         $db = $this->getDB();
         if ($this->getUseSPROCs()) {
             $sproc = $this->getSPROCs()["select"]["tags"];
-            $sql = "EXEC [$sproc]";
+            $sql = "EXEC [$sproc] @imageID=:imageID, @secureTags=:secure";
+            $sqlParams = [
+                ":imageID" => $this->imageID,
+                ":secure" => $this->includeSecureTags
+            ];
         } else {
             throw new \Exception("This application only supports the use of SPROCs for database queries!");
         }
         $getStatement = $db->prepare($sql);
-        
+
         // perform the select and retrieve the data
-        $getStatement->execute();
+        $getStatement->execute($sqlParams);
         $rows = $getStatement->fetchAll();
         
         // build/return a list of business objects based on the returned data

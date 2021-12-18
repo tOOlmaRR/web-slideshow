@@ -25,6 +25,9 @@ class DbWebSlideshow
     {
         $entityFactory = new EntityFactory($config['database']);
         $tagsEntity = $entityFactory->getEntity("tags");
+        $tagsEntity->imageID = null;
+        $tagsEntity->includeSecureTags = $this->privateAcessGranted ? 1 : 0;
+
         if ($tagsEntity->get())
         {
             $allTags = $tagsEntity->tags;
@@ -32,20 +35,7 @@ class DbWebSlideshow
             $allTags = [];
             // TODO: consider outputting an error to the UI
         }
-
-        $tagsToDisplay = [];
-        foreach ($allTags as $tag) {
-            // add secure tags only if private access has been granted
-            if ($tag->secure && $this->privateAcessGranted) {
-                $tagsToDisplay[] = $tag;
-            }
-
-            // add all public tags
-            else if (!$tag->secure) {
-                $tagsToDisplay[] = $tag;
-            }
-        }
-        return $tagsToDisplay;
+        return $allTags;
     }
 
     public function buildSlideshowTagsHtml($tags) : string
@@ -108,9 +98,9 @@ class DbWebSlideshow
 
     public function renderSlideShow($configuration) : string
     {
+        $entityFactory = new EntityFactory($configuration['database']);
         $allImages = [];
         foreach ($configuration['chosenTags'] as $tag) {
-            $entityFactory = new EntityFactory($configuration['database']);
             $imagesEntity = $entityFactory->getEntity("images");
             $imagesEntity->tag = $tag;
             $imagesEntity->includeSecureImages = $this->privateAcessGranted ? 1 : 0;
@@ -127,6 +117,8 @@ class DbWebSlideshow
 
         $photosToDisplay = array();
         foreach ($allImages as $image) {
+            $photoToDisplay = [];
+            
             // determine physical and virtual roots based on configuration
             $virtualRoot = $image->secure ? $configuration["virtualRoots"]["private"] : $configuration["virtualRoots"]["public"];
             $rootFolder = $image->secure ? $configuration["physicalRoots"]["private"] : $configuration["physicalRoots"]["public"];
@@ -158,8 +150,19 @@ class DbWebSlideshow
 
             // append the filename
             $virtualFullPath = $virtualLocation . $image->fileName;
-            
             $photoToDisplay[DbWebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] = $virtualFullPath;
+
+            // retrieve all tags for the current image
+            $tagsEntity = $entityFactory->getEntity("tags");
+            $tagsEntity->imageID = $image->imageID;
+            $tagsEntity->includeSecureTags = $this->privateAcessGranted ? 1 : 0;
+            if ($tagsEntity->get())
+            {
+                $imageTags = $tagsEntity->tags;
+                foreach ($imageTags as $tag) {
+                    $photoToDisplay['tags'][$tag->tagID] = $tag;
+                }
+            }
             $photosToDisplay[] = $photoToDisplay;
         }
 
@@ -198,13 +201,15 @@ class DbWebSlideshow
 
     private function buildSlideBasicInfoHtml($slide) : string
     {
+        $checkedAttribute = $slide['secured']? "checked" : "";
+        
         $slideBasicInfoHtml = "<fieldset>";
         $slideBasicInfoHtml .= "<legend>Basic Info:</legend>";
         
         $slideBasicInfoHtml .= "    <div class=\"slideBasicInfo\">";
         $slideBasicInfoHtml .= "        <div>";
         $slideBasicInfoHtml .= "            <span class=\"title\">Filename: </span><br />";
-        $slideBasicInfoHtml .= "            <input class=\"slide-filename\" type=\"text\" name=\"filename\" value=\"" . $slide[DbWebSlideshow::SLIDE_FILENAME_KEY] . "\" />";
+        $slideBasicInfoHtml .= "            <input class=\"slide-filename\" type=\"text\" disabled=\"disabled\" name=\"filename\" value=\"" . $slide[DbWebSlideshow::SLIDE_FILENAME_KEY] . "\" />";
         $slideBasicInfoHtml .= "        </div>";
         $slideBasicInfoHtml .= "        <div>";
         $slideBasicInfoHtml .= "            <span class=\"title\">Original Size: </span><br />";
@@ -215,9 +220,7 @@ class DbWebSlideshow
         $slideBasicInfoHtml .= "            <input class=\"slide-n-size\" type=\"text\" disabled=\"disabled\" value=\"$slide[width]x$slide[height]\" />";
         $slideBasicInfoHtml .= "        </div>";
         $slideBasicInfoHtml .= "        <div>";
-        $slideBasicInfoHtml .= "            <input class=\"slide-secured\" type=\"checkbox\" name=\"secureImage\" ";
-        $checkedAttribute = $slide['secured']? " checked" : "";
-        $slideBasicInfoHtml .= "$checkedAttribute/><label for=\"secureImage\">Secured Image</label>";
+        $slideBasicInfoHtml .= "            <input class=\"slide-secured\" type=\"checkbox\" disabled=\"disabled\" name=\"secureImage\" $checkedAttribute/><label for=\"secureImage\">Secured Image</label>";
         $slideBasicInfoHtml .= "        </div>";
         $slideBasicInfoHtml .= "    </div>";
         $slideBasicInfoHtml .= "</fieldset>";
@@ -235,10 +238,14 @@ class DbWebSlideshow
         
         // Build list of tags to render
         foreach ($tags as $tag) {
+            $checkedAttribute = "";
+            if (array_key_exists($tag->tagID, $slide['tags'])) {
+                $checkedAttribute = "checked";
+            }
             $cssClass = $tag->secure ? 'privateOption' : 'publicOption';
             $slideTagsHtml .= "                <span>";
-            $slideTagsHtml .= "                    <input type=\"checkbox\" name=\"slideTags[]\" value=\"" . $tag->tag . "\" id=\"" . $tag->tag . "\">";
-            $slideTagsHtml .= "                    <label class=\"" . $cssClass . "\" for=\"" . $tag->tag . "\">" . $tag->tag . "</label>";
+            $slideTagsHtml .= "                    <input type=\"checkbox\" name=\"slideTags[]\" value=\"$tag->tag\" id=\"$tag->tag\" $checkedAttribute/>";
+            $slideTagsHtml .= "                    <label class=\"$cssClass\" for=\"$tag->tag\">$tag->tag</label>";
             $slideTagsHtml .= "                </span>";
         }
 
