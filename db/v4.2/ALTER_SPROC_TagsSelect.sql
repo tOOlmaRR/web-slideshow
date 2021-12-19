@@ -1,13 +1,12 @@
 USE [WebSlideshow-DEV]
 GO
 
-/****** Object:  StoredProcedure [dbo].[Tags.Select]    Script Date: 2021-12-17 9:47:24 PM ******/
+/****** Object:  StoredProcedure [dbo].[Tags.Select]    Script Date: 2021-12-17 9:41:34 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
-
 
 
 
@@ -23,7 +22,7 @@ GO
 -- Updates:		December 17, 2021 (add parameters to allow retrieving tags for a given image, and only non-secure tags if requested)
 -- Description:	Selects all Tags from the database
 -- =============================================
-CREATE PROCEDURE [dbo].[Tags.Select]
+ALTER PROCEDURE [dbo].[Tags.Select]
 	@imageID int,
 	@secureTags bit
 AS

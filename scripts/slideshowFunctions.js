@@ -1,7 +1,13 @@
 let slideIndex = 0;
 let slideShowIntervalID;
 let slides;
+let slideInfoPanels;
 let slideIndexes;
+
+// Do this once the DOM has loaded
+window.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM has loaded'); 
+})
 
 // Next/previous controls
 function plusSlides(n)
@@ -19,8 +25,16 @@ function showSlides(n)
 
     // retrieve all slides from the source HTML if not already retrieved
     if (slides === undefined) {
-        slides = document.getElementsByClassName("mySlides");
+        slides = document.getElementsByClassName("mySlides");        
     }
+
+    // retrieve all slide info panels from the source HTML
+    if (slideInfoPanels === undefined) {
+        slideInfoPanels = document.getElementsByClassName("mySlideInfo");
+    }
+
+    // early exit if there are no slides to display
+    if (slides.length === 0 || slideInfoPanels.length === 0) return;
     
     // not asked to display a specific slide (continue the slideshow)
     if (n === undefined) {
@@ -32,9 +46,10 @@ function showSlides(n)
             }
         }
         
-        // hide all slides
+        // hide all slides and info panels
         for (let i = 0; i < slides.length; i++) {
             slides[i].style.display = "none";
+            slideInfoPanels[i].style.display = "none"
         }
 
         // move forward one slide
@@ -45,8 +60,9 @@ function showSlides(n)
             slideIndex = 1
         }
         
-        // show only the current slide
+        // show only the current slide and it's info panel
         slides[slideIndexes[slideIndex-1]].style.display = "block";
+        slideInfoPanels[slideIndexes[slideIndex-1]].style.display = "block";
         
         // continue the slideshow after the configured pause
         slideShowIntervalID = setTimeout(showSlides, configuredInterval);
@@ -63,13 +79,15 @@ function showSlides(n)
             slideIndex = slides.length
         }
         
-        // hide all slides
+        // hide all slides and info panels
         for (let i = 0; i < slides.length; i++) {
             slides[slideIndexes[i]].style.display = "none";
+            slideInfoPanels[slideIndexes[i]].style.display = "none";
         }
         
-        // show only the current slide
+        // show only the current slide and it's info panel
         slides[slideIndexes[slideIndex-1]].style.display = "block";
+        slideInfoPanels[slideIndexes[slideIndex-1]].style.display = "block";
         
         // continue the slideshow after the configured pause
         slideShowIntervalID = setTimeout(showSlides, configuredInterval);
@@ -84,6 +102,7 @@ function randomize_change(checkbox)
     } else {
         slideIndex = slideIndexes[slideIndex-1];
         slides = undefined;
+        slideInfoPanels = undefined;
         slideIndexes = undefined;
     }
     showSlides();
@@ -96,6 +115,57 @@ function haltSlideshow(checkbox) {
         const configuredIntervalText = document.getElementById("currentSlideshowSpeed").innerText;
         const configuredInterval = +configuredIntervalText * 1000;
         slideShowIntervalID = setTimeout(showSlides, configuredInterval);
+    }
+}
+
+function updateTags(imageID, tagID, tag, checkbox) {
+    console.log("update Tag: " + tag);
+    var msgDiv = document.getElementById('slideTagsSubmitMessages');
+
+    // halt the slideshow if in progress
+    var haltSlideshowCheckbox = document.getElementById('haltSlideshow');
+    var slideshowInProgress = !haltSlideshowCheckbox.checked;
+    if (slideshowInProgress) {
+        clearInterval(slideShowIntervalID);
+        haltSlideshowCheckbox.checked = true;
+        var haltedMsgDiv = document.createElement("div");
+        haltedMsgDiv.className = 'inProgress';
+        haltedMsgDiv.innerText = 'Slideshow HALTED';
+        msgDiv.appendChild(haltedMsgDiv);
+    }
+
+    // display operation to be performed and indicate operation is in progress
+    var newMsgDiv = document.createElement("div");
+    newMsgDiv.className = 'inProgress';
+    var newOperation = checkbox.checked === true ? 'adding' : "removing";
+    var newMsg = newOperation + ' "' + tag + '"...';
+    newMsgDiv.innerText = newMsg;
+    msgDiv.appendChild(newMsgDiv);
+    
+    // perform the operation
+    console.log("update DB");
+    httpRequest = new XMLHttpRequest();
+
+    if (!httpRequest) {
+        newMsgDiv.className = 'failure';
+        newMsgDiv.innerText += "FAILED!"
+        return false;
+    }
+    //httpRequest.onreadystatechange = alertContents;
+    httpRequest.open('POST', 'services/taggedimage.php');
+    httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    params = "imageID=" + imageID + "&tagID=" + tagID + "&operation=" + newOperation;
+    httpRequest.send(params);
+    
+    httpRequest.onload = function() {
+        // Do whatever with response
+        if (httpRequest.responseText != 'success') {
+            newMsgDiv.className = 'failure';
+            newMsgDiv.innerText += "FAIL!"
+        } else {
+            newMsgDiv.className = 'success';
+            newMsgDiv.innerText += "DONE!"
+        }
     }
 }
 

@@ -13,6 +13,7 @@ class DbWebSlideshow
 
     public int $maxHeight;
     public bool $privateAcessGranted = false;
+    public array $allSlides;
 
     public function __construct(int $viewportHeight)
     {
@@ -24,6 +25,9 @@ class DbWebSlideshow
     {
         $entityFactory = new EntityFactory($config['database']);
         $tagsEntity = $entityFactory->getEntity("tags");
+        $tagsEntity->imageID = null;
+        $tagsEntity->includeSecureTags = $this->privateAcessGranted ? 1 : 0;
+
         if ($tagsEntity->get())
         {
             $allTags = $tagsEntity->tags;
@@ -31,50 +35,39 @@ class DbWebSlideshow
             $allTags = [];
             // TODO: consider outputting an error to the UI
         }
-
-        $tagsToDisplay = [];
-        foreach ($allTags as $tag) {
-            // add secure tags only if private access has been granted
-            if ($tag->secure && $this->privateAcessGranted) {
-                $tagsToDisplay[] = $tag;
-            }
-
-            // add all public tags
-            else if (!$tag->secure) {
-                $tagsToDisplay[] = $tag;
-            }
-        }
-        return $tagsToDisplay;
+        return $allTags;
     }
 
-    public function renderSlideshowTags($tags)
+    public function buildSlideshowTagsHtml($tags, $config) : string
     {
         // initial form and fieldset rendering
-        $slidehowTagsHtml = "<form action=\"\" method=\"POST\">";
-        $slidehowTagsHtml = $slidehowTagsHtml . "<fieldset>";
-        $slidehowTagsHtml = $slidehowTagsHtml . "<legend>Tags to Include in the Slideshow:</legend>";
-        $slidehowTagsHtml = $slidehowTagsHtml . "<div id=\"tagSelection\">";
+        $slideshowTagsHtml = "<form action=\"\" method=\"POST\">";
+        $slideshowTagsHtml = $slideshowTagsHtml . "<fieldset>";
+        $slideshowTagsHtml = $slideshowTagsHtml . "<legend>Tags to Include in Slideshow:</legend>";
+        $slideshowTagsHtml = $slideshowTagsHtml . "<div id=\"tagSelection\">";
         
         // Build list of tags to render
         foreach ($tags as $tag) {
             $cssClass = $tag->secure ? 'privateOption' : 'publicOption';
-            $slidehowTagsHtml = $slidehowTagsHtml . "<span>";
-            $slidehowTagsHtml = $slidehowTagsHtml . "<input type=\"checkbox\" name=\"chosenSlideshowTags[]\" value=\"" . $tag->tag . "\" id=\"" . $tag->tag . "\">";
-            $slidehowTagsHtml = $slidehowTagsHtml . "<label class=\"" . $cssClass . "\" for=\"" . $tag->tag . "\">" . $tag->tag . "</label>";
-            $slidehowTagsHtml = $slidehowTagsHtml . "</span>";
+            $checkedAttribute = in_array($tag->tag, $config['chosenTags']) ? 'checked' : '';
+
+            $slideshowTagsHtml = $slideshowTagsHtml . "<span>";
+            $slideshowTagsHtml = $slideshowTagsHtml . "<input type=\"checkbox\" name=\"chosenSlideshowTags[]\" value=\"$tag->tag\" id=\"$tag->tag\" $checkedAttribute />";
+            $slideshowTagsHtml = $slideshowTagsHtml . "<label class=\"$cssClass\" for=\"$tag->tag\">$tag->tag</label>";
+            $slideshowTagsHtml = $slideshowTagsHtml . "</span>";
         }
 
         // close off the drop down and render the button
-        $slidehowTagsHtml = $slidehowTagsHtml . "</div>";
-        $slidehowTagsHtml = $slidehowTagsHtml . "<div id=\"tagSelectionSubmit\"><input type=\"submit\" value=\"GO!\"></div>";
-        $slidehowTagsHtml = $slidehowTagsHtml . "</form>";
-        $slidehowTagsHtml = $slidehowTagsHtml . "</fieldset>";
+        $slideshowTagsHtml = $slideshowTagsHtml . "</div>";
+        $slideshowTagsHtml = $slideshowTagsHtml . "<div id=\"tagSelectionSubmit\"><input type=\"submit\" value=\"Generate Slideshow\"></div>";
+        $slideshowTagsHtml = $slideshowTagsHtml . "</form>";
+        $slideshowTagsHtml = $slideshowTagsHtml . "</fieldset>";
 
         // display the built HTML to the page
-        echo $slidehowTagsHtml;
+        return $slideshowTagsHtml;
     }
 
-    public function renderRandomizeToggle()
+    public function buildRandomizeToggleHtml() : string
     {
         $slideshowRandomizeToggleHtml = "<fieldset>";
         $slideshowRandomizeToggleHtml = $slideshowRandomizeToggleHtml . "<legend>Randomize:</legend>";
@@ -83,10 +76,10 @@ class DbWebSlideshow
         $slideshowRandomizeToggleHtml = $slideshowRandomizeToggleHtml . "</fieldset>";
 
         // display the built HTML to the page
-        echo $slideshowRandomizeToggleHtml;
+        return $slideshowRandomizeToggleHtml;
     }
 
-    public function renderSlideshowSpeed()
+    public function buildSlideshowSpeedHtml() : string
     {
         $slideshowSpeedHtml = "<fieldset>";
         $slideshowSpeedHtml = $slideshowSpeedHtml . "<legend>Slideshow Speed:</legend>";
@@ -102,14 +95,14 @@ class DbWebSlideshow
         $slideshowSpeedHtml  = $slideshowSpeedHtml . "</fieldset>";
 
         // display the built HTML to the page
-        echo $slideshowSpeedHtml;
+        return $slideshowSpeedHtml;
     }
 
-    public function renderSlideShow($configuration)
+    public function renderSlideShow($configuration) : string
     {
+        $entityFactory = new EntityFactory($configuration['database']);
         $allImages = [];
         foreach ($configuration['chosenTags'] as $tag) {
-            $entityFactory = new EntityFactory($configuration['database']);
             $imagesEntity = $entityFactory->getEntity("images");
             $imagesEntity->tag = $tag;
             $imagesEntity->includeSecureImages = $this->privateAcessGranted ? 1 : 0;
@@ -126,6 +119,8 @@ class DbWebSlideshow
 
         $photosToDisplay = array();
         foreach ($allImages as $image) {
+            $photoToDisplay = [];
+            
             // determine physical and virtual roots based on configuration
             $virtualRoot = $image->secure ? $configuration["virtualRoots"]["private"] : $configuration["virtualRoots"]["public"];
             $rootFolder = $image->secure ? $configuration["physicalRoots"]["private"] : $configuration["physicalRoots"]["public"];
@@ -134,16 +129,18 @@ class DbWebSlideshow
             $newImageDimensions = $this->optimizePhotoSize($image->width, $image->height);
 
             // build the photo object and add it to the list
+            $photoToDisplay['ID'] = $image->imageID;
             $photoToDisplay[DbWebSlideshow::SLIDE_FILENAME_KEY] = $image->fileName;
             $photoToDisplay[DbWebSlideshow::SLIDE_FULLPATH_KEY] = $image->fullFilePath;
             $photoToDisplay['originalWidth'] = $image->width;
             $photoToDisplay['originalHeight'] = $image->height;
             $photoToDisplay['width'] = $newImageDimensions['width'];
             $photoToDisplay['height'] = $newImageDimensions['height'];
+            $photoToDisplay['secured'] = $image->secure;
             
             /* get the path */
             // take the full physical path and trim off the root folder
-            $path =  substr($image->fullFilePath, strlen($rootFolder));
+            $path = substr($image->fullFilePath, strlen($rootFolder));
 
             // trim off the filename
             $path = substr($path, 0, strpos($path, $image->fileName));
@@ -156,8 +153,19 @@ class DbWebSlideshow
 
             // append the filename
             $virtualFullPath = $virtualLocation . $image->fileName;
-            
             $photoToDisplay[DbWebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] = $virtualFullPath;
+
+            // retrieve all tags for the current image
+            $tagsEntity = $entityFactory->getEntity("tags");
+            $tagsEntity->imageID = $image->imageID;
+            $tagsEntity->includeSecureTags = $this->privateAcessGranted ? 1 : 0;
+            if ($tagsEntity->get())
+            {
+                $imageTags = $tagsEntity->tags;
+                foreach ($imageTags as $tag) {
+                    $photoToDisplay['tags'][$tag->tagID] = $tag;
+                }
+            }
             $photosToDisplay[] = $photoToDisplay;
         }
 
@@ -165,17 +173,95 @@ class DbWebSlideshow
         $number = 0;
         $slideshowHtml = '';
         foreach ($photosToDisplay as $photoToDisplay) {
-            $slideshowHtml = $slideshowHtml . "            <div class=\"mySlides fade c" . $number . "\" style=\"height: " . (intval($photoToDisplay['height'])+55) . "px;\">";
-            $slideshowHtml = $slideshowHtml . "                <div class=\"numbertext\">" . ($number + 1) . " / " . count($photosToDisplay) . "</div>";
-            $slideshowHtml = $slideshowHtml . "                <img width=\"$photoToDisplay[width]\" height=\"$photoToDisplay[height]\" src=\"" . $photoToDisplay[DbWebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] . "\">";
-            $slideshowHtml = $slideshowHtml . "                <div class=\"text\"><span class=\"filename\">" . $photoToDisplay[DbWebSlideshow::SLIDE_FILENAME_KEY] . "</span><span class=\"dimensions\">$photoToDisplay[originalWidth]x$photoToDisplay[originalHeight] resized to $photoToDisplay[width]x$photoToDisplay[height]<span></div>";
-            $slideshowHtml = $slideshowHtml . "            </div>";
+            $slideshowHtml = $slideshowHtml . "<div class=\"mySlides fade c" . $number . "\" style=\"height: " . (intval($photoToDisplay['height'])+55) . "px;\">";
+            $slideshowHtml = $slideshowHtml . "    <div class=\"numbertext\">" . ($number + 1) . " / " . count($photosToDisplay) . "</div>";
+            $slideshowHtml = $slideshowHtml . "    <img width=\"$photoToDisplay[width]\" height=\"$photoToDisplay[height]\" src=\"" . $photoToDisplay[DbWebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] . "\">";
+            $slideshowHtml = $slideshowHtml . "    <div class=\"text\"><span class=\"filename\">" . $photoToDisplay[DbWebSlideshow::SLIDE_FILENAME_KEY] . "</span><span class=\"dimensions\">$photoToDisplay[originalWidth]x$photoToDisplay[originalHeight] resized to $photoToDisplay[width]x$photoToDisplay[height]<span></div>";
+            $slideshowHtml = $slideshowHtml . "</div>";
             $number++;
         }
-        echo $slideshowHtml;
+
+        $this->allSlides = $photosToDisplay;
+        return $slideshowHtml;
+    }
+
+    public function buildSlideInfoHtml($allSlides, $tags) : string
+    {
+        $slideInfoHtml = '';
+        $number = 0;
+        foreach ($allSlides as $slide)
+        {
+            $slideInfoHtml .= "<div class=\"mySlideInfo c" . $number . "\">";
+            $slideInfoHtml .= $this->buildSlideBasicInfoHtml($slide);
+            $slideInfoHtml .= $this->buildSlideTagsHtml($slide, $tags);
+            $slideInfoHtml .= "</div>";
+            $number++;
+        }
+        $slideInfoHtml .= "<div id=\"slideTagsSubmitMessages\"></div>";
+        return $slideInfoHtml;
     }
 
 
+
+    private function buildSlideBasicInfoHtml($slide) : string
+    {
+        $checkedAttribute = $slide['secured']? "checked" : "";
+        
+        $slideBasicInfoHtml = "<fieldset>";
+        $slideBasicInfoHtml .= "<legend>Basic Info:</legend>";
+        
+        $slideBasicInfoHtml .= "    <div class=\"slideBasicInfo\">";
+        $slideBasicInfoHtml .= "        <div>";
+        $slideBasicInfoHtml .= "            <span class=\"title\">Filename: </span><br />";
+        $slideBasicInfoHtml .= "            <input class=\"slide-filename\" type=\"text\" disabled=\"disabled\" name=\"filename\" value=\"" . $slide[DbWebSlideshow::SLIDE_FILENAME_KEY] . "\" />";
+        $slideBasicInfoHtml .= "        </div>";
+        $slideBasicInfoHtml .= "        <div>";
+        $slideBasicInfoHtml .= "            <span class=\"title\">Original Size: </span><br />";
+        $slideBasicInfoHtml .= "            <input class=\"slide-o-size\" type=\"text\" disabled=\"disabled\" value=\"$slide[originalWidth]x$slide[originalHeight]\" />";
+        $slideBasicInfoHtml .= "        </div>";
+        $slideBasicInfoHtml .= "        <div>";
+        $slideBasicInfoHtml .= "            <span class=\"title\">Resized To: </span><br />";
+        $slideBasicInfoHtml .= "            <input class=\"slide-n-size\" type=\"text\" disabled=\"disabled\" value=\"$slide[width]x$slide[height]\" />";
+        $slideBasicInfoHtml .= "        </div>";
+        $slideBasicInfoHtml .= "        <div>";
+        $slideBasicInfoHtml .= "            <input class=\"slide-secured\" type=\"checkbox\" disabled=\"disabled\" name=\"secureImage\" $checkedAttribute/><label for=\"secureImage\">Secured Image</label>";
+        $slideBasicInfoHtml .= "        </div>";
+        $slideBasicInfoHtml .= "    </div>";
+        $slideBasicInfoHtml .= "</fieldset>";
+        return $slideBasicInfoHtml;
+    }
+
+    private function buildSlideTagsHtml($slide, $tags) : string
+    {
+        // initial form and fieldset rendering
+        $slideTagsHtml = "<div class=\"slideTagInfo\">";
+        $slideTagsHtml .= "    <form action=\"\" method=\"POST\">";
+        $slideTagsHtml .= "        <fieldset>";
+        $slideTagsHtml .= "            <legend>Tags Associated to this Slide:</legend>";
+        $slideTagsHtml .= "            <div id=\"tagSelection\">";
+        
+        // Build list of tags to render
+        foreach ($tags as $tag) {
+            $checkedAttribute = "";
+            if (array_key_exists($tag->tagID, $slide['tags'])) {
+                $checkedAttribute = "checked";
+            }
+            $cssClass = $tag->secure ? 'privateOption' : 'publicOption';
+            $slideTagsHtml .= "                <span>";
+            $slideTagsHtml .= "                    <input type=\"checkbox\" name=\"slideTags[]\" value=\"$tag->tag\" id=\"$tag->tag\" $checkedAttribute onclick=\"updateTags(" . $slide['ID'] . ", $tag->tagID, '$tag->tag', this);\"/>";
+            $slideTagsHtml .= "                    <label class=\"$cssClass\" for=\"$tag->tag\">$tag->tag</label>";
+            $slideTagsHtml .= "                </span>";
+        }
+
+        // close off the drop down and render the button
+        $slideTagsHtml .= "            </div>";
+        $slideTagsHtml .= "        </fieldset>";
+        $slideTagsHtml .= "    </form>";
+        $slideTagsHtml .= "</div>";
+
+        // display the built HTML to the page
+        return $slideTagsHtml;
+    }
 
     private function optimizePhotoSize($width, $height) : array
     {
@@ -188,7 +274,7 @@ class DbWebSlideshow
     private function isPrivateAccessGranted()
     {
         $currentHourAndMinutes = date('Gi');
-        if (isset($_GET) && isset($_GET["in"]) && ($_GET["in"] >= $currentHourAndMinutes - 1) && ($_GET["in"] <= $currentHourAndMinutes + 1)) {
+        if (isset($_GET) && isset($_GET['in']) && ($_GET['in'] >= $currentHourAndMinutes - 1) && ($_GET['in'] <= $currentHourAndMinutes + 1)) {
             return true;
         } else {
             return false;
