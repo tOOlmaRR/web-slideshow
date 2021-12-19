@@ -43,7 +43,7 @@
                 <fieldset>
                     <legend class="title">Slideshow Options:</legend>
                     <div class="slideshowSelection">             
-                        <?php echo $dbSlideshow->buildSlideshowTagsHtml($availableTags) ?>
+                        <?php echo $dbSlideshow->buildSlideshowTagsHtml($availableTags, $configuration) ?>
                     </div>
                     
                     <div class="randomizeToggle">

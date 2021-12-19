@@ -38,7 +38,7 @@ class DbWebSlideshow
         return $allTags;
     }
 
-    public function buildSlideshowTagsHtml($tags) : string
+    public function buildSlideshowTagsHtml($tags, $config) : string
     {
         // initial form and fieldset rendering
         $slideshowTagsHtml = "<form action=\"\" method=\"POST\">";
@@ -49,9 +49,11 @@ class DbWebSlideshow
         // Build list of tags to render
         foreach ($tags as $tag) {
             $cssClass = $tag->secure ? 'privateOption' : 'publicOption';
+            $checkedAttribute = in_array($tag->tag, $config['chosenTags']) ? 'checked' : '';
+
             $slideshowTagsHtml = $slideshowTagsHtml . "<span>";
-            $slideshowTagsHtml = $slideshowTagsHtml . "<input type=\"checkbox\" name=\"chosenSlideshowTags[]\" value=\"" . $tag->tag . "\" id=\"" . $tag->tag . "\">";
-            $slideshowTagsHtml = $slideshowTagsHtml . "<label class=\"" . $cssClass . "\" for=\"" . $tag->tag . "\">" . $tag->tag . "</label>";
+            $slideshowTagsHtml = $slideshowTagsHtml . "<input type=\"checkbox\" name=\"chosenSlideshowTags[]\" value=\"$tag->tag\" id=\"$tag->tag\" $checkedAttribute />";
+            $slideshowTagsHtml = $slideshowTagsHtml . "<label class=\"$cssClass\" for=\"$tag->tag\">$tag->tag</label>";
             $slideshowTagsHtml = $slideshowTagsHtml . "</span>";
         }
 
