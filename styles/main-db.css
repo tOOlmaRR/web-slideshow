@@ -10,6 +10,17 @@ legend {
     text-align: left;
 }
 
+.inProgress {
+    color: orange;
+}
+
+.success {
+    color: green;
+}
+
+.failure {
+    color: red;
+}
 
 /* Left Pane */
 #leftPane {
@@ -95,7 +106,7 @@ legend {
     width: 225px;
 }
 
-#slideTagsSubmit {
+#slideTagsSubmitMessages {
     clear: both;
     padding-top: 5px;
 }

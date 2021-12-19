@@ -4,6 +4,11 @@ let slides;
 let slideInfoPanels;
 let slideIndexes;
 
+// Do this once the DOM has loaded
+window.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM has loaded'); 
+})
+
 // Next/previous controls
 function plusSlides(n)
 {
@@ -27,6 +32,9 @@ function showSlides(n)
     if (slideInfoPanels === undefined) {
         slideInfoPanels = document.getElementsByClassName("mySlideInfo");
     }
+
+    // early exit if there are no slides to display
+    if (slides.length === 0 || slideInfoPanels.length === 0) return;
     
     // not asked to display a specific slide (continue the slideshow)
     if (n === undefined) {
@@ -108,6 +116,41 @@ function haltSlideshow(checkbox) {
         const configuredInterval = +configuredIntervalText * 1000;
         slideShowIntervalID = setTimeout(showSlides, configuredInterval);
     }
+}
+
+function updateTags(tagID, tag, checked) {
+    console.log("update Tag: " + tag);
+    var msgDiv = document.getElementById('slideTagsSubmitMessages');
+
+    // halt the slideshow if in progress
+    var haltSlideshowCheckbox = document.getElementById('haltSlideshow');
+    var slideshowInProgress = !haltSlideshowCheckbox.checked;
+    if (slideshowInProgress) {
+        clearInterval(slideShowIntervalID);
+        haltSlideshowCheckbox.checked = true;
+        var haltedMsgDiv = document.createElement("div");
+        haltedMsgDiv.className = 'inProgress';
+        haltedMsgDiv.innerText = 'Slideshow HALTED';
+        msgDiv.appendChild(haltedMsgDiv);
+    }
+
+    // display operation to be performed and indicate operation is in progress
+    var newMsgDiv = document.createElement("div");
+    newMsgDiv.className = 'inProgress';
+    var newOperation = checked == '' ? 'adding' : "removing";
+    var newMsg = newOperation + ' "' + tag + '"...';
+    newMsgDiv.innerText = newMsg;
+    msgDiv.appendChild(newMsgDiv);
+    
+    // perform the operation
+    var delayInMilliseconds = 3000; // 3 seconds
+    setTimeout(function() {
+        // display results
+        console.log("wait foir it!!");
+        console.log("update Tag: " + tag);
+        newMsgDiv.className = 'success';
+        newMsgDiv.innerText += "DONE!"
+    }, delayInMilliseconds);    
 }
 
 /* Randomize array in-place using Durstenfeld shuffle algorithm */

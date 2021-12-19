@@ -194,6 +194,7 @@ class DbWebSlideshow
             $slideInfoHtml .= "</div>";
             $number++;
         }
+        $slideInfoHtml .= "<div id=\"slideTagsSubmitMessages\"></div>";
         return $slideInfoHtml;
     }
 
@@ -244,14 +245,13 @@ class DbWebSlideshow
             }
             $cssClass = $tag->secure ? 'privateOption' : 'publicOption';
             $slideTagsHtml .= "                <span>";
-            $slideTagsHtml .= "                    <input type=\"checkbox\" name=\"slideTags[]\" value=\"$tag->tag\" id=\"$tag->tag\" $checkedAttribute/>";
+            $slideTagsHtml .= "                    <input type=\"checkbox\" name=\"slideTags[]\" value=\"$tag->tag\" id=\"$tag->tag\" $checkedAttribute onclick=\"updateTags($tag->tagID, '$tag->tag', '$checkedAttribute');\"/>";
             $slideTagsHtml .= "                    <label class=\"$cssClass\" for=\"$tag->tag\">$tag->tag</label>";
             $slideTagsHtml .= "                </span>";
         }
 
         // close off the drop down and render the button
         $slideTagsHtml .= "            </div>";
-        $slideTagsHtml .= "            <div id=\"slideTagsSubmit\"><input type=\"submit\" value=\"Update Tags\"></div>";
         $slideTagsHtml .= "        </fieldset>";
         $slideTagsHtml .= "    </form>";
         $slideTagsHtml .= "</div>";
