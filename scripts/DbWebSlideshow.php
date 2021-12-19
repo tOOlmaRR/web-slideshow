@@ -129,6 +129,7 @@ class DbWebSlideshow
             $newImageDimensions = $this->optimizePhotoSize($image->width, $image->height);
 
             // build the photo object and add it to the list
+            $photoToDisplay['ID'] = $image->imageID;
             $photoToDisplay[DbWebSlideshow::SLIDE_FILENAME_KEY] = $image->fileName;
             $photoToDisplay[DbWebSlideshow::SLIDE_FULLPATH_KEY] = $image->fullFilePath;
             $photoToDisplay['originalWidth'] = $image->width;
@@ -247,7 +248,7 @@ class DbWebSlideshow
             }
             $cssClass = $tag->secure ? 'privateOption' : 'publicOption';
             $slideTagsHtml .= "                <span>";
-            $slideTagsHtml .= "                    <input type=\"checkbox\" name=\"slideTags[]\" value=\"$tag->tag\" id=\"$tag->tag\" $checkedAttribute onclick=\"updateTags($tag->tagID, '$tag->tag', '$checkedAttribute');\"/>";
+            $slideTagsHtml .= "                    <input type=\"checkbox\" name=\"slideTags[]\" value=\"$tag->tag\" id=\"$tag->tag\" $checkedAttribute onclick=\"updateTags(" . $slide['ID'] . ", $tag->tagID, '$tag->tag', this);\"/>";
             $slideTagsHtml .= "                    <label class=\"$cssClass\" for=\"$tag->tag\">$tag->tag</label>";
             $slideTagsHtml .= "                </span>";
         }

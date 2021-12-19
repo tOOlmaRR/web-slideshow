@@ -118,7 +118,7 @@ function haltSlideshow(checkbox) {
     }
 }
 
-function updateTags(tagID, tag, checked) {
+function updateTags(imageID, tagID, tag, checkbox) {
     console.log("update Tag: " + tag);
     var msgDiv = document.getElementById('slideTagsSubmitMessages');
 
@@ -137,20 +137,36 @@ function updateTags(tagID, tag, checked) {
     // display operation to be performed and indicate operation is in progress
     var newMsgDiv = document.createElement("div");
     newMsgDiv.className = 'inProgress';
-    var newOperation = checked == '' ? 'adding' : "removing";
+    var newOperation = checkbox.checked === true ? 'adding' : "removing";
     var newMsg = newOperation + ' "' + tag + '"...';
     newMsgDiv.innerText = newMsg;
     msgDiv.appendChild(newMsgDiv);
     
     // perform the operation
-    var delayInMilliseconds = 3000; // 3 seconds
-    setTimeout(function() {
-        // display results
-        console.log("wait foir it!!");
-        console.log("update Tag: " + tag);
-        newMsgDiv.className = 'success';
-        newMsgDiv.innerText += "DONE!"
-    }, delayInMilliseconds);    
+    console.log("update DB");
+    httpRequest = new XMLHttpRequest();
+
+    if (!httpRequest) {
+        newMsgDiv.className = 'failure';
+        newMsgDiv.innerText += "FAILED!"
+        return false;
+    }
+    //httpRequest.onreadystatechange = alertContents;
+    httpRequest.open('POST', 'services/taggedimage.php');
+    httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    params = "imageID=" + imageID + "&tagID=" + tagID + "&operation=" + newOperation;
+    httpRequest.send(params);
+    
+    httpRequest.onload = function() {
+        // Do whatever with response
+        if (httpRequest.responseText != 'success') {
+            newMsgDiv.className = 'failure';
+            newMsgDiv.innerText += "FAIL!"
+        } else {
+            newMsgDiv.className = 'success';
+            newMsgDiv.innerText += "DONE!"
+        }
+    }
 }
 
 /* Randomize array in-place using Durstenfeld shuffle algorithm */
