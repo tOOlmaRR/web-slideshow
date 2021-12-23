@@ -2,6 +2,7 @@
 namespace toolmarr\WebSlideshow;
 
 use toolmarr\WebSlideshow\DAL\EntityFactory;
+use toolmarr\WebSlideshow\DAL\ImageEntity;
 use toolmarr\WebSlideshow\DAL\TagsEntity;
 use toolmarr\WebSlideshow\DAL\TagEntity;
 
@@ -100,72 +101,21 @@ class DbWebSlideshow
 
     public function renderSlideShow($configuration) : string
     {
+        /* Retrieve images from database and build the slides */
         $entityFactory = new EntityFactory($configuration['database']);
-        $allImages = [];
-        foreach ($configuration['chosenTags'] as $tag) {
-            $imagesEntity = $entityFactory->getEntity("images");
-            $imagesEntity->tag = $tag;
-            $imagesEntity->includeSecureImages = $this->privateAcessGranted ? 1 : 0;
-            if ($imagesEntity->get())
-            {
-                $newImages = $imagesEntity->images;
-                foreach ($newImages as $image) {
-                    if (!array_key_exists($image->imageID, $allImages)) {
-                        $allImages[$image->imageID] = $image;
-                    }
-                }
-            }
-        }
-
-        $photosToDisplay = array();
+        $allImages = $this->getAllImagesWithChosenTags($configuration['chosenTags'], $entityFactory);
+        
+        $photosToDisplay = [];
         foreach ($allImages as $image) {
-            $photoToDisplay = [];
-            
-            // determine physical and virtual roots based on configuration
+            // build the slide object and add it to the list
+            $photoToDisplay = $this->buildSlide($image, $entityFactory);
+
+            // build the image's virtual location based on it's path and the configured physical and virtual roots
+            $physicalRoot = $image->secure ? $configuration["physicalRoots"]["private"] : $configuration["physicalRoots"]["public"];
             $virtualRoot = $image->secure ? $configuration["virtualRoots"]["private"] : $configuration["virtualRoots"]["public"];
-            $rootFolder = $image->secure ? $configuration["physicalRoots"]["private"] : $configuration["physicalRoots"]["public"];
-
-            // proportionally resize the image's dimensions
-            $newImageDimensions = $this->optimizePhotoSize($image->width, $image->height);
-
-            // build the photo object and add it to the list
-            $photoToDisplay['ID'] = $image->imageID;
-            $photoToDisplay[DbWebSlideshow::SLIDE_FILENAME_KEY] = $image->fileName;
-            $photoToDisplay[DbWebSlideshow::SLIDE_FULLPATH_KEY] = $image->fullFilePath;
-            $photoToDisplay['originalWidth'] = $image->width;
-            $photoToDisplay['originalHeight'] = $image->height;
-            $photoToDisplay['width'] = $newImageDimensions['width'];
-            $photoToDisplay['height'] = $newImageDimensions['height'];
-            $photoToDisplay['secured'] = $image->secure;
+            $photoToDisplay[DbWebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] = $this->buildImageVirtualLocation($physicalRoot, $virtualRoot, $image);
             
-            /* get the path */
-            // take the full physical path and trim off the root folder
-            $path = substr($image->fullFilePath, strlen($rootFolder));
-
-            // trim off the filename
-            $path = substr($path, 0, strpos($path, $image->fileName));
-
-            // append remainder to the virtualRoot
-            $virtualLocation = $virtualRoot . $path;
-
-            // replace the \ with a /
-            $virtualLocation = str_replace("\\", "/", $virtualLocation);
-
-            // append the filename
-            $virtualFullPath = $virtualLocation . $image->fileName;
-            $photoToDisplay[DbWebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] = $virtualFullPath;
-
-            // retrieve all tags for the current image
-            $tagsEntity = $entityFactory->getEntity("tags");
-            $tagsEntity->imageID = $image->imageID;
-            $tagsEntity->includeSecureTags = $this->privateAcessGranted ? 1 : 0;
-            if ($tagsEntity->get())
-            {
-                $imageTags = $tagsEntity->tags;
-                foreach ($imageTags as $tag) {
-                    $photoToDisplay['tags'][$tag->tagID] = $tag;
-                }
-            }
+            // add it to the collection
             $photosToDisplay[] = $photoToDisplay;
         }
 
@@ -203,6 +153,79 @@ class DbWebSlideshow
 
 
 
+    private function getAllImagesWithChosenTags(array $chosenTags, EntityFactory $entityFactory) : array
+    {
+        $allImages = [];        
+        foreach ($chosenTags as $tag) {
+            $imagesEntity = $entityFactory->getEntity("images");
+            $imagesEntity->tag = $tag;
+            $imagesEntity->includeSecureImages = $this->privateAcessGranted ? 1 : 0;
+            if ($imagesEntity->get())
+            {
+                $newImages = $imagesEntity->images;
+                foreach ($newImages as $image) {
+                    if (!array_key_exists($image->imageID, $allImages)) {
+                        $allImages[$image->imageID] = $image;
+                    }
+                }
+            }
+        }
+        return $allImages;
+    }
+
+
+
+    private function buildSlide(ImageEntity $image, EntityFactory $entityFactory) : array
+    {
+        // proportionally resize the image's dimensions
+        $newImageDimensions = $this->optimizePhotoSize($image->width, $image->height);
+
+        // build and return the slide
+        $slide = [];
+        $slide['ID'] = $image->imageID;
+        $slide[DbWebSlideshow::SLIDE_FILENAME_KEY] = $image->fileName;
+        $slide[DbWebSlideshow::SLIDE_FULLPATH_KEY] = $image->fullFilePath;
+        $slide['originalWidth'] = $image->width;
+        $slide['originalHeight'] = $image->height;
+        $slide['width'] = $newImageDimensions['width'];
+        $slide['height'] = $newImageDimensions['height'];
+        $slide['secured'] = $image->secure;
+        
+        
+        // retrieve all tags for the current image and add them to the slide
+        $tagsEntity = $entityFactory->getEntity("tags");
+        $tagsEntity->imageID = $slide['ID'];
+        $tagsEntity->includeSecureTags = $this->privateAcessGranted ? 1 : 0;
+        if ($tagsEntity->get())
+        {
+            $imageTags = $tagsEntity->tags;
+            foreach ($imageTags as $tag) {
+                $slide['tags'][$tag->tagID] = $tag;
+            }
+        }
+        return $slide;
+    }
+    
+    private function buildImageVirtualLocation(string $physicalRoot, string $virtualRoot, ImageEntity $image) : string
+    {
+        // take the full physical path and trim off the root folder
+        $path = substr($image->fullFilePath, strlen($physicalRoot));
+
+        // trim off the filename
+        $path = substr($path, 0, strpos($path, $image->fileName));
+
+        // append remainder to the virtualRoot
+        $virtualLocation = $virtualRoot . $path;
+
+        // replace the \ with a /
+        $virtualLocation = str_replace("\\", "/", $virtualLocation);
+
+        // append the filename
+        $virtualFullPath = $virtualLocation . $image->fileName;
+
+        return $virtualFullPath;
+    }
+    
     private function buildSlideBasicInfoHtml($slide) : string
     {
         $checkedAttribute = $slide['secured']? "checked" : "";
