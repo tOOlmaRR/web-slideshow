@@ -34,4 +34,22 @@ class TaggedImageEntity extends BaseEntity implements IEntity
         // perform the insert
         return $insertStatement->execute();
     }
+
+    public function delete()
+    {
+        // set up the query
+        $db = $this->getDB();
+        if ($this->getUseSPROCs()) {
+            $sproc = $this->getSPROCs()["delete"]["taggedImage"];
+            $sql = "EXEC [$sproc] :imageID, :tagID";
+            $insertStatement = $db->prepare($sql);
+            $insertStatement->bindParam(":imageID", $this->imageID);
+            $insertStatement->bindParam(":tagID", $this->tagID);
+        } else {
+            throw new \Exception("This application only supports the use of SPROCs for database queries!");
+        }
+        
+        // perform the insert
+        return $insertStatement->execute();
+    }
 }

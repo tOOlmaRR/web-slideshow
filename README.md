@@ -22,6 +22,8 @@ This is a web application that can display custom slideshows in a browser for lo
    - **Slideshow Speed** - a slider control in the UI controls how long each slide will be displayed for. Changes take effect after transitioning to the next slide.
    - **Randomize Option** - allows you to randomize the slides in the current slideshow. Changes take effect immediately. Halting randomization will stop at the current slide.
    - **Halt** - allows you to stop the slidehow on the current slide and pick up where you left off afterwards.
+   - **See Slide Details** - see details of the slide including size and filename
+   - **Update a Slide's Tags** - see and update which tags are associated to the current slide, and halt the slideshow on the first change
 
 ## Slideshow Configuration
 All configuration elements are defined in the */mainConfig.php* file. There is an overlying $configuration array which is designed to contain all configuration elements, and then within, there are separate arrays that contain all slideshow configurations as well as the root physical and virtual folders to use for both private and public slideshows.
@@ -140,6 +142,11 @@ vendor/bin/phpunit tests --configuration ./tests --coverage-clover ./tests/resul
 
 
 ## History
+
+### v4.2
+- improvements to the Database-driven Slideshow
+    - add right column to display information on individual slides, including tags
+    - add/remove tags associated to a slide by checking/unchecking them in the UI
 
 ### v4.1
 - improved randomization feature in both the static and dynamic (DB-driven) slideshows:
