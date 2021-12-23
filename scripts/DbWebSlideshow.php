@@ -220,10 +220,8 @@ class DbWebSlideshow
         // replace the \ with a /
         $virtualLocation = str_replace("\\", "/", $virtualLocation);
 
-        // append the filename
-        $virtualFullPath = $virtualLocation . $image->fileName;
-
-        return $virtualFullPath;
+        // append the filename and return
+        return $virtualLocation . $image->fileName;
     }
     
     private function buildSlideBasicInfoHtml($slide) : string
@@ -294,13 +292,9 @@ class DbWebSlideshow
         return $newImageDimensions;
     }
 
-    private function isPrivateAccessGranted()
+    private function isPrivateAccessGranted() : bool
     {
         $currentHourAndMinutes = date('Gi');
-        if (isset($_GET) && isset($_GET['in']) && ($_GET['in'] >= $currentHourAndMinutes - 1) && ($_GET['in'] <= $currentHourAndMinutes + 1)) {
-            return true;
-        } else {
-            return false;
-        }
+        return isset($_GET) && isset($_GET['in']) && ($_GET['in'] >= $currentHourAndMinutes - 1) && ($_GET['in'] <= $currentHourAndMinutes + 1);
     }
 }
