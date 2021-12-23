@@ -144,17 +144,17 @@ function updateTags(imageID, tagID, tag, checkbox) {
     
     // perform the operation
     console.log("update DB");
-    httpRequest = new XMLHttpRequest();
+    var httpRequest = new XMLHttpRequest();
 
     if (!httpRequest) {
         newMsgDiv.className = 'failure';
         newMsgDiv.innerText += "FAILED!"
         return false;
     }
-    //httpRequest.onreadystatechange = alertContents;
+
     httpRequest.open('POST', 'services/taggedimage.php');
     httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    params = "imageID=" + imageID + "&tagID=" + tagID + "&operation=" + newOperation;
+    var params = "imageID=" + imageID + "&tagID=" + tagID + "&operation=" + newOperation;
     httpRequest.send(params);
     
     httpRequest.onload = function() {
