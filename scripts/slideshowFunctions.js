@@ -34,7 +34,8 @@ function showSlides(n)
     }
 
     // early exit if there are no slides to display
-    if (slides.length === 0 || slideInfoPanels.length === 0) return;
+    if (slides.length === 0)
+        return;
     
     // not asked to display a specific slide (continue the slideshow)
     if (n === undefined) {
@@ -49,7 +50,9 @@ function showSlides(n)
         // hide all slides and info panels
         for (let i = 0; i < slides.length; i++) {
             slides[i].style.display = "none";
-            slideInfoPanels[i].style.display = "none"
+            if (slideInfoPanels.length > 0) {
+                slideInfoPanels[i].style.display = "none"
+            }
         }
 
         // move forward one slide
@@ -62,8 +65,10 @@ function showSlides(n)
         
         // show only the current slide and it's info panel
         slides[slideIndexes[slideIndex-1]].style.display = "block";
-        slideInfoPanels[slideIndexes[slideIndex-1]].style.display = "block";
-        
+        if (slideInfoPanels.length > 0) {
+            slideInfoPanels[slideIndexes[slideIndex-1]].style.display = "block";
+        }
+
         // continue the slideshow after the configured pause
         slideShowIntervalID = setTimeout(showSlides, configuredInterval);
     
@@ -82,12 +87,16 @@ function showSlides(n)
         // hide all slides and info panels
         for (let i = 0; i < slides.length; i++) {
             slides[slideIndexes[i]].style.display = "none";
-            slideInfoPanels[slideIndexes[i]].style.display = "none";
+            if (slideInfoPanels.length > 0) {
+                slideInfoPanels[slideIndexes[i]].style.display = "none";
+            }
         }
         
         // show only the current slide and it's info panel
         slides[slideIndexes[slideIndex-1]].style.display = "block";
-        slideInfoPanels[slideIndexes[slideIndex-1]].style.display = "block";
+        if (slideInfoPanels.length > 0) {
+            slideInfoPanels[slideIndexes[slideIndex-1]].style.display = "block";
+        }
         
         // continue the slideshow after the configured pause
         slideShowIntervalID = setTimeout(showSlides, configuredInterval);
