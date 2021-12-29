@@ -42,7 +42,7 @@ class DbWebSlideshow
     public function buildSlideshowTagsHtml($tags, $config) : string
     {
         // initial form and fieldset rendering
-        $slideshowTagsHtml = "<form action=\"\" method=\"POST\">";
+        $slideshowTagsHtml = "<form id=\"slideshowForm\" action=\"\" method=\"POST\">";
         $slideshowTagsHtml = $slideshowTagsHtml . "<fieldset>";
         $slideshowTagsHtml = $slideshowTagsHtml . "<legend>Tags to Include in Slideshow:</legend>";
         $slideshowTagsHtml = $slideshowTagsHtml . "<div id=\"tagSelection\">";
@@ -99,11 +99,11 @@ class DbWebSlideshow
         return $slideshowSpeedHtml;
     }
 
-    public function renderSlideShow($configuration) : string
+    public function retrieveSlideshowData($configuration, $chosenTags) : array
     {
         /* Retrieve images from database and build the slides */
         $entityFactory = new EntityFactory($configuration['database']);
-        $allImages = $this->getAllImagesWithChosenTags($configuration['chosenTags'], $entityFactory);
+        $allImages = $this->getAllImagesWithChosenTags($chosenTags, $entityFactory);
         
         $photosToDisplay = [];
         foreach ($allImages as $image) {
@@ -118,21 +118,7 @@ class DbWebSlideshow
             // add it to the collection
             $photosToDisplay[] = $photoToDisplay;
         }
-
-        /* Render the slides */
-        $number = 0;
-        $slideshowHtml = '';
-        foreach ($photosToDisplay as $photoToDisplay) {
-            $slideshowHtml = $slideshowHtml . "<div class=\"mySlides fade c" . $number . "\" style=\"height: " . (intval($photoToDisplay['height'])+55) . "px;\">";
-            $slideshowHtml = $slideshowHtml . "    <div class=\"numbertext\">" . ($number + 1) . " / " . count($photosToDisplay) . "</div>";
-            $slideshowHtml = $slideshowHtml . "    <img width=\"$photoToDisplay[width]\" height=\"$photoToDisplay[height]\" src=\"" . $photoToDisplay[DbWebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] . "\">";
-            $slideshowHtml = $slideshowHtml . "    <div class=\"text\"><span class=\"filename\">" . $photoToDisplay[DbWebSlideshow::SLIDE_FILENAME_KEY] . "</span><span class=\"dimensions\">$photoToDisplay[originalWidth]x$photoToDisplay[originalHeight] resized to $photoToDisplay[width]x$photoToDisplay[height]<span></div>";
-            $slideshowHtml = $slideshowHtml . "</div>";
-            $number++;
-        }
-
-        $this->allSlides = $photosToDisplay;
-        return $slideshowHtml;
+        return $photosToDisplay;
     }
 
     public function buildSlideInfoHtml($allSlides, $tags) : string

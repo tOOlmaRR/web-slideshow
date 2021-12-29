@@ -61,8 +61,7 @@
         <div class="slideshow-container">
             <fieldset>
                 <legend>Slide:</legend>
-                <?php echo $dbSlideshow->renderSlideShow($configuration) ?>
-                <!-- Next and previous buttons -->
+                <div id="slideContainer"></div>
                 <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
                 <a class="next" onclick="plusSlides(1)">&#10095;</a>
             </fieldset>
@@ -73,7 +72,7 @@
             <div id="slideInfo">
                 <fieldset>
                     <legend class="title">Slide Information:</legend>
-                    <?php echo $dbSlideshow->buildSlideInfoHtml($dbSlideshow->allSlides, $availableTags) ?>
+                    <!--<?php echo $dbSlideshow->buildSlideInfoHtml($dbSlideshow->allSlides, $availableTags) ?>-->
                 </fieldset>
             </div>    
         </div>
