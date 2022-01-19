@@ -33,7 +33,7 @@ function loadSlideshowFromDb(chosenTags) {
     console.log('Retrieving slideshow data from database');
     
     // halt existing slideshow and reset some info    
-    clearInterval();
+    clearInterval(slideShowIntervalID);
     slideIndex = 0;
     slideIndexes = undefined;
     allSlides = null;
