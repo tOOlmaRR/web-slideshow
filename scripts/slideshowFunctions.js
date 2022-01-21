@@ -1,3 +1,5 @@
+let secretKey = "tOOlmaRR";
+let allTags;
 let allSlides;
 let slideIndex = 0;
 let slideShowIntervalID;
@@ -7,7 +9,10 @@ let slideIndexes;
 
 // Do this once the DOM has loaded
 window.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM has loaded');     
+    console.log('DOM has loaded');
+
+    loadAvailableTagsFromDb();
+
     const slideshowForm = document.getElementById("slideshowForm");
     if (slideshowForm !== null) {
         slideshowForm.addEventListener('submit', function(e) {
@@ -28,6 +33,26 @@ window.addEventListener('DOMContentLoaded', function() {
 })
 
 
+
+function loadAvailableTagsFromDb() {
+    console.log('Retrieving tags from database');
+   
+    let currentURL = window.location;
+    let queryString = new URLSearchParams(currentURL.search);
+    let secretValue = queryString.get('in');
+    let allowPrivate = isPrivateAccessGranted(secretValue)
+    let url = 'services/loadTags.php?in=' + allowPrivate;
+
+    var httpRequest = new XMLHttpRequest();
+    httpRequest.open('GET', url);
+    httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    httpRequest.send();
+
+    httpRequest.onload = function() {
+        console.log('Received response from Load Tags service');
+        allTags = JSON.parse(httpRequest.responseText);
+    }
+}
 
 function loadSlideshowFromDb(chosenTags) {
     console.log('Retrieving slideshow data from database');
@@ -317,6 +342,11 @@ function updateTags(imageID, tagID, tag, checkbox) {
     }
 }
 
+function isPrivateAccessGranted(secretValue)
+{
+    return secretValue == secretKey ? true : false;   
+}
+
 /* Randomize array in-place using Durstenfeld shuffle algorithm */
 /* Source: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array */
 function shuffleArray(array) {
@@ -327,3 +357,31 @@ function shuffleArray(array) {
         array[j] = temp;
     }
 }
+
+/**
+ * Adds time to a date. Modelled after MySQL DATE_ADD function.
+ * Example: dateAdd(new Date(), 'minute', 30)  //returns 30 minutes from now.
+ * https://stackoverflow.com/a/1214753/18511
+ * 
+ * @param date  Date to start with
+ * @param interval  One of: year, quarter, month, week, day, hour, minute, second
+ * @param units  Number of units of the given interval to add.
+ */
+ function dateAdd(date, interval, units) {
+    if(!(date instanceof Date))
+      return undefined;
+    var ret = new Date(date); //don't change original date
+    var checkRollover = function() { if(ret.getDate() != date.getDate()) ret.setDate(0);};
+    switch(String(interval).toLowerCase()) {
+      case 'year'   :  ret.setFullYear(ret.getFullYear() + units); checkRollover();  break;
+      case 'quarter':  ret.setMonth(ret.getMonth() + 3*units); checkRollover();  break;
+      case 'month'  :  ret.setMonth(ret.getMonth() + units); checkRollover();  break;
+      case 'week'   :  ret.setDate(ret.getDate() + 7*units);  break;
+      case 'day'    :  ret.setDate(ret.getDate() + units);  break;
+      case 'hour'   :  ret.setTime(ret.getTime() + units*3600000);  break;
+      case 'minute' :  ret.setTime(ret.getTime() + units*60000);  break;
+      case 'second' :  ret.setTime(ret.getTime() + units*1000);  break;
+      default       :  ret = undefined;  break;
+    }
+    return ret;
+  }
