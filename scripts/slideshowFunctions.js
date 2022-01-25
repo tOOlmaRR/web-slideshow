@@ -102,9 +102,7 @@ function loadSlideshowFromDb(chosenTags) {
 // Move forward or backward in the slideshow by the specified number of slides
 function plusSlides(n)
 {
-    if (slideShowIntervalID !== 'undefined') {
-        clearInterval(slideShowIntervalID);
-    }
+    clearInterval(slideShowIntervalID);
     if (allSlides != null && allSlides.length > 0) {
         console.log('show next slide from data');
     }
@@ -114,9 +112,6 @@ function plusSlides(n)
 // Show a slide and it's info panels: either the next one in the current slideshow, or a specific slide if requested
 function showSlides(n)
 {
-    const configuredIntervalText = document.getElementById("currentSlideshowSpeed").innerText;
-    const configuredInterval = +configuredIntervalText * 1000;
-
     // Handle DB-driven slideshow
     if (allSlides != null && allSlides.length > 0) {
         // load up initial list of indexes (used for randomization)
@@ -126,8 +121,17 @@ function showSlides(n)
                 slideIndexes.push(i);
             }
         }
-        // render slides based on the allSlides array instead of hiding/showing pre-rendered HTML
-        renderSlideFromData(configuredInterval, n);
+        // render slides and slide info panels based on the allSlides array instead of hiding/showing pre-rendered HTML
+        determineNextSlideIndex(n);
+        renderSlideFromData();
+        renderSlideInfoFromData();
+        renderSlideTagInfoFromData()
+        
+        // Ensure previous interval is cleared first, then reset the interval based on the UI and continue the slideshow
+        clearInterval(slideShowIntervalID);
+        const configuredIntervalText = document.getElementById("currentSlideshowSpeed").innerText;
+        const configuredInterval = +configuredIntervalText * 1000;
+        slideShowIntervalID = setTimeout(showSlides, configuredInterval);
         return;
     }
     
@@ -177,7 +181,10 @@ function showSlides(n)
             slideInfoPanels[slideIndexes[slideIndex-1]].style.display = "block";
         }
 
-        // continue the slideshow after the configured pause
+        // Ensure previous interval is cleared first, then reset the interval based on the UI and continue the slideshow
+        clearInterval(slideShowIntervalID);
+        const configuredIntervalText = document.getElementById("currentSlideshowSpeed").innerText;
+        const configuredInterval = +configuredIntervalText * 1000;
         slideShowIntervalID = setTimeout(showSlides, configuredInterval);
     
     // display a specified slide
@@ -206,16 +213,18 @@ function showSlides(n)
             slideInfoPanels[slideIndexes[slideIndex-1]].style.display = "block";
         }
         
-        // continue the slideshow after the configured pause
+        // Ensure previous interval is cleared first, then reset the interval based on the UI and continue the slideshow
+        clearInterval(slideShowIntervalID);
+        const configuredIntervalText = document.getElementById("currentSlideshowSpeed").innerText;
+        const configuredInterval = +configuredIntervalText * 1000;
         slideShowIntervalID = setTimeout(showSlides, configuredInterval);
     }
 }
 
-function renderSlideFromData(configuredInterval, n)
+// render the HTML needed to display a slide via AJAX call to a service
+function renderSlideFromData()
 {
-    console.log('render slide from data');
-    determineNextSlideIndex(n)    
-    console.log('render slide index ' + slideIndexes[slideIndex] + '(' + slideIndex + ') from data');
+    console.log('render slide with index ' + slideIndexes[slideIndex] + '(' + slideIndex + ') from data');
 
     // retrieve current slide
     var httpRequest = new XMLHttpRequest();
@@ -238,9 +247,60 @@ function renderSlideFromData(configuredInterval, n)
         slidePlaceholder = document.getElementById('slideContainer');
         slidePlaceholder.innerHTML = slideHTML; // replace all content of the placeholder
     }
-    
-    // continue the slideshow after the configured pause
-    slideShowIntervalID = setTimeout(showSlides, configuredInterval);
+}
+
+// render the HTML needed to display a slide's info panels via AJAX call to a service
+function renderSlideInfoFromData()
+{
+    console.log('render slide info with index ' + slideIndexes[slideIndex] + '(' + slideIndex + ') from data');
+
+    // retrieve current slide
+    var httpRequest = new XMLHttpRequest();
+    httpRequest.open('POST', 'services/renderSlideInfo.php');
+    httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    data = {
+        'slide': JSON.stringify(allSlides[slideIndexes[slideIndex]]),
+        'allTags' : JSON.stringify(allTags),
+    }
+    var params = Object.keys(data).map(
+        function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) }
+    ).join('&');
+
+    httpRequest.send(params);
+    httpRequest.onload = function() {
+        console.log('Received response from Render Slide Info service');
+        jsonResponse = JSON.parse(httpRequest.responseText);
+        slideInfoHTML = jsonResponse['HTML'];
+        slideInfoPlaceholder = document.getElementById('slideInfoContainer');
+        slideInfoPlaceholder.innerHTML = slideInfoHTML; // replace all content of the placeholder
+    }
+}
+
+// render the HTML needed to display a slide's info panels via AJAX call to a service
+function renderSlideTagInfoFromData()
+{
+    console.log('render slide tag info with index ' + slideIndexes[slideIndex] + '(' + slideIndex + ') from data');
+
+    // retrieve current slide
+    var httpRequest = new XMLHttpRequest();
+    httpRequest.open('POST', 'services/renderTags.php');
+    httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    data = {
+        'slide': JSON.stringify(allSlides[slideIndexes[slideIndex]]),
+        'allTags' : JSON.stringify(allTags),
+    }
+    var params = Object.keys(data).map(
+        function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) }
+    ).join('&');
+
+    httpRequest.send(params);
+    httpRequest.onload = function() {
+        console.log('Received response from Render Tags service');
+        jsonResponse = JSON.parse(httpRequest.responseText);
+        slideInfoHTML = jsonResponse['HTML'];
+        slideInfoPlaceholder = document.getElementById('slideInfoTagsContainer');
+        slideInfoPlaceholder.innerHTML = slideInfoHTML; // replace all content of the placeholder
+    }
 }
 
 // Helper method to determine which slide to show
@@ -288,9 +348,9 @@ function randomize_change(checkbox)
 
 // Event handler for the checkbox that halts or resumes the current slideshow
 function haltSlideshow(checkbox) {
-    if (checkbox.checked) {
-        clearInterval(slideShowIntervalID);
-    } else {
+    clearInterval(slideShowIntervalID);
+    if (!checkbox.checked) {
+        // Reset the interval based on the UI and continue the slideshow
         const configuredIntervalText = document.getElementById("currentSlideshowSpeed").innerText;
         const configuredInterval = +configuredIntervalText * 1000;
         slideShowIntervalID = setTimeout(showSlides, configuredInterval);
