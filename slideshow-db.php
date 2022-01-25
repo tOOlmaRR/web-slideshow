@@ -72,7 +72,8 @@
             <div id="slideInfo">
                 <fieldset>
                     <legend class="title">Slide Information:</legend>
-                    <!--<?php echo $dbSlideshow->buildSlideInfoHtml($dbSlideshow->allSlides, $availableTags) ?>-->
+                    <div id="slideInfoContainer"></div>
+                    <div id="slideInfoTagsContainer"></div>
                 </fieldset>
             </div>    
         </div>

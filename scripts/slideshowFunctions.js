@@ -11,8 +11,10 @@ let slideIndexes;
 window.addEventListener('DOMContentLoaded', function() {
     console.log('DOM has loaded');
 
+    // load available tags
     loadAvailableTagsFromDb();
 
+    // listen for, and handle, slideshow generation requests
     const slideshowForm = document.getElementById("slideshowForm");
     if (slideshowForm !== null) {
         slideshowForm.addEventListener('submit', function(e) {
@@ -32,8 +34,7 @@ window.addEventListener('DOMContentLoaded', function() {
     }
 })
 
-
-
+// Load all available tags from the database via AJAX call to a service
 function loadAvailableTagsFromDb() {
     console.log('Retrieving tags from database');
    
@@ -54,6 +55,7 @@ function loadAvailableTagsFromDb() {
     }
 }
 
+// Load all slides for the chosen tags via AJAX call to a service, then start the slidehow if slides have been loaded
 function loadSlideshowFromDb(chosenTags) {
     console.log('Retrieving slideshow data from database');
     
@@ -97,7 +99,7 @@ function loadSlideshowFromDb(chosenTags) {
     }
 }
 
-// Next/previous controls
+// Move forward or backward in the slideshow by the specified number of slides
 function plusSlides(n)
 {
     if (slideShowIntervalID !== 'undefined') {
@@ -109,6 +111,7 @@ function plusSlides(n)
     showSlides(slideIndex += n);
 }
 
+// Show a slide and it's info panels: either the next one in the current slideshow, or a specific slide if requested
 function showSlides(n)
 {
     const configuredIntervalText = document.getElementById("currentSlideshowSpeed").innerText;
@@ -240,6 +243,7 @@ function renderSlideFromData(configuredInterval, n)
     slideShowIntervalID = setTimeout(showSlides, configuredInterval);
 }
 
+// Helper method to determine which slide to show
 function determineNextSlideIndex(n)
 {
     // Request is for a specific slide #
@@ -267,6 +271,7 @@ function determineNextSlideIndex(n)
     }
 }
 
+// Event handler for the checkbox that enables or disables the randomize feature
 function randomize_change(checkbox)
 {
     clearInterval(slideShowIntervalID);
@@ -281,6 +286,7 @@ function randomize_change(checkbox)
     showSlides();
 }
 
+// Event handler for the checkbox that halts or resumes the current slideshow
 function haltSlideshow(checkbox) {
     if (checkbox.checked) {
         clearInterval(slideShowIntervalID);
@@ -291,6 +297,7 @@ function haltSlideshow(checkbox) {
     }
 }
 
+// Event handler to update a tag for the current slideshow (to either add or remove the tag based on the state of a checkbox)
 function updateTags(imageID, tagID, tag, checkbox) {
     console.log("update Tag: " + tag);
     var msgDiv = document.getElementById('slideTagsSubmitMessages');
@@ -342,6 +349,7 @@ function updateTags(imageID, tagID, tag, checkbox) {
     }
 }
 
+// Determine if the current request has been granted private access
 function isPrivateAccessGranted(secretValue)
 {
     return secretValue == secretKey ? true : false;   
