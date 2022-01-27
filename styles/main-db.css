@@ -51,7 +51,7 @@ legend {
     color: red;
 }
 
-#tagSelection span {
+.tagSelection span {
     float: left;
     padding-right: 5px;
 }

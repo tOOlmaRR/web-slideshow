@@ -39,34 +39,34 @@ class DbWebSlideshow
         return $allTags;
     }
 
-    public function buildSlideshowTagsHtml($tags, $config) : string
-    {
-        // initial form and fieldset rendering
-        $slideshowTagsHtml = "<form id=\"slideshowForm\" action=\"\" method=\"POST\">";
-        $slideshowTagsHtml = $slideshowTagsHtml . "<fieldset>";
-        $slideshowTagsHtml = $slideshowTagsHtml . "<legend>Tags to Include in Slideshow:</legend>";
-        $slideshowTagsHtml = $slideshowTagsHtml . "<div id=\"tagSelection\">";
+    // public function buildSlideshowTagsHtml($tags, $config) : string
+    // {
+    //     // initial form and fieldset rendering
+    //     $slideshowTagsHtml = "<form id=\"slideshowForm\" action=\"\" method=\"POST\">";
+    //     $slideshowTagsHtml = $slideshowTagsHtml . "<fieldset>";
+    //     $slideshowTagsHtml = $slideshowTagsHtml . "<legend>Tags to Include in Slideshow:</legend>";
+    //     $slideshowTagsHtml = $slideshowTagsHtml . "<div class=\"tagSelection\">";
         
-        // Build list of tags to render
-        foreach ($tags as $tag) {
-            $cssClass = $tag->secure ? 'privateOption' : 'publicOption';
-            $checkedAttribute = in_array($tag->tag, $config['chosenTags']) ? 'checked' : '';
+    //     // Build list of tags to render
+    //     foreach ($tags as $tag) {
+    //         $cssClass = $tag->secure ? 'privateOption' : 'publicOption';
+    //         $checkedAttribute = in_array($tag->tag, $config['chosenTags']) ? 'checked' : '';
 
-            $slideshowTagsHtml = $slideshowTagsHtml . "<span>";
-            $slideshowTagsHtml = $slideshowTagsHtml . "<input type=\"checkbox\" name=\"chosenSlideshowTags[]\" value=\"$tag->tag\" id=\"$tag->tag\" $checkedAttribute />";
-            $slideshowTagsHtml = $slideshowTagsHtml . "<label class=\"$cssClass\" for=\"$tag->tag\">$tag->tag</label>";
-            $slideshowTagsHtml = $slideshowTagsHtml . "</span>";
-        }
+    //         $slideshowTagsHtml = $slideshowTagsHtml . "<span>";
+    //         $slideshowTagsHtml = $slideshowTagsHtml . "<input type=\"checkbox\" name=\"chosenSlideshowTags[]\" value=\"$tag->tag\" id=\"$tag->tag\" $checkedAttribute />";
+    //         $slideshowTagsHtml = $slideshowTagsHtml . "<label class=\"$cssClass\" for=\"$tag->tag\">$tag->tag</label>";
+    //         $slideshowTagsHtml = $slideshowTagsHtml . "</span>";
+    //     }
 
-        // close off the drop down and render the button
-        $slideshowTagsHtml = $slideshowTagsHtml . "</div>";
-        $slideshowTagsHtml = $slideshowTagsHtml . "<div id=\"tagSelectionSubmit\"><input type=\"submit\" value=\"Generate Slideshow\"></div>";
-        $slideshowTagsHtml = $slideshowTagsHtml . "</form>";
-        $slideshowTagsHtml = $slideshowTagsHtml . "</fieldset>";
+    //     // close off the drop down and render the button
+    //     $slideshowTagsHtml = $slideshowTagsHtml . "</div>";
+    //     $slideshowTagsHtml = $slideshowTagsHtml . "<div id=\"tagSelectionSubmit\"><input type=\"submit\" value=\"Generate Slideshow\"></div>";
+    //     $slideshowTagsHtml = $slideshowTagsHtml . "</form>";
+    //     $slideshowTagsHtml = $slideshowTagsHtml . "</fieldset>";
 
-        // display the built HTML to the page
-        return $slideshowTagsHtml;
-    }
+    //     // display the built HTML to the page
+    //     return $slideshowTagsHtml;
+    // }
 
     public function buildRandomizeToggleHtml() : string
     {

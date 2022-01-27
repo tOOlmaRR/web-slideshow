@@ -14,6 +14,9 @@ window.addEventListener('DOMContentLoaded', function() {
     // load available tags
     loadAvailableTagsFromDb();
 
+    // render the tags available for the slideshow
+    renderSlideshowTagsSelection();
+
     // listen for, and handle, slideshow generation requests
     const slideshowForm = document.getElementById("slideshowForm");
     if (slideshowForm !== null) {
@@ -34,7 +37,7 @@ window.addEventListener('DOMContentLoaded', function() {
     }
 })
 
-// Load all available tags from the database via AJAX call to a service
+// Loads all available tags from the database via AJAX call to a service
 function loadAvailableTagsFromDb() {
     console.log('Retrieving tags from database');
    
@@ -45,14 +48,18 @@ function loadAvailableTagsFromDb() {
     let url = 'services/loadTags.php?in=' + allowPrivate;
 
     var httpRequest = new XMLHttpRequest();
-    httpRequest.open('GET', url);
+    httpRequest.open('GET', url, false);
     httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     httpRequest.send();
-
-    httpRequest.onload = function() {
-        console.log('Received response from Load Tags service');
-        allTags = JSON.parse(httpRequest.responseText);
-    }
+    console.log('Received response from Load Tags service');
+    allTags = JSON.parse(httpRequest.responseText);
+    
+    // if we made this call asynchronousely, we'd need to handle the completion with an event handler like this:
+    // httpRequest.onload = function() {
+    //     console.log('Received response from Load Tags service');
+    //     allTags = JSON.parse(httpRequest.responseText);
+    // }
+    // But rendering the tags must happen only after we have handled the AJAX response
 }
 
 // Load all slides for the chosen tags via AJAX call to a service, then start the slidehow if slides have been loaded
@@ -220,6 +227,41 @@ function showSlides(n)
         slideShowIntervalID = setTimeout(showSlides, configuredInterval);
     }
 }
+
+// render all tags available for generating a slideshow
+function renderSlideshowTagsSelection()
+{
+    console.log('render slideshow tag selection from data');
+
+    var httpRequest = new XMLHttpRequest();
+    httpRequest.open('POST', 'services/renderTags.php', false);
+    httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    data = {
+        'allTags' : JSON.stringify(allTags),
+    }
+    var params = Object.keys(data).map(
+        function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) }
+    ).join('&');
+
+    httpRequest.send(params);
+    console.log('Received response from Render Tags service');
+
+    jsonResponse = JSON.parse(httpRequest.responseText);
+    slideInfoHTML = jsonResponse['HTML'];
+    slideInfoPlaceholder = document.getElementById('slideshowTagSelection');
+    slideInfoPlaceholder.innerHTML = slideInfoHTML; // replace all content of the placeholder
+    
+    // if we made this call asynchronousely, we'd need to handle the completion with an event handler like this:
+    // httpRequest.onload = function() {
+    //     console.log('Received response from Render Tags service');
+    //     jsonResponse = JSON.parse(httpRequest.responseText);
+    //     slideInfoHTML = jsonResponse['HTML'];
+    //     slideInfoPlaceholder = document.getElementById('slideshowTagSelection');
+    //     slideInfoPlaceholder.innerHTML = slideInfoHTML; // replace all content of the placeholder
+    // }
+    // But we need to wait until this response is handled in order to attach the event handle to the submit button
+}
+
 
 // render the HTML needed to display a slide via AJAX call to a service
 function renderSlideFromData()
