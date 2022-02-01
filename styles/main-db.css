@@ -51,7 +51,7 @@ legend {
     color: red;
 }
 
-#tagSelection span {
+.tagSelection span {
     float: left;
     padding-right: 5px;
 }
@@ -121,7 +121,6 @@ legend {
 
 /* Hide the images by default */
 .mySlides {
-    display: none;
     width: 100%;
     background-color: black;
     text-align: center;

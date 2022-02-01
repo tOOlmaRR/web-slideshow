@@ -42,14 +42,14 @@
             <div id="slideshowOptions">
                 <fieldset>
                     <legend class="title">Slideshow Options:</legend>
-                    <div class="slideshowSelection">             
-                        <?php echo $dbSlideshow->buildSlideshowTagsHtml($availableTags, $configuration) ?>
-                    </div>
-                    
+                    <fieldset>
+                        <legend>Tags to Include in Slideshow:</legend>
+                            <div id="slideshowTagSelection"></div>
+                        </legend>
+                    </fieldset>
                     <div class="randomizeToggle">
                         <?php echo $dbSlideshow->buildRandomizeToggleHtml() ?>
                     </div>
-    
                     <div class="slideshowSpeed">
                         <?php echo $dbSlideshow->buildSlideshowSpeedHtml() ?>
                     </div>
@@ -61,8 +61,7 @@
         <div class="slideshow-container">
             <fieldset>
                 <legend>Slide:</legend>
-                <?php echo $dbSlideshow->renderSlideShow($configuration) ?>
-                <!-- Next and previous buttons -->
+                <div id="slideContainer"></div>
                 <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
                 <a class="next" onclick="plusSlides(1)">&#10095;</a>
             </fieldset>
@@ -73,7 +72,11 @@
             <div id="slideInfo">
                 <fieldset>
                     <legend class="title">Slide Information:</legend>
-                    <?php echo $dbSlideshow->buildSlideInfoHtml($dbSlideshow->allSlides, $availableTags) ?>
+                    <div id="slideInfoContainer"></div>
+                        <fieldset>
+                            <legend>Tags Associated to this Slide:</legend>
+                            <div id="slideInfoTagsContainer"></div>
+                        </fieldset>
                 </fieldset>
             </div>    
         </div>
