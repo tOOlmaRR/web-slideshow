@@ -11,15 +11,17 @@ let slideIndexes;
 window.addEventListener('DOMContentLoaded', function() {
     console.log('DOM has loaded');
 
-    // load available tags
-    loadAvailableTagsFromDb();
+    // This following DIV should only exist in old file-system-based slideshow. Do nothing if this DIV is found.
+    const slideshowTagsSelectionDiv = document.getElementById("slideshowTagSelection");
+    if (slideshowTagsSelectionDiv !== null) {
+        // load available tags
+        loadAvailableTagsFromDb();
 
-    // render the tags available for the slideshow
-    renderSlideshowTagsSelection();
-
-    // listen for, and handle, slideshow generation requests
-    const slideshowForm = document.getElementById("slideshowForm");
-    if (slideshowForm !== null) {
+        // render the tags available for the slideshow
+        renderSlideshowTagsSelection();
+        
+        // listen for, and handle, slideshow generation requests
+        const slideshowForm = document.getElementById("slideshowForm");
         slideshowForm.addEventListener('submit', function(e) {
             e.preventDefault();
             console.log('Retrieve slideshow data from database');
