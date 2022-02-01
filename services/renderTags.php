@@ -50,8 +50,8 @@ if (isset($_POST['allTags'])) {
     }
     $slideInfoHtml .= "    </div>";
 
-    // show messages area in 'slideTags' mode to indicate what is going on
-    // show submit buttonin 'slideshowTags' mode
+    // in 'slideTags' mode: show messages area to indicate what is going on
+    // in 'slideshowTags' mode: show submit button
     if ($mode == "slideTags") {            
         $slideInfoHtml .= "    <div id=\"slideTagsSubmitMessages\"></div>";
     } else if ($mode == "slideshowTags") {

@@ -14,7 +14,7 @@ This is a web application that can display custom slideshows in a browser for lo
 1. **Recursive Folders** - via slideshow configuration, you can also choose to include all subfolders of each folder configured for a slideshow.
 ### Features Under Development
 1. **Folder Scanner** - via the /scan.php page. This page allows you to scan a folder, with or without it's subfolders, into a database. Data retrieved and added includes the full file path, the file name, the width and height of images, and a bit indicating whether or not the image should be considered secured (to be used for private slideshows). This scanner also includes the option to create and associate tags (comma-delimited set) to each image scanned. Tags are associated to images and tags can also be marked as secured. **Note**: The slideshow page does not load images from the database yet, and there are no admin options to modify the data in the web UI yet either.
-1. **Database-Driven Slideshow** - via the /slideshow-db.php page. This page has very similar features to the main slideshow.php page, except that it is driven off of the database and by tags rather than physical folders of photos/images. The UI has also been redesigned slightly. For the moment, this page has the following features, but should be considered as a beta version for the moment:
+1. **Database-Driven Slideshow** - via the /slideshow-db.php page. This page has very similar features to the main slideshow.php page, except that it is driven off of the database and by tags rather than physical folders of photos/images. The UI has also been redesigned slightly. For the moment, this page has the following features, but should be considered as a beta version for the moment:   
    - **Available Tags** - determines all tags that are available to you and allows you to create a slideshow by combining all photos in the database associated to the chosen tags. Photos will only be added once if a photo has more than one of the chosen tags.
    - **Private Tags** - tags can be defined as 'secure' in the database, and secure tags will only be displayed if you are authorized to view them.
    - **Private Images** - images stored in the database can also be marked as 'secure'. These images will only be included in slideshows if you are authorized to view them.
@@ -100,9 +100,11 @@ You will need to bind these virtual folders to their associated physical paths i
     </Directory>
 ```
 
-### Memory Consumption Issues for Large Slideshows
+### Memory Consumption Issues for Large Slideshows in slideshow.php
 A block of HTML is added to the webpage for every single file within each of the configured folders for a slideshow. This means that the page source can grow uncontrollably if your slideshow simply contains too many images. In addition, all images are loaded in at load time, compounding the issue. In addition, length and width of images aren't specificed in the HTML, so all images are loaded in their original form.<br>
 So how many images are too many you ask? A test run containing 470 images lower resolution images (most were under 1MB) loaded in 23 seconds and loaded 141MB. Another test run with 693 higher quality images (averaging about 5MB per photo) from multiple folders was not so fun, loading 1614MB in just under 5 minutes, and only about half of the images were loaded in memory at this point. So it's safe to say that size matters!
+
+**Note: This no longer applies to the DB-driven slideshow (slideshow-db.php)!** This page will only render one slide at a time, along with it's metadata, using AJAX calls to server-side services.
 
 ### No Exclusion Option
 In the case that you've configured a slideshow to include subfolders, you cannot exclude certain folders from the resulting directory tree.
@@ -142,6 +144,15 @@ vendor/bin/phpunit tests --configuration ./tests --coverage-clover ./tests/resul
 
 
 ## History
+
+### v5.0
+- architecural improvements to DB-driven slideshow to render HTML for one slide at a time
+    - required creation of PHP server-side serviced that are called from the client-side via AJAX calls in JavaScript to:
+        - load and render slides to begina slideshow
+        - load info/metadata for the currnt slide
+        - load tags available for slideshow generation
+        - render tags avaialble for slideshow generation or tags that are associated to the current slide
+    - required some changes/improvements to DOM
 
 ### v4.2
 - improvements to the Database-driven Slideshow

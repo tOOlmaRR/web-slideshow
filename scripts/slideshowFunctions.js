@@ -293,12 +293,11 @@ function renderSlideFromData()
     }
 }
 
-// render the HTML needed to display a slide's info panels via AJAX call to a service
+// render the HTML needed to display a slide's info panel via AJAX call to a service
 function renderSlideInfoFromData()
 {
     console.log('render slide info with index ' + slideIndexes[slideIndex] + '(' + slideIndex + ') from data');
 
-    // retrieve current slide
     var httpRequest = new XMLHttpRequest();
     httpRequest.open('POST', 'services/renderSlideInfo.php');
     httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
@@ -320,12 +319,11 @@ function renderSlideInfoFromData()
     }
 }
 
-// render the HTML needed to display a slide's info panels via AJAX call to a service
+// render the HTML needed to display tags associated to the current slide via AJAX call to a service
 function renderSlideTagInfoFromData()
 {
     console.log('render slide tag info with index ' + slideIndexes[slideIndex] + '(' + slideIndex + ') from data');
 
-    // retrieve current slide
     var httpRequest = new XMLHttpRequest();
     httpRequest.open('POST', 'services/renderTags.php');
     httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
