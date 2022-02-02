@@ -83,7 +83,7 @@ function loadSlideshowFromDb(chosenTags) {
     var httpRequest = new XMLHttpRequest();
     httpRequest.open('POST', 'services/loadSlides.php');
     httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    var data = {
+    const data = {
         'maxHeight': maxHeight,
         'chosenTags': chosenTags
     }
@@ -238,7 +238,7 @@ function renderSlideshowTagsSelection()
     var httpRequest = new XMLHttpRequest();
     httpRequest.open('POST', 'services/renderTags.php', false);
     httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    data = {
+    const data = {
         'allTags' : JSON.stringify(allTags),
     }
     var params = Object.keys(data).map(
@@ -274,7 +274,7 @@ function renderSlideFromData()
     var httpRequest = new XMLHttpRequest();
     httpRequest.open('POST', 'services/renderSlide.php');
     httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    data = {
+    const data = {
         'slide': JSON.stringify(allSlides[slideIndexes[slideIndex]]),
         'slideCount': allSlides.length,
         'slideIndex': slideIndexes[slideIndex]
@@ -301,7 +301,7 @@ function renderSlideInfoFromData()
     var httpRequest = new XMLHttpRequest();
     httpRequest.open('POST', 'services/renderSlideInfo.php');
     httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    data = {
+    const data = {
         'slide': JSON.stringify(allSlides[slideIndexes[slideIndex]]),
         'allTags' : JSON.stringify(allTags),
     }
@@ -327,7 +327,7 @@ function renderSlideTagInfoFromData()
     var httpRequest = new XMLHttpRequest();
     httpRequest.open('POST', 'services/renderTags.php');
     httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    data = {
+    const data = {
         'slide': JSON.stringify(allSlides[slideIndexes[slideIndex]]),
         'allTags' : JSON.stringify(allTags),
     }
