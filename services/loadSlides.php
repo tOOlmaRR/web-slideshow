@@ -7,11 +7,13 @@ require_once('../scripts/dbMainConfig.php');
 $alSlides = [];
 if (isset($_POST['maxHeight']) && isset($_POST['chosenTags'])) {
     // gather inputs from the request
+    $privateAccessGranted = $_GET['in'] ?? false;
     $maxHeight = $_POST['maxHeight'];
     $chosenTags = explode(",", $_POST['chosenTags']);
 
     // instantiate the slidehow and build the slide data
     $dbSlideshow = new DbWebSlideshow($maxHeight);
+    $dbSlideshow->privateAcessGranted = $privateAccessGranted == 'true' ? true : false;
     $allSlides = $dbSlideshow->retrieveSlideshowData($configuration, $chosenTags);
 }
 
