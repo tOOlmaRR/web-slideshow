@@ -38,8 +38,8 @@ $physicalRoots["private"] = "E:\\MyPhotos\\Private\\";
 $configuration["physicalRoots"] = $physicalRoots;
 
 /* Determine Slideshow Configuration - Chosen Tags */
-if (isset($_POST) && isset($_POST["chosenSlideshowTags"])) {
-    $configuration["chosenTags"] = $_POST["chosenSlideshowTags"];
+if (isset($_POST) && isset($_POST["chosenTags"])) {
+    $configuration["chosenTags"] = $_POST["chosenTags"];
 } else {
     $configuration["chosenTags"] = [];
 }
