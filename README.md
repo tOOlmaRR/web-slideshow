@@ -146,13 +146,13 @@ vendor/bin/phpunit tests --configuration ./tests --coverage-clover ./tests/resul
 ## History
 
 ### v5.0
-- architecural improvements to DB-driven slideshow to render HTML for one slide at a time
-    - required creation of PHP server-side serviced that are called from the client-side via AJAX calls in JavaScript to:
-        - load and render slides to begina slideshow
-        - load info/metadata for the currnt slide
+- architectural improvements to DB-driven slideshow to render HTML for one slide at a time
+    - required creation of PHP server-side services that are called from the client via AJAX calls to:
+        - load and render slides to begin a slideshow
+        - load info/metadata for the current slide
         - load tags available for slideshow generation
         - render tags avaialble for slideshow generation or tags that are associated to the current slide
-    - required some changes/improvements to DOM
+    - required some changes/improvements to the HTML structure
 
 ### v4.2
 - improvements to the Database-driven Slideshow
