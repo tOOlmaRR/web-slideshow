@@ -31,10 +31,8 @@ if (isset($_POST['allTags'])) {
         $tagCheckedAttribute = "";
         if ($mode == "slideshowTags") {
             $tagCheckedAttribute = in_array($tag['tag'], $configuration['chosenTags']) ? 'checked' : '';
-        } else if ($mode == "slideTags") {            
-            if (array_key_exists($tag['tagID'], $slide['tags'])) {
-                $tagCheckedAttribute = "checked";
-            }
+        } else if ($mode == "slideTags" && array_key_exists($tag['tagID'], $slide['tags'])) {
+            $tagCheckedAttribute = "checked";
         }
 
         // build the tags themselves
@@ -50,8 +48,8 @@ if (isset($_POST['allTags'])) {
     }
     $slideInfoHtml .= "    </div>";
 
-    // show messages area in 'slideTags' mode to indicate what is going on
-    // show submit buttonin 'slideshowTags' mode
+    // in 'slideTags' mode: show messages area to indicate what is going on
+    // in 'slideshowTags' mode: show submit button
     if ($mode == "slideTags") {            
         $slideInfoHtml .= "    <div id=\"slideTagsSubmitMessages\"></div>";
     } else if ($mode == "slideshowTags") {
