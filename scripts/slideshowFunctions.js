@@ -43,10 +43,9 @@ window.addEventListener('DOMContentLoaded', function() {
 function loadAvailableTagsFromDb() {
     console.log('Retrieving tags from database');
    
-    let currentURL = window.location;
-    let queryString = new URLSearchParams(currentURL.search);
-    let secretValue = queryString.get('in');
-    let allowPrivate = isPrivateAccessGranted(secretValue)
+    // determine if user has private access
+    const secretValue = determineSecretValue();
+    const allowPrivate = isPrivateAccessGranted(secretValue)
     let url = 'services/loadTags.php?in=' + allowPrivate;
 
     var httpRequest = new XMLHttpRequest();
@@ -79,9 +78,14 @@ function loadSlideshowFromDb(chosenTags) {
     // determine maximum height based on the client
     let maxHeight = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
     
+    // determine if user has private access
+    const secretValue = determineSecretValue();
+    const allowPrivate = isPrivateAccessGranted(secretValue)
+    let url = 'services/loadSlides.php?in=' + allowPrivate;
+
     // retrieve slide data from the database
     var httpRequest = new XMLHttpRequest();
-    httpRequest.open('POST', 'services/loadSlides.php');
+    httpRequest.open('POST', url);
     httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     const data = {
         'maxHeight': maxHeight,
@@ -449,6 +453,14 @@ function updateTags(imageID, tagID, tag, checkbox) {
             newMsgDiv.innerText += "DONE!"
         }
     }
+}
+
+// Determine the secret value from the request
+function determineSecretValue()
+{
+    const currentURL = window.location;
+    const queryString = new URLSearchParams(currentURL.search);
+    return queryString.get('in');
 }
 
 // Determine if the current request has been granted private access
