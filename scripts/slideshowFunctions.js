@@ -83,7 +83,7 @@ function loadSlideshowFromDb(chosenTags) {
     var httpRequest = new XMLHttpRequest();
     httpRequest.open('POST', 'services/loadSlides.php');
     httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    data = {
+    var data = {
         'maxHeight': maxHeight,
         'chosenTags': chosenTags
     }
@@ -102,7 +102,7 @@ function loadSlideshowFromDb(chosenTags) {
         }
         // if we don't, clear the slide placeholder
         else {
-            slidePlaceholder = document.getElementById('slideContainer');
+            var slidePlaceholder = document.getElementById('slideContainer');
             slidePlaceholder.innerHTML = '';
         }
     }
@@ -248,9 +248,9 @@ function renderSlideshowTagsSelection()
     httpRequest.send(params);
     console.log('Received response from Render Tags service');
 
-    jsonResponse = JSON.parse(httpRequest.responseText);
-    slideInfoHTML = jsonResponse['HTML'];
-    slideInfoPlaceholder = document.getElementById('slideshowTagSelection');
+    const jsonResponse = JSON.parse(httpRequest.responseText);
+    const slideInfoHTML = jsonResponse['HTML'];
+    var slideInfoPlaceholder = document.getElementById('slideshowTagSelection');
     slideInfoPlaceholder.innerHTML = slideInfoHTML; // replace all content of the placeholder
     
     // if we made this call asynchronousely, we'd need to handle the completion with an event handler like this:
@@ -286,9 +286,9 @@ function renderSlideFromData()
     httpRequest.send(params);
     httpRequest.onload = function() {
         console.log('Received response from Render Slide service');
-        jsonResponse = JSON.parse(httpRequest.responseText);
-        slideHTML = jsonResponse['HTML'];
-        slidePlaceholder = document.getElementById('slideContainer');
+        const jsonResponse = JSON.parse(httpRequest.responseText);
+        const slideHTML = jsonResponse['HTML'];
+        var slidePlaceholder = document.getElementById('slideContainer');
         slidePlaceholder.innerHTML = slideHTML; // replace all content of the placeholder
     }
 }
@@ -312,9 +312,9 @@ function renderSlideInfoFromData()
     httpRequest.send(params);
     httpRequest.onload = function() {
         console.log('Received response from Render Slide Info service');
-        jsonResponse = JSON.parse(httpRequest.responseText);
-        slideInfoHTML = jsonResponse['HTML'];
-        slideInfoPlaceholder = document.getElementById('slideInfoContainer');
+        const jsonResponse = JSON.parse(httpRequest.responseText);
+        const slideInfoHTML = jsonResponse['HTML'];
+        var slideInfoPlaceholder = document.getElementById('slideInfoContainer');
         slideInfoPlaceholder.innerHTML = slideInfoHTML; // replace all content of the placeholder
     }
 }
@@ -338,9 +338,9 @@ function renderSlideTagInfoFromData()
     httpRequest.send(params);
     httpRequest.onload = function() {
         console.log('Received response from Render Tags service');
-        jsonResponse = JSON.parse(httpRequest.responseText);
-        slideInfoHTML = jsonResponse['HTML'];
-        slideInfoPlaceholder = document.getElementById('slideInfoTagsContainer');
+        const jsonResponse = JSON.parse(httpRequest.responseText);
+        const slideInfoHTML = jsonResponse['HTML'];
+        var slideInfoPlaceholder = document.getElementById('slideInfoTagsContainer');
         slideInfoPlaceholder.innerHTML = slideInfoHTML; // replace all content of the placeholder
     }
 }

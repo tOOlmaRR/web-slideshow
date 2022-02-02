@@ -31,10 +31,8 @@ if (isset($_POST['allTags'])) {
         $tagCheckedAttribute = "";
         if ($mode == "slideshowTags") {
             $tagCheckedAttribute = in_array($tag['tag'], $configuration['chosenTags']) ? 'checked' : '';
-        } else if ($mode == "slideTags") {            
-            if (array_key_exists($tag['tagID'], $slide['tags'])) {
-                $tagCheckedAttribute = "checked";
-            }
+        } else if ($mode == "slideTags" && array_key_exists($tag['tagID'], $slide['tags'])) {
+            $tagCheckedAttribute = "checked";
         }
 
         // build the tags themselves
