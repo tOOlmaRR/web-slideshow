@@ -43,7 +43,7 @@
                 <fieldset>
                     <legend class="title">Slideshow Options:</legend>
                     <fieldset>
-                        <legend>Tags to Include in Slideshow:</legend>
+                        <legend>Tags to Include:</legend>
                             <div id="slideshowTagSelection"></div>
                         </legend>
                     </fieldset>
@@ -74,7 +74,7 @@
                     <legend class="title">Slide Information:</legend>
                     <div id="slideInfoContainer"></div>
                         <fieldset>
-                            <legend>Tags Associated to this Slide:</legend>
+                            <legend>Tags:</legend>
                             <div id="slideInfoTagsContainer"></div>
                         </fieldset>
                 </fieldset>
