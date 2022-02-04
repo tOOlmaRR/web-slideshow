@@ -42,7 +42,7 @@ class TagsEntity extends BaseEntity implements IEntity
             $tag->tagID = $row["TagID"];
             $tag->tag = $row["Tag"];
             $tag->secure = $row["Secure"] === '1' ? true : false;
-            $this->tags[$row["TagID"]] = $tag;
+            $this->tags[$row["Tag"]] = $tag;
         }
         return true;
     }

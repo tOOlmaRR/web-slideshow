@@ -24,7 +24,7 @@ legend {
 
 /* Left Pane */
 #leftPane {
-    width: 250px;
+    width: 225px;
     float: left;
 }
 
@@ -52,6 +52,7 @@ legend {
 }
 
 .tagSelection span {
+    font-size: 10pt;
     float: left;
     padding-right: 5px;
 }
@@ -80,7 +81,7 @@ legend {
 /* Right Pane */
 #rightPane {
     float: left;
-    width: 250px;
+    width: 225px;
 }
 
 
