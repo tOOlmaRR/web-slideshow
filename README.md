@@ -145,6 +145,12 @@ vendor/bin/phpunit tests --configuration ./tests --coverage-clover ./tests/resul
 
 ## History
 
+### v5.0.1
+- bug fix: tags not being rendered in alphabetical order
+- minor styling changes
+    - render tags in a smaller font size
+    - reduce the width of the left and right panes
+
 ### v5.0
 - architectural improvements to DB-driven slideshow to render HTML for one slide at a time
     - required creation of PHP server-side services that are called from the client via AJAX calls to:
