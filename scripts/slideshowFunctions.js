@@ -471,6 +471,42 @@ function isPrivateAccessGranted(secretValue)
     return secretValue == secretKey ? true : false;   
 }
 
+function toggleOptionsPane(caller)
+{
+    var optionsPane = document.getElementById('show_collapsible_div');
+    var optionsLabel = document.getElementById('show_collapsible_label');
+    if (caller.className == "show_collapse") {
+        optionsPane.style.display = 'none';
+        optionsLabel.style.display = 'none';
+        caller.className = "show_expand";
+        caller.innerHTML = '&raquo;&raquo;&raquo;';
+
+    } else if (caller.className == "show_expand") {
+        optionsPane.style.display = 'block';
+        optionsLabel.style.display = 'inline';
+        caller.className = "show_collapse";
+        caller.innerHTML = '&laquo;&laquo;&laquo;';
+    }
+}
+
+function toggleInfoPane(caller)
+{
+    var infoPane = document.getElementById('info_collapsible_div');
+    var infoLabel = document.getElementById('info_collapsible_label');
+    if (caller.className == "info_collapse") {
+        infoPane.style.display = 'none';
+        infoLabel.style.display = 'none';
+        caller.className = "info_expand";
+        caller.innerHTML = '&raquo;&raquo;&raquo;';
+
+    } else if (caller.className == "info_expand") {
+        infoPane.style.display = 'block';
+        infoLabel.style.display = 'inline';
+        caller.className = "info_collapse";
+        caller.innerHTML = '&laquo;&laquo;&laquo;';
+    }
+}
+
 /* Randomize array in-place using Durstenfeld shuffle algorithm */
 /* Source: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array */
 function shuffleArray(array) {
