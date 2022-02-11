@@ -60,8 +60,13 @@ legend {
 }
 
 #tagSelectionSubmit {
+    padding-top: 5px;
+}
+
+#modeSelection {
     clear: both;
     padding-top: 5px;
+    font-size: 10pt;
 }
 
 .randomizeToggle {

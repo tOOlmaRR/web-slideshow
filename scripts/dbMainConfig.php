@@ -37,9 +37,21 @@ $physicalRoots["public"] = "E:\\MyPhotos\\";
 $physicalRoots["private"] = "E:\\MyPhotos\\Private\\";
 $configuration["physicalRoots"] = $physicalRoots;
 
-/* Determine Slideshow Configuration - Chosen Tags */
+/* Determine Slideshow Configuration */
+
+// tags chosen for the slideshow
 if (isset($_POST) && isset($_POST["chosenTags"])) {
     $configuration["chosenTags"] = $_POST["chosenTags"];
 } else {
     $configuration["chosenTags"] = [];
+}
+
+// what slideshow mode are we in?
+//   normal: show both slideshow options and slide info panes and display the slideshow to the right
+//   tagging: hide the slideshow options pane, increase the width of the slide info pane, and only include slides that are not 'fully tagged'
+//   maximize: hide bot slideshow options and slide info panes, increase the allowable width, go into full screen mode, and remove as much 'chrome' as possible
+if (isset($_POST) && isset($_POST["slideshowMode"])) {
+    $configuration["slideshowMode"] = $_POST["slideshowMode"];
+} else {
+    $configuration["slideshowMode"] = [];
 }
