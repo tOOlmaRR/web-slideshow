@@ -8,10 +8,9 @@ if (isset($_POST['slide']) && isset($_POST['slideCount']) && isset($_POST['slide
     
     // build the HTML
     $slideHtml = '';
-    $slideHtml .= "<div class=\"mySlides fade\" style=\"height: " . intval($slideToRender->height + 55) . "px;\">";
+    $slideHtml .= "<div class=\"mySlides fade\" style=\"height: " . intval($slideToRender->height + 25) . "px;\">";
     $slideHtml .= "    <div class=\"numbertext\">" . ($slideIndex + 1) . " / " . $slideCount . "</div>";
     $slideHtml .= "    <img width=\"$slideToRender->width\" height=\"$slideToRender->height\" src=\"" . $slideToRender->virtualLocation . "\">";
-    $slideHtml .= "    <div class=\"text\"><span class=\"filename\">" . $slideToRender->filename . "</span><span class=\"dimensions\">$slideToRender->originalWidth x $slideToRender->originalHeight resized to $slideToRender->width x $slideToRender->height<span></div>";
     $slideHtml .= "</div>";
 }
 

@@ -18,7 +18,7 @@ class DbWebSlideshow
 
     public function __construct(int $viewportHeight)
     {
-        $this->maxHeight = $viewportHeight - 100;
+        $this->maxHeight = $viewportHeight - 65;
         $this->privateAcessGranted = $this->isPrivateAccessGranted();
     }
 

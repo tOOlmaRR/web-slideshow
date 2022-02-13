@@ -43,7 +43,7 @@ window.addEventListener('DOMContentLoaded', function() {
             let slideInfoToggler = document.getElementById("slideInfoPaneToggle");
             if (mode == 'tagging') {
                 toggleOptionsPane(slideshowOptionsToggler);
-                slideInfoPane.style.width = '400px';
+                slideInfoPane.style.width = '375px';
             } else if (mode == 'maximize') {
                 toggleOptionsPane(slideshowOptionsToggler);
                 toggleInfoPane(slideInfoToggler);
