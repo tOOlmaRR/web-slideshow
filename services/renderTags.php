@@ -54,14 +54,15 @@ if (isset($_POST['allTags'])) {
         $slideInfoHtml .= "    <div id=\"slideTagsSubmitMessages\"></div>";
     } else if ($mode == "slideshowTags") {
         $slideInfoHtml .= "    <div id=\"modeSelection\">";
-        $slideInfoHtml .= "        <input type=\"radio\" name=\"slideshowMode\" value=\"normal\" checked>";
+        $slideInfoHtml .= "        <input type=\"radio\" name=\"slideshowMode\" value=\"normal\" id=\"normal\" checked>";
         $slideInfoHtml .= "        <label for=\"normal\">normal</label>";
-        $slideInfoHtml .= "        <input type=\"radio\" name=\"slideshowMode\" value=\"tagging\">";
+        $slideInfoHtml .= "        <input type=\"radio\" name=\"slideshowMode\" value=\"tagging\" id=\"tagging\">";
         $slideInfoHtml .= "        <label for=\"tagging\">tagging</label>";
-        $slideInfoHtml .= "        <input type=\"radio\" name=\"slideshowMode\" value=\"maximize\">";
+        $slideInfoHtml .= "        <input type=\"radio\" name=\"slideshowMode\" value=\"maximize\" id=\"maximize\">";
         $slideInfoHtml .= "        <label for=\"maximize\">maximize</label>";
         $slideInfoHtml .= "    </div>";
         $slideInfoHtml .= "    <div id=\"tagSelectionSubmit\"><input type=\"submit\" value=\"Generate Slideshow\"></div>";
+        $slideInfoHtml .= "</form";
     }
 }
 
