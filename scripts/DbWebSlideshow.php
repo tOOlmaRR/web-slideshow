@@ -70,7 +70,7 @@ class DbWebSlideshow
         return $slideshowSpeedHtml;
     }
 
-    public function retrieveSlideshowData($configuration, $chosenTags) : array
+    public function retrieveSlideshowData($configuration, $chosenTags, array $omitTags) : array
     {
         /* Retrieve images from database and build the slides */
         $entityFactory = new EntityFactory($configuration['database']);
@@ -80,6 +80,11 @@ class DbWebSlideshow
         foreach ($allImages as $image) {
             // build the slide object and add it to the list
             $photoToDisplay = $this->buildSlide($image, $entityFactory);
+
+            // apply filters to remove the photo if it contains a tag in the omit list
+            if ($this->filterPhoto($photoToDisplay, $omitTags)) {
+                continue;
+            }
 
             // build the image's virtual location based on it's path and the configured physical and virtual roots
             $physicalRoot = $image->secure ? $configuration["physicalRoots"]["private"] : $configuration["physicalRoots"]["public"];
@@ -91,24 +96,6 @@ class DbWebSlideshow
         }
         return $photosToDisplay;
     }
-
-    public function buildSlideInfoHtml($allSlides, $tags) : string
-    {
-        $slideInfoHtml = '';
-        $number = 0;
-        foreach ($allSlides as $slide)
-        {
-            $slideInfoHtml .= "<div class=\"mySlideInfo c" . $number . "\">";
-            $slideInfoHtml .= $this->buildSlideBasicInfoHtml($slide);
-            $slideInfoHtml .= $this->buildSlideTagsHtml($slide, $tags);
-            $slideInfoHtml .= "</div>";
-            $number++;
-        }
-        $slideInfoHtml .= "<div id=\"slideTagsSubmitMessages\"></div>";
-        return $slideInfoHtml;
-    }
-
-
 
     private function getAllImagesWithChosenTags(array $chosenTags, EntityFactory $entityFactory) : array
     {
@@ -154,10 +141,24 @@ class DbWebSlideshow
         {
             $imageTags = $tagsEntity->tags;
             foreach ($imageTags as $tag) {
-                $slide['tags'][$tag->tagID] = $tag;
+                $slide['tags'][$tag->tag] = $tag;
             }
         }
         return $slide;
+    }
+
+    private function filterPhoto(array $photo, array $omitTags) : bool
+    {
+        if ($omitTags == null) {
+            return false;
+        } else {
+            foreach ($omitTags as $tagToOmit) {
+                if (array_key_exists($tagToOmit, $photo['tags'])) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
     
     private function buildImageVirtualLocation(string $physicalRoot, string $virtualRoot, ImageEntity $image) : string
@@ -178,66 +179,6 @@ class DbWebSlideshow
         return $virtualLocation . $image->fileName;
     }
     
-    private function buildSlideBasicInfoHtml($slide) : string
-    {
-        $checkedAttribute = $slide['secured']? "checked" : "";
-        
-        $slideBasicInfoHtml = "<fieldset>";
-        $slideBasicInfoHtml .= "<legend>Basic Info:</legend>";
-        
-        $slideBasicInfoHtml .= "    <div class=\"slideBasicInfo\">";
-        $slideBasicInfoHtml .= "        <div>";
-        $slideBasicInfoHtml .= "            <span class=\"title\">Filename: </span><br />";
-        $slideBasicInfoHtml .= "            <input class=\"slide-filename\" type=\"text\" disabled=\"disabled\" name=\"filename\" value=\"" . $slide[DbWebSlideshow::SLIDE_FILENAME_KEY] . "\" />";
-        $slideBasicInfoHtml .= "        </div>";
-        $slideBasicInfoHtml .= "        <div>";
-        $slideBasicInfoHtml .= "            <span class=\"title\">Original Size: </span><br />";
-        $slideBasicInfoHtml .= "            <input class=\"slide-o-size\" type=\"text\" disabled=\"disabled\" value=\"$slide[originalWidth]x$slide[originalHeight]\" />";
-        $slideBasicInfoHtml .= "        </div>";
-        $slideBasicInfoHtml .= "        <div>";
-        $slideBasicInfoHtml .= "            <span class=\"title\">Resized To: </span><br />";
-        $slideBasicInfoHtml .= "            <input class=\"slide-n-size\" type=\"text\" disabled=\"disabled\" value=\"$slide[width]x$slide[height]\" />";
-        $slideBasicInfoHtml .= "        </div>";
-        $slideBasicInfoHtml .= "        <div>";
-        $slideBasicInfoHtml .= "            <input class=\"slide-secured\" type=\"checkbox\" disabled=\"disabled\" name=\"secureImage\" $checkedAttribute/><label for=\"secureImage\">Secured Image</label>";
-        $slideBasicInfoHtml .= "        </div>";
-        $slideBasicInfoHtml .= "    </div>";
-        $slideBasicInfoHtml .= "</fieldset>";
-        return $slideBasicInfoHtml;
-    }
-
-    private function buildSlideTagsHtml($slide, $tags) : string
-    {
-        // initial form and fieldset rendering
-        $slideTagsHtml = "<div class=\"slideTagInfo\">";
-        $slideTagsHtml .= "    <form action=\"\" method=\"POST\">";
-        $slideTagsHtml .= "        <fieldset>";
-        $slideTagsHtml .= "            <legend>Tags Associated to this Slide:</legend>";
-        $slideTagsHtml .= "            <div id=\"tagSelection\">";
-        
-        // Build list of tags to render
-        foreach ($tags as $tag) {
-            $checkedAttribute = "";
-            if (array_key_exists($tag->tagID, $slide['tags'])) {
-                $checkedAttribute = "checked";
-            }
-            $cssClass = $tag->secure ? 'privateOption' : 'publicOption';
-            $slideTagsHtml .= "                <span>";
-            $slideTagsHtml .= "                    <input type=\"checkbox\" name=\"slideTags[]\" value=\"$tag->tag\" id=\"$tag->tag\" $checkedAttribute onclick=\"updateTags(" . $slide['ID'] . ", $tag->tagID, '$tag->tag', this);\"/>";
-            $slideTagsHtml .= "                    <label class=\"$cssClass\" for=\"$tag->tag\">$tag->tag</label>";
-            $slideTagsHtml .= "                </span>";
-        }
-
-        // close off the drop down and render the button
-        $slideTagsHtml .= "            </div>";
-        $slideTagsHtml .= "        </fieldset>";
-        $slideTagsHtml .= "    </form>";
-        $slideTagsHtml .= "</div>";
-
-        // display the built HTML to the page
-        return $slideTagsHtml;
-    }
-
     private function optimizePhotoSize($width, $height) : array
     {
         $newImageDimensions = array();

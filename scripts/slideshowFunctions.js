@@ -102,10 +102,15 @@ function loadSlideshowFromDb(chosenTags, mode) {
     const currentURL = window.location;
     const queryString = new URLSearchParams(currentURL.search);
     let maxHeight = queryString.get('height') ?? Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
-    if (mode == 'maximize') {
-        maxHeight = (parseInt(maxHeight) + 50).toString();
-    }
     
+    // apply customizations based on mode
+    let omitTags = '';
+    if (mode == 'maximize') {
+        maxHeight = (parseInt(maxHeight) + 50).toString();        
+    } else if (mode == 'tagging') {
+        omitTags = 'fully tagged';
+    }
+        
     // determine if user has private access
     const secretValue = determineSecretValue();
     const allowPrivate = isPrivateAccessGranted(secretValue)
@@ -118,6 +123,7 @@ function loadSlideshowFromDb(chosenTags, mode) {
     const data = {
         'maxHeight': maxHeight,
         'chosenTags': chosenTags,
+        'tagsToOmit' : omitTags
     }
     var params = Object.keys(data).map(
         function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) }
