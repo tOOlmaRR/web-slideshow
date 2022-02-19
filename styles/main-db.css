@@ -2,6 +2,10 @@
     box-sizing: border-box
 }
 
+body {
+    margin: 0px;
+}
+
 form {
     display: inline;
 }
@@ -22,13 +26,11 @@ legend {
     color: red;
 }
 
-/* Left Pane */
+/* Left Pane: Slideshow Options */
 #leftPane {
-    width: 225px;
     float: left;
 }
 
-/* Slideshow Options */
 #slideshowOptions {
     margin-bottom: 25px;
 }
@@ -78,14 +80,11 @@ legend {
     margin-left: 10px;
 }
 
-/* Right Pane */
+/* Right Pane: Slide Info */
 #rightPane {
     float: left;
-    width: 225px;
 }
 
-
-/* Slide Info */
 #slideInfo {
     margin-bottom: 25px;
 }
@@ -103,24 +102,22 @@ legend {
     font-size: 10pt;
 }
 
-#slideInfo .slideBasicInfo .slide-filename {
-    width: 225px;
-}
-
 #slideTagsSubmitMessages {
     clear: both;
     padding-top: 5px;
 }
 
-/* Slideshow container */
-.slideshow-container {
-    max-width: 1000px;
+/* Slideshow Pane */
+#slideshowContainer {
     position: relative;
     float: left;
     margin: auto;
 }
 
-/* Hide the images by default */
+#slideshowContainer fieldset legend.title {
+    font-weight: bold;
+}
+
 .mySlides {
     width: 100%;
     background-color: black;
@@ -136,32 +133,6 @@ legend {
     transform: translateY(-50%);
 }
 
-/* Next & previous buttons */
-.prev, .next {
-    cursor: pointer;
-    position: absolute;
-    top: 50%;
-    width: auto;
-    margin-right: 16px;
-    padding: 16px;
-    color: white;
-    font-weight: bold;
-    font-size: 18px;
-    transition: 0.6s ease;
-    border-radius: 0 3px 3px 0;
-    user-select: none;
-}
-
-/* Position the "next button" to the right */
-.next {
-    right: 0;
-    border-radius: 3px 0 0 3px;
-}
-
-/* On hover, add a black background color with a little bit see-through */
-.prev:hover, .next:hover {
-    background-color: rgba(0,0,0,0.8);
-}
 
 /* Caption text */
 .text {
@@ -194,6 +165,33 @@ legend {
     top: 0;
 }
 
+/* Next & previous buttons */
+.prev, .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    margin-right: 16px;
+    padding: 16px;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    transition: 0.6s ease;
+    border-radius: 0 3px 3px 0;
+    user-select: none;
+}
+
+/* Position the "next button" to the right */
+.next {
+    right: 0;
+    border-radius: 3px 0 0 3px;
+}
+
+/* On hover, add a black background color with a little bit see-through */
+.prev:hover, .next:hover {
+    background-color: rgba(0,0,0,0.8);
+}
+
 /* Fading animation */
 .fade {
     -webkit-animation-name: fade;
@@ -218,4 +216,26 @@ legend {
     to {
         opacity: 1
     }
+}
+
+
+/* Collapse Elements */
+.show_collapse, .show_expand, .info_collapse, .info_expand {
+    position: inline-block;
+}
+
+.show_collapse:hover, .info_collapse:hover {
+    background-color: red;
+}
+
+.show_expand:hover, .info_expand:hover {
+    background-color: green;
+}
+
+#show_collapsible_div {
+    width: 250px;
+}
+
+#info_collapsible_div {
+    width: 250px;
 }
