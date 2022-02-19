@@ -75,8 +75,10 @@ function loadSlideshowFromDb(chosenTags) {
     const randomizeCheckbox = document.getElementById("randomizeToggle");
     randomizeCheckbox.checked = false;
     
-    // determine maximum height based on the client
-    let maxHeight = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+    // determine maximum height based on the query string, or the client if there is no QS parameter
+    const currentURL = window.location;
+    const queryString = new URLSearchParams(currentURL.search);
+    let maxHeight = queryString.get('height') ?? Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
     
     // determine if user has private access
     const secretValue = determineSecretValue();
