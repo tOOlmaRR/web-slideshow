@@ -25,6 +25,29 @@ window.addEventListener('DOMContentLoaded', function() {
         slideshowForm.addEventListener('submit', function(e) {
             e.preventDefault();
             console.log('Retrieve slideshow data from database');
+
+            // determine slideshow mode from the state of the radio buttons
+            let mode = 'normal';
+            var radioButtons = document.getElementsByName('slideshowMode');
+              
+            for (i = 0; i < radioButtons.length; i++) {
+                if (radioButtons[i].checked) {
+                    mode = radioButtons[i].value;
+                }
+            }
+
+            // resize panes based on mode
+            //let slideshowOptionsPane = document.getElementById("show_collapsible_div");
+            let slideInfoPane = document.getElementById("info_collapsible_div");
+            let slideshowOptionsToggler = document.getElementById("slideshowOptionsPaneToggle");
+            let slideInfoToggler = document.getElementById("slideInfoPaneToggle");
+            if (mode == 'tagging') {
+                toggleOptionsPane(slideshowOptionsToggler);
+                slideInfoPane.style.width = '375px';
+            } else if (mode == 'maximize') {
+                toggleOptionsPane(slideshowOptionsToggler);
+                toggleInfoPane(slideInfoToggler);
+            }
     
             // get checked tags
             var inputElements = slideshowForm.getElementsByTagName('input');
@@ -34,7 +57,7 @@ window.addEventListener('DOMContentLoaded', function() {
                     chosenTags.push(inputElements[i].value);
                 }
             }
-            loadSlideshowFromDb(chosenTags);
+            loadSlideshowFromDb(chosenTags, mode);
         });
     }
 })
@@ -64,7 +87,7 @@ function loadAvailableTagsFromDb() {
 }
 
 // Load all slides for the chosen tags via AJAX call to a service, then start the slidehow if slides have been loaded
-function loadSlideshowFromDb(chosenTags) {
+function loadSlideshowFromDb(chosenTags, mode) {
     console.log('Retrieving slideshow data from database');
     
     // halt existing slideshow and reset some info    
@@ -80,6 +103,14 @@ function loadSlideshowFromDb(chosenTags) {
     const queryString = new URLSearchParams(currentURL.search);
     let maxHeight = queryString.get('height') ?? Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
     
+    // apply customizations based on mode
+    let omitTags = '';
+    if (mode == 'maximize') {
+        maxHeight = (parseInt(maxHeight) + 50).toString();        
+    } else if (mode == 'tagging') {
+        omitTags = 'fully tagged';
+    }
+        
     // determine if user has private access
     const secretValue = determineSecretValue();
     const allowPrivate = isPrivateAccessGranted(secretValue)
@@ -91,7 +122,8 @@ function loadSlideshowFromDb(chosenTags) {
     httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     const data = {
         'maxHeight': maxHeight,
-        'chosenTags': chosenTags
+        'chosenTags': chosenTags,
+        'tagsToOmit' : omitTags
     }
     var params = Object.keys(data).map(
         function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) }

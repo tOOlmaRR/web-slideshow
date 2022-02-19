@@ -37,11 +37,11 @@
     </head>
     <body>
         <!-- Slideshow Options -->
-        <div id="leftPane">            
+        <div id="leftPane">
             <div id="slideshowOptions">
                 <fieldset>
                     <legend class="title">
-                        <span><a class="show_collapse" onclick="toggleOptionsPane(this);">&laquo;&laquo;&laquo;</a></span>    
+                        <span><a id="slideshowOptionsPaneToggle" class="show_collapse" title="Slideshow Options" onclick="toggleOptionsPane(this);">&laquo;&laquo;&laquo;</a></span>    
                         <span id="show_collapsible_label" class="legendLabel">Slideshow Options:</span>
                     </legend>
                     <div id="show_collapsible_div">
@@ -66,7 +66,7 @@
             <div id="slideInfo">
                 <fieldset>
                     <legend class="title">
-                        <span><a class="info_collapse" onclick="toggleInfoPane(this);">&laquo;&laquo;&laquo;</a></span>
+                        <span><a id="slideInfoPaneToggle" class="info_collapse" title="Slide Information" onclick="toggleInfoPane(this);">&laquo;&laquo;&laquo;</a></span>
                         <span id="info_collapsible_label" class="legendLabel">Slide Information:</span>
                     </legend>
 
