@@ -106,7 +106,7 @@ function loadSlideshowFromDb(chosenTags, mode) {
     // apply customizations based on mode
     let omitTags = '';
     if (mode == 'maximize') {
-        maxHeight = (parseInt(maxHeight) + 50).toString();        
+        maxHeight = (parseInt(maxHeight) + 135).toString();        
     } else if (mode == 'tagging') {
         omitTags = 'fully tagged';
     }
