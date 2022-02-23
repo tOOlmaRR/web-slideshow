@@ -27,28 +27,11 @@ window.addEventListener('DOMContentLoaded', function() {
             console.log('Retrieve slideshow data from database');
 
             // determine slideshow mode from the state of the radio buttons
-            let mode = 'normal';
-            var radioButtons = document.getElementsByName('slideshowMode');
-              
-            for (i = 0; i < radioButtons.length; i++) {
-                if (radioButtons[i].checked) {
-                    mode = radioButtons[i].value;
-                }
-            }
+            let mode = determineSlideshowMode();
 
-            // resize panes based on mode
-            //let slideshowOptionsPane = document.getElementById("show_collapsible_div");
-            let slideInfoPane = document.getElementById("info_collapsible_div");
-            let slideshowOptionsToggler = document.getElementById("slideshowOptionsPaneToggle");
-            let slideInfoToggler = document.getElementById("slideInfoPaneToggle");
-            if (mode == 'tagging') {
-                toggleOptionsPane(slideshowOptionsToggler);
-                slideInfoPane.style.width = '375px';
-            } else if (mode == 'maximize') {
-                toggleOptionsPane(slideshowOptionsToggler);
-                toggleInfoPane(slideInfoToggler);
-            }
-    
+            // apply slideshow mode presets
+            applySlideshowModeToUI(mode)
+
             // get checked tags
             var inputElements = slideshowForm.getElementsByTagName('input');
             var chosenTags = [];
@@ -106,7 +89,7 @@ function loadSlideshowFromDb(chosenTags, mode) {
     // apply customizations based on mode
     let omitTags = '';
     if (mode == 'maximize') {
-        maxHeight = (parseInt(maxHeight) + 50).toString();        
+        maxHeight = (parseInt(maxHeight) + 120).toString();        
     } else if (mode == 'tagging') {
         omitTags = 'fully tagged';
     }
@@ -486,6 +469,34 @@ function updateTags(imageID, tagID, tag, checkbox) {
             newMsgDiv.className = 'success';
             newMsgDiv.innerText += "DONE!"
         }
+    }
+}
+
+// Determine slideshow mode based on selection in the UI
+function determineSlideshowMode()
+{
+    let mode = 'normal';
+    var radioButtons = document.getElementsByName('slideshowMode');
+    for (var i=0; i < radioButtons.length; i++) {
+        if (radioButtons[i].checked) {
+            return radioButtons[i].value;
+        }
+    }
+    return mode;
+}
+
+// Adjust the UI as requested via slideshow mode selection
+function applySlideshowModeToUI(mode)
+{
+    let slideInfoPane = document.getElementById("info_collapsible_div");
+    let slideshowOptionsToggler = document.getElementById("slideshowOptionsPaneToggle");
+    let slideInfoToggler = document.getElementById("slideInfoPaneToggle");
+    if (mode == 'tagging') {
+        toggleOptionsPane(slideshowOptionsToggler);
+        slideInfoPane.style.width = '375px';
+    } else if (mode == 'maximize') {
+        toggleOptionsPane(slideshowOptionsToggler);
+        toggleInfoPane(slideInfoToggler);
     }
 }
 

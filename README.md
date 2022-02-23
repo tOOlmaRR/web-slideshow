@@ -15,15 +15,19 @@ This is a web application that can display custom slideshows in a browser for lo
 ### Features Under Development
 1. **Folder Scanner** - via the /scan.php page. This page allows you to scan a folder, with or without it's subfolders, into a database. Data retrieved and added includes the full file path, the file name, the width and height of images, and a bit indicating whether or not the image should be considered secured (to be used for private slideshows). This scanner also includes the option to create and associate tags (comma-delimited set) to each image scanned. Tags are associated to images and tags can also be marked as secured. **Note**: The slideshow page does not load images from the database yet, and there are no admin options to modify the data in the web UI yet either.
 1. **Database-Driven Slideshow** - via the /slideshow-db.php page. This page has very similar features to the main slideshow.php page, except that it is driven off of the database and by tags rather than physical folders of photos/images. The UI has also been redesigned slightly. For the moment, this page has the following features, but should be considered as a beta version for the moment:   
-   - **Available Tags** - determines all tags that are available to you and allows you to create a slideshow by combining all photos in the database associated to the chosen tags. Photos will only be added once if a photo has more than one of the chosen tags.
-   - **Private Tags** - tags can be defined as 'secure' in the database, and secure tags will only be displayed if you are authorized to view them.
-   - **Private Images** - images stored in the database can also be marked as 'secure'. These images will only be included in slideshows if you are authorized to view them.
-   - **Manual Controls** - at any time you can move forward or backward in the current slideshow. This does not halt the slideshow in progress, but it does restart the timer.
-   - **Slideshow Speed** - a slider control in the UI controls how long each slide will be displayed for. Changes take effect after transitioning to the next slide.
-   - **Randomize Option** - allows you to randomize the slides in the current slideshow. Changes take effect immediately. Halting randomization will stop at the current slide.
-   - **Halt** - allows you to stop the slidehow on the current slide and pick up where you left off afterwards.
-   - **See Slide Details** - see details of the slide including size and filename
-   - **Update a Slide's Tags** - see and update which tags are associated to the current slide, and halt the slideshow on the first change
+    - **Available Tags** - determines all tags that are available to you and allows you to create a slideshow by combining all photos in the database associated to the chosen tags. Photos will only be added once if a photo has more than one of the chosen tags.
+    - **Private Tags** - tags can be defined as 'secure' in the database, and secure tags will only be displayed if you are authorized to view them.
+    - **Private Images** - images stored in the database can also be marked as 'secure'. These images will only be included in slideshows if you are authorized to view them.
+    - **Manual Controls** - at any time you can move forward or backward in the current slideshow. This does not halt the slideshow in progress, but it does restart the timer.
+    - **Slideshow Speed** - a slider control in the UI controls how long each slide will be displayed for. Changes take effect after transitioning to the next slide.
+    - **Randomize Option** - allows you to randomize the slides in the current slideshow. Changes take effect immediately. Halting randomization will stop at the current slide.
+    - **Halt** - allows you to stop the slidehow on the current slide and pick up where you left off afterwards.
+    - **See Slide Details** - see details of the slide including size and filename
+    - **Update a Slide's Tags** - see and update which tags are associated to the current slide, and halt the slideshow on the first change
+    - **Slideshow Modes** - presets for viewing a slideshow including:
+        - **Normal** - standard UI and slideshow settings
+        - **Tagging** - only display slides that are not tagged with the "fully tagged" tag, minimizes the slideshow settings pane at the far left and increases the width of the slideshow info pane to make tagging slides a bit easier
+        - **Maximize** - puts the focus on the slideshow by minimizing the other two panes    
 
 ## Slideshow Configuration
 All configuration elements are defined in the */mainConfig.php* file. There is an overlying $configuration array which is designed to contain all configuration elements, and then within, there are separate arrays that contain all slideshow configurations as well as the root physical and virtual folders to use for both private and public slideshows.
@@ -144,6 +148,14 @@ vendor/bin/phpunit tests --configuration ./tests --coverage-clover ./tests/resul
 
 
 ## History
+
+### v5.1
+- bug fix: calculate the dimensions of images based on the adjusted height value in the query string rather than just the originally calculated height. This was preventing manual adjustments via the query string
+- UI enhancements
+    - remove the slideshow info in the footer of slides and reclaim that usused space to increase the overall size of the slide
+    - move the slideshow info pane to the left of the slideshow itself
+    - add links to allow the slideshow settings and slide info panes to be hidden and restored
+- added 3 slideshow modes (UI presets) that can be chosen when generating a slideshow
 
 ### v5.0.1
 - bug fix: tags not being rendered in alphabetical order
