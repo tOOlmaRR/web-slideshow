@@ -477,9 +477,9 @@ function determineSlideshowMode()
 {
     let mode = 'normal';
     var radioButtons = document.getElementsByName('slideshowMode');
-    for (var i=0; i < radioButtons.length; i++) {
-        if (radioButtons[i].checked) {
-            return radioButtons[i].value;
+    for (let modeOption of radioButtons) {
+        if (modeOption.checked) {
+            return modeOption.value;
         }
     }
     return mode;
