@@ -10,11 +10,12 @@ if (isset($_POST['maxHeight']) && isset($_POST['chosenTags'])) {
     $privateAccessGranted = $_GET['in'] ?? false;
     $maxHeight = $_POST['maxHeight'];
     $chosenTags = explode(",", $_POST['chosenTags']);
+    $tagsToOmit =  isset($_POST['tagsToOmit']) ? explode(",", $_POST['tagsToOmit']) : array();
 
     // instantiate the slidehow and build the slide data
     $dbSlideshow = new DbWebSlideshow($maxHeight);
     $dbSlideshow->privateAcessGranted = $privateAccessGranted == 'true' ? true : false;
-    $allSlides = $dbSlideshow->retrieveSlideshowData($configuration, $chosenTags);
+    $allSlides = $dbSlideshow->retrieveSlideshowData($configuration, $chosenTags, $tagsToOmit);
 }
 
 // prepare the response

@@ -25,7 +25,13 @@ window.addEventListener('DOMContentLoaded', function() {
         slideshowForm.addEventListener('submit', function(e) {
             e.preventDefault();
             console.log('Retrieve slideshow data from database');
-    
+
+            // determine slideshow mode from the state of the radio buttons
+            let mode = determineSlideshowMode();
+
+            // apply slideshow mode presets
+            applySlideshowModeToUI(mode)
+
             // get checked tags
             var inputElements = slideshowForm.getElementsByTagName('input');
             var chosenTags = [];
@@ -34,7 +40,7 @@ window.addEventListener('DOMContentLoaded', function() {
                     chosenTags.push(inputElements[i].value);
                 }
             }
-            loadSlideshowFromDb(chosenTags);
+            loadSlideshowFromDb(chosenTags, mode);
         });
     }
 })
@@ -64,7 +70,7 @@ function loadAvailableTagsFromDb() {
 }
 
 // Load all slides for the chosen tags via AJAX call to a service, then start the slidehow if slides have been loaded
-function loadSlideshowFromDb(chosenTags) {
+function loadSlideshowFromDb(chosenTags, mode) {
     console.log('Retrieving slideshow data from database');
     
     // halt existing slideshow and reset some info    
@@ -75,9 +81,19 @@ function loadSlideshowFromDb(chosenTags) {
     const randomizeCheckbox = document.getElementById("randomizeToggle");
     randomizeCheckbox.checked = false;
     
-    // determine maximum height based on the client
-    let maxHeight = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+    // determine maximum height based on the query string, or the client if there is no QS parameter
+    const currentURL = window.location;
+    const queryString = new URLSearchParams(currentURL.search);
+    let maxHeight = queryString.get('height') ?? Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
     
+    // apply customizations based on mode
+    let omitTags = '';
+    if (mode == 'maximize') {
+        maxHeight = (parseInt(maxHeight) + 120).toString();        
+    } else if (mode == 'tagging') {
+        omitTags = 'fully tagged';
+    }
+        
     // determine if user has private access
     const secretValue = determineSecretValue();
     const allowPrivate = isPrivateAccessGranted(secretValue)
@@ -89,7 +105,8 @@ function loadSlideshowFromDb(chosenTags) {
     httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     const data = {
         'maxHeight': maxHeight,
-        'chosenTags': chosenTags
+        'chosenTags': chosenTags,
+        'tagsToOmit' : omitTags
     }
     var params = Object.keys(data).map(
         function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) }
@@ -455,6 +472,34 @@ function updateTags(imageID, tagID, tag, checkbox) {
     }
 }
 
+// Determine slideshow mode based on selection in the UI
+function determineSlideshowMode()
+{
+    let mode = 'normal';
+    var radioButtons = document.getElementsByName('slideshowMode');
+    for (let modeOption of radioButtons) {
+        if (modeOption.checked) {
+            return modeOption.value;
+        }
+    }
+    return mode;
+}
+
+// Adjust the UI as requested via slideshow mode selection
+function applySlideshowModeToUI(mode)
+{
+    let slideInfoPane = document.getElementById("info_collapsible_div");
+    let slideshowOptionsToggler = document.getElementById("slideshowOptionsPaneToggle");
+    let slideInfoToggler = document.getElementById("slideInfoPaneToggle");
+    if (mode == 'tagging') {
+        toggleOptionsPane(slideshowOptionsToggler);
+        slideInfoPane.style.width = '375px';
+    } else if (mode == 'maximize') {
+        toggleOptionsPane(slideshowOptionsToggler);
+        toggleInfoPane(slideInfoToggler);
+    }
+}
+
 // Determine the secret value from the request
 function determineSecretValue()
 {
@@ -467,6 +512,42 @@ function determineSecretValue()
 function isPrivateAccessGranted(secretValue)
 {
     return secretValue == secretKey ? true : false;   
+}
+
+function toggleOptionsPane(caller)
+{
+    var optionsPane = document.getElementById('show_collapsible_div');
+    var optionsLabel = document.getElementById('show_collapsible_label');
+    if (caller.className == "show_collapse") {
+        optionsPane.style.display = 'none';
+        optionsLabel.style.display = 'none';
+        caller.className = "show_expand";
+        caller.innerHTML = '&raquo;&raquo;&raquo;';
+
+    } else if (caller.className == "show_expand") {
+        optionsPane.style.display = 'block';
+        optionsLabel.style.display = 'inline';
+        caller.className = "show_collapse";
+        caller.innerHTML = '&laquo;&laquo;&laquo;';
+    }
+}
+
+function toggleInfoPane(caller)
+{
+    var infoPane = document.getElementById('info_collapsible_div');
+    var infoLabel = document.getElementById('info_collapsible_label');
+    if (caller.className == "info_collapse") {
+        infoPane.style.display = 'none';
+        infoLabel.style.display = 'none';
+        caller.className = "info_expand";
+        caller.innerHTML = '&raquo;&raquo;&raquo;';
+
+    } else if (caller.className == "info_expand") {
+        infoPane.style.display = 'block';
+        infoLabel.style.display = 'inline';
+        caller.className = "info_collapse";
+        caller.innerHTML = '&laquo;&laquo;&laquo;';
+    }
 }
 
 /* Randomize array in-place using Durstenfeld shuffle algorithm */
