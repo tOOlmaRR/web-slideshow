@@ -429,11 +429,16 @@ function updateTags(imageID, tagID, tag, checkbox) {
     var haltSlideshowCheckbox = document.getElementById('haltSlideshow');
     var slideshowInProgress = !haltSlideshowCheckbox.checked;
     if (slideshowInProgress) {
+        // Reset the interval based on the UI and continue the slideshow
         clearInterval(slideShowIntervalID);
-        haltSlideshowCheckbox.checked = true;
+        const configuredIntervalText = document.getElementById("currentSlideshowSpeed").innerText;
+        const configuredInterval = +configuredIntervalText * 1000;
+        slideShowIntervalID = setTimeout(showSlides, configuredInterval);
+
+        // add message to the UI
         var haltedMsgDiv = document.createElement("div");
         haltedMsgDiv.className = 'inProgress';
-        haltedMsgDiv.innerText = 'Slideshow HALTED';
+        haltedMsgDiv.innerText = 'Slideshow interval reset';
         msgDiv.appendChild(haltedMsgDiv);
     }
 
