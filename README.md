@@ -23,7 +23,7 @@ This is a web application that can display custom slideshows in a browser for lo
     - **Randomize Option** - allows you to randomize the slides in the current slideshow. Changes take effect immediately. Halting randomization will stop at the current slide.
     - **Halt** - allows you to stop the slidehow on the current slide and pick up where you left off afterwards.
     - **See Slide Details** - see details of the slide including size and filename
-    - **Update a Slide's Tags** - see and update which tags are associated to the current slide, and halt the slideshow on the first change
+    - **Update a Slide's Tags** - see and update which tags are associated to the current slide, and reset the slideshow interval when adding/removing tags.
     - **Slideshow Modes** - presets for viewing a slideshow including:
         - **Normal** - standard UI and slideshow settings
         - **Tagging** - only display slides that are not tagged with the "fully tagged" tag, minimizes the slideshow settings pane at the far left and increases the width of the slideshow info pane to make tagging slides a bit easier
@@ -104,11 +104,11 @@ You will need to bind these virtual folders to their associated physical paths i
     </Directory>
 ```
 
-### Memory Consumption Issues for Large Slideshows in slideshow.php
+### Memory Consumption Issues for Large Slideshows in File-Based Slideshow
 A block of HTML is added to the webpage for every single file within each of the configured folders for a slideshow. This means that the page source can grow uncontrollably if your slideshow simply contains too many images. In addition, all images are loaded in at load time, compounding the issue. In addition, length and width of images aren't specificed in the HTML, so all images are loaded in their original form.<br>
 So how many images are too many you ask? A test run containing 470 images lower resolution images (most were under 1MB) loaded in 23 seconds and loaded 141MB. Another test run with 693 higher quality images (averaging about 5MB per photo) from multiple folders was not so fun, loading 1614MB in just under 5 minutes, and only about half of the images were loaded in memory at this point. So it's safe to say that size matters!
 
-**Note: This no longer applies to the DB-driven slideshow (slideshow-db.php)!** This page will only render one slide at a time, along with it's metadata, using AJAX calls to server-side services.
+**Note: This no longer applies to the DB-Driven Slideshow (slideshow-db.php)!** This page will only render one slide at a time, along with it's metadata, using AJAX calls to server-side services.
 
 ### No Exclusion Option
 In the case that you've configured a slideshow to include subfolders, you cannot exclude certain folders from the resulting directory tree.
@@ -148,6 +148,9 @@ vendor/bin/phpunit tests --configuration ./tests --coverage-clover ./tests/resul
 
 
 ## History
+
+### v5.1.1
+- UX enhancement : instead of halting the slideshow when adding tags to, or removing tags from, the current slide, the slideshow interval is now restarted.
 
 ### v5.1
 - bug fix: calculate the dimensions of images based on the adjusted height value in the query string rather than just the originally calculated height. This was preventing manual adjustments via the query string
