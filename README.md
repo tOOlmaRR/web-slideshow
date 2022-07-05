@@ -148,6 +148,8 @@ vendor/bin/phpunit tests --configuration ./tests --coverage-clover ./tests/resul
 
 
 ## History
+### v5.2.0
+- UX Enhancement : display entire image path instead of just the filename. In the DB-based slideshow, this means adding an extra field in the slide info panel
 
 ### v5.1.1
 - UX enhancement : instead of halting the slideshow when adding tags to, or removing tags from, the current slide, the slideshow interval is now restarted.
