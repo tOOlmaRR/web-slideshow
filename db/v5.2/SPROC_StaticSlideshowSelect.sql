@@ -1,7 +1,7 @@
 USE [WebSlideshow-DEV]
 GO
 
-/****** Object:  StoredProcedure [dbo].[StaticSlideshow.Select]    Script Date: 2022-07-05 7:48:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[StaticSlideshow.Select]    Script Date: 2022-08-21 10:59:28 AM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -17,7 +17,7 @@ GO
 -- Description:	Selects all Images in the requested Static Slideshow in the predefined order
 -- =============================================
 CREATE PROCEDURE [dbo].[StaticSlideshow.Select]
-	@staticSlideshowID int,
+	@ID int,
 	@secureImages bit
 AS
 BEGIN
@@ -30,7 +30,7 @@ BEGIN
 			SELECT Images.ImageID, Images.FullFilePath, Images.FileName, Images.width, Images.height, images.Secure, StaticSlideshowImages.DisplayOrder
 			FROM Images
 			JOIN StaticSlideshowImages ON Images.ImageID = StaticSlideshowImages.ImageID
-			WHERE StaticSlideshowImages.StaticSlideshowID = @staticSlideshowID
+			WHERE StaticSlideshowImages.StaticSlideshowID = @ID
 			ORDER BY StaticSlideshowImages.DisplayOrder
 		END
 	ELSE
@@ -38,7 +38,7 @@ BEGIN
 			SELECT Images.ImageID, Images.FullFilePath, Images.FileName, Images.width, Images.height, images.Secure, StaticSlideshowImages.DisplayOrder
 			FROM Images
 			JOIN StaticSlideshowImages ON Images.ImageID = StaticSlideshowImages.ImageID
-			WHERE StaticSlideshowImages.StaticSlideshowID = @staticSlideshowID
+			WHERE StaticSlideshowImages.StaticSlideshowID = @ID
 			AND Images.Secure = @secureImages
 			ORDER BY StaticSlideshowImages.DisplayOrder
 		END

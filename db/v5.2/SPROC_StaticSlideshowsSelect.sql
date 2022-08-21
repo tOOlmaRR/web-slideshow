@@ -1,12 +1,13 @@
 USE [WebSlideshow-DEV]
 GO
 
-/****** Object:  StoredProcedure [dbo].[StaticSlideshows.Select]    Script Date: 2022-07-05 7:50:55 PM ******/
+/****** Object:  StoredProcedure [dbo].[StaticSlideshows.Select]    Script Date: 2022-08-21 10:31:29 AM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 
@@ -26,13 +27,13 @@ BEGIN
 
 	IF @secureSlideshows = 1
 		BEGIN
-			SELECT [ID], [Name], [Secure]
+			SELECT [StaticSlideshowID], [Name], [Secure]
 			FROM [dbo].[StaticSlideshows]
 			ORDER BY [Name]
 		END
 	ELSE
 		BEGIN
-			SELECT [ID], [Name], [Secure]
+			SELECT [StaticSlideshowID], [Name], [Secure]
 			FROM [dbo].[StaticSlideshows]
 			WHERE [Secure] = @secureSlideshows
 			ORDER BY [Name]
