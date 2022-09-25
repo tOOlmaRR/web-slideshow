@@ -32,7 +32,19 @@ legend {
 }
 
 #slideshowOptions {
-    margin-bottom: 25px;
+    margin-bottom: 10px;
+}
+
+#slideshowTypeSelection {
+    margin-bottom: 10px;
+}
+
+#staticSlideshowOptions {
+    margin-bottom: 10px;
+}
+
+#tagSlideshowOptions {
+    margin-bottom: 10px;
 }
 
 #slideshowOptions fieldset

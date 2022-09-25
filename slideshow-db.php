@@ -44,15 +44,44 @@
                         <span><a id="slideshowOptionsPaneToggle" class="show_collapse" title="Slideshow Options" onclick="toggleOptionsPane(this);">&laquo;&laquo;&laquo;</a></span>    
                         <span id="show_collapsible_label" class="legendLabel">Slideshow Options:</span>
                     </legend>
+                    
+                    
+                    <!-- Collapsible: Full Left Menu -->
                     <div id="show_collapsible_div">
-                        <fieldset>
-                            <legend>Tags to Include:</legend>
-                                <div id="slideshowTagSelection"></div>
-                            </legend>
-                        </fieldset>
-                        <div class="randomizeToggle">
-                            <?php echo $dbSlideshow->buildRandomizeToggleHtml() ?>
+                        
+                        <div id="slideshowTypeSelection">
+                            <input type="radio" name="slideshowType" value="tags" id="tags" checked>
+                            <label for="tagbased">Tag-Based Slideshows</label>
+                            <br />
+                            <input type="radio" name="slideshowType" value="static" id="static">
+                            <label for="static">Static Slideshows</label>
                         </div>
+
+                        <!-- Collapsible: Tag Slideshow Options -->
+                        <div id="tagSlideshowOptions">
+                            <fieldset>
+                                <legend>Tag Slideshow Options:</legend>
+                                <fieldset>
+                                    <legend>Tags to Include:</legend>
+                                        <div id="slideshowTagSelection"></div>
+                                    </legend>
+                                </fieldset>
+                                <div class="randomizeToggle">
+                                    <?php echo $dbSlideshow->buildRandomizeToggleHtml() ?>
+                                </div>
+                                </legend>
+                            </fieldset>
+                        </div>
+
+                        <!-- Collapsible: Static Slideshow Options -->
+                        <div id="staticSlideshowOptions">
+                            <fieldset>
+                                <legend>Static Slideshow Options:</legend>
+                                    <div id="staticSlideshowOptionsContainer"></div>
+                                </legend>
+                            </fieldset>
+                        </div>
+
                         <div class="slideshowSpeed">
                             <?php echo $dbSlideshow->buildSlideshowSpeedHtml() ?>
                         </div>
