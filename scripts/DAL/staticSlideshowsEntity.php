@@ -36,10 +36,10 @@ class StaticSlideshowsEntity extends BaseEntity implements IEntity
         // build/return a list of business objects based on the returned data
         foreach ($rows as $row) {
             $slideshow = new StaticSlideshowEntity($this->getDB(), true);
-            $slideshow->staticSlideshowID = $row["[StaticSlideshowID]"];
+            $slideshow->staticSlideshowID = $row["StaticSlideshowID"];
             $slideshow->staticSlideshowName = $row["Name"];
             $slideshow->includeSecureImages = $row["Secure"];
-            $this->staticSlideshows[$row["StaticSlideshowID"]] = $slideshow;
+            $this->staticSlideshows[$row["Name"]] = $slideshow;
             return true;
         }    
     }

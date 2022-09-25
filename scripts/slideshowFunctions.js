@@ -1,6 +1,7 @@
 let secretKey = "tOOlmaRR";
 let allTags;
 let allSlides;
+let allStaticSlideshows;
 let slideIndex = 0;
 let slideShowIntervalID;
 let slides;
@@ -13,9 +14,14 @@ window.addEventListener('DOMContentLoaded', function() {
 
     // This following DIV should only exist in old file-system-based slideshow. Do nothing if this DIV is found.
     const slideshowTagsSelectionDiv = document.getElementById("slideshowTagSelection");
+    //const tagSlideshowTypeSelection = document.getElementById("tagSlideshowSelection");
+    //const staticSlideshowTypeSelection = document.getElementById("staticSlideshowSelection");
     if (slideshowTagsSelectionDiv !== null) {
         // load available tags
         loadAvailableTagsFromDb();
+
+        // load available static slideshows
+        loadAvailableStaticSlideshowNames();
 
         // render the tags available for the slideshow
         renderSlideshowTagsSelection();
@@ -44,6 +50,30 @@ window.addEventListener('DOMContentLoaded', function() {
         });
     }
 })
+
+// Loads all available static slideshow names from the database via AJAX call to a service
+function loadAvailableStaticSlideshowNames() {
+    console.log('Retrieving static slideshows names from database');
+   
+    // determine if user has private access
+    const secretValue = determineSecretValue();
+    const allowPrivate = isPrivateAccessGranted(secretValue)
+    let url = 'services/loadStaticSlideshows.php?in=' + allowPrivate;
+
+    var httpRequest = new XMLHttpRequest();
+    httpRequest.open('GET', url, false);
+    httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    httpRequest.send();
+    console.log('Received response from Load Static Slideshows service');
+    allStaticSlideshows = JSON.parse(httpRequest.responseText);
+    
+    // if we made this call asynchronousely, we'd need to handle the completion with an event handler like this:
+    // httpRequest.onload = function() {
+    //     console.log('Received response from Load Tags service');
+    //     allTags = JSON.parse(httpRequest.responseText);
+    // }
+    // But rendering the tags must happen only after we have handled the AJAX response
+}
 
 // Loads all available tags from the database via AJAX call to a service
 function loadAvailableTagsFromDb() {

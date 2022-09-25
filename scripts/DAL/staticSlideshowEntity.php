@@ -12,7 +12,7 @@ class StaticSlideshowEntity extends BaseEntity implements IEntity
     
     // properties - outputs
     public $images = [];
-    public $displayOrder;
+    public $displayOrder = 0;
 
 
     

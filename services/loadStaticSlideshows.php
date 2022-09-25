@@ -4,7 +4,6 @@ use toolmarr\WebSlideshow\DbWebSlideshow;
 require_once('../vendor/autoload.php');
 require_once('../scripts/dbMainConfig.php');
 
-$allStaticSlideShows = [];
 // gather inputs from the request
 $privateAccessGranted = $_GET['in'] ?? false;
 
@@ -15,6 +14,6 @@ $allStaticSlideshows = $dbSlideshow->getStaticSlideshows($configuration);
 
 // prepare the response
 header('Content-Type: application/json; charset=utf-8');
-$jsonResponse = json_encode($allStaticSlideShows);
+$jsonResponse = json_encode($allStaticSlideshows);
 echo $jsonResponse;
 exit();

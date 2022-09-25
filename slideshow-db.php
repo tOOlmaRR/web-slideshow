@@ -50,11 +50,11 @@
                     <div id="show_collapsible_div">
                         
                         <div id="slideshowTypeSelection">
-                            <input type="radio" name="slideshowType" value="tags" id="tags" checked onclick="toggleSlideshowTypeOptionsPane();">
-                            <label for="tagbased">Tag-Based Slideshows</label>
+                            <input type="radio" name="slideshowType" value="tags" id="tagSlideshowSelection" checked onclick="toggleSlideshowTypeOptionsPane();">
+                            <label for="tagSlideshowSelection">Tag-Based Slideshows</label>
                             <br />
-                            <input type="radio" name="slideshowType" value="static" id="static" onclick="toggleSlideshowTypeOptionsPane();">
-                            <label for="static">Static Slideshows</label>
+                            <input type="radio" name="slideshowType" value="static" id="staticSlideshowSelection" onclick="toggleSlideshowTypeOptionsPane();">
+                            <label for="staticSlideshowSelection">Static Slideshows</label>
                         </div>
 
                         <!-- Collapsible: Tag Slideshow Options -->

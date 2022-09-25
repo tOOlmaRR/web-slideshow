@@ -4,7 +4,6 @@ use toolmarr\WebSlideshow\DbWebSlideshow;
 require_once('../vendor/autoload.php');
 require_once('../scripts/dbMainConfig.php');
 
-$alSlides = [];
 // gather inputs from the request
 $privateAccessGranted = $_GET['in'] ?? false;
 
