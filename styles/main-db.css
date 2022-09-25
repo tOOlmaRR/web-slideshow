@@ -39,11 +39,15 @@ legend {
     margin-bottom: 10px;
 }
 
-#staticSlideshowOptions {
+/* Display by default; Toggles to hidden */
+#tagSlideshowOptions {
+    display: block;
     margin-bottom: 10px;
 }
 
-#tagSlideshowOptions {
+/* Hide by default; Toggles to be displayed */
+#staticSlideshowOptions {
+    display: none;
     margin-bottom: 10px;
 }
 

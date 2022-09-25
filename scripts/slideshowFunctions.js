@@ -519,6 +519,19 @@ function isPrivateAccessGranted(secretValue)
     return secretValue == secretKey ? true : false;   
 }
 
+function toggleSlideshowTypeOptionsPane()
+{
+    var tagSlideshowOptionsPane = document.getElementById('tagSlideshowOptions');
+    var staticSlideshowOptionsPane = document.getElementById('staticSlideshowOptions');
+    if (tagSlideshowOptionsPane.style.display == 'none') {
+        tagSlideshowOptionsPane.style.display = 'block';
+        staticSlideshowOptionsPane.style.display = 'none';
+    } else {
+        tagSlideshowOptionsPane.style.display = 'none'
+        staticSlideshowOptionsPane.style.display = 'block';
+    }
+}
+
 function toggleOptionsPane(caller)
 {
     var optionsPane = document.getElementById('show_collapsible_div');
