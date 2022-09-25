@@ -14,7 +14,7 @@ class DbWebSlideshow
 
     public int $maxHeight;
     public bool $privateAcessGranted = false;
-    public array $allSlides;
+    //public array $allSlides; // I think this is no longer used
 
     public function __construct(int $viewportHeight)
     {
@@ -37,6 +37,42 @@ class DbWebSlideshow
             // TODO: consider outputting an error to the UI
         }
         return $allTags;
+    }
+
+    public function getStaticSlideshows($config) : array
+    {
+        $entityFactory = new EntityFactory($config['database']);
+        $staticSlideshowsEntity = $entityFactory->getEntity("staticSlideshows");
+        $staticSlideshowsEntity->includeSecureSlideshows = $this->privateAcessGranted ? 1 : 0;
+
+        if ($staticSlideshowsEntity->get())
+        {
+            $allStaticSlideshows = $staticSlideshowsEntity->staticSlideshows;
+        } else {
+            $allStaticSlideshows = [];
+            // TODO: consider outputting an error to the UI
+        }
+        return $allStaticSlideshows;
+    }
+
+    public function getStaticSlideshowSlides($chosenStaticSlideshowID) : array
+    {
+        $entityFactory = new EntityFactory($config['database']);
+        $staticSlideshowEntity = $entityFactory->getEntity("staticSlideshow");
+        $staticSlideshowEntity->includeSecureImages = $this->privateAcessGranted ? 1 : 0;
+        $staticSlideshowEntity->staticSlideshowID = $chosenStaticSlideshowID;
+
+        if ($staticSlideshowEntity->get())
+        {
+            $allStaticSlideshowImages = $staticSlideshowsEntity->images;
+        } else {
+            $allStaticSlideshowImages = [];
+            // TODO: consider outputting an error to the UI
+        }
+        
+        // Build a list of slides to include in the slideshow
+        $slidesToDisplay = buildSlidesToDisplay($configuration, $allStaticSlideshowImages, []);
+        return $slidesToDisplay;
     }
 
     public function buildRandomizeToggleHtml() : string
@@ -70,31 +106,40 @@ class DbWebSlideshow
         return $slideshowSpeedHtml;
     }
 
-    public function retrieveSlideshowData($configuration, $chosenTags, array $omitTags) : array
+    public function retrieveTagSlideshowData($configuration, $chosenTags, array $omitTags) : array
     {
-        /* Retrieve images from database and build the slides */
+        // Retrieve images from database and build the slides
         $entityFactory = new EntityFactory($configuration['database']);
         $allImages = $this->getAllImagesWithChosenTags($chosenTags, $entityFactory);
         
-        $photosToDisplay = [];
+        // Build a list of slides to include in the slideshow
+        $slidesToDisplay = buildSlidesToDisplay($configuration, $allImages, $omitTags);
+        return $slidesToDisplay;
+    }
+
+    private function buildSlidesToDisplay($configuration, array $allImages, array $omitTags) : array
+    {
+        $slidesToDisplay  = [];
         foreach ($allImages as $image) {
+            
             // build the slide object and add it to the list
-            $photoToDisplay = $this->buildSlide($image, $entityFactory);
+            $entityFactory = new EntityFactory($configuration['database']);
+            $slideToDisplay = $this->buildSlide($image, $entityFactory);
 
             // apply filters to remove the photo if it contains a tag in the omit list
-            if ($this->filterPhoto($photoToDisplay, $omitTags)) {
+            if ($this->filterPhoto($slideToDisplay, $omitTags)) {
                 continue;
             }
 
             // build the image's virtual location based on it's path and the configured physical and virtual roots
             $physicalRoot = $image->secure ? $configuration["physicalRoots"]["private"] : $configuration["physicalRoots"]["public"];
             $virtualRoot = $image->secure ? $configuration["virtualRoots"]["private"] : $configuration["virtualRoots"]["public"];
-            $photoToDisplay[DbWebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] = $this->buildImageVirtualLocation($physicalRoot, $virtualRoot, $image);
+            $slideToDisplay[DbWebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] = $this->buildImageVirtualLocation($physicalRoot, $virtualRoot, $image);
             
             // add it to the collection
-            $photosToDisplay[] = $photoToDisplay;
+            $slidesToDisplay[] = $slideToDisplay;
         }
-        return $photosToDisplay;
+        return $slidesToDisplay;
     }
 
     private function getAllImagesWithChosenTags(array $chosenTags, EntityFactory $entityFactory) : array
