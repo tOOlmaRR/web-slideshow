@@ -113,7 +113,7 @@ class DbWebSlideshow
         $allImages = $this->getAllImagesWithChosenTags($chosenTags, $entityFactory);
         
         // Build a list of slides to include in the slideshow
-        $slidesToDisplay = buildSlidesToDisplay($configuration, $allImages, $omitTags);
+        $slidesToDisplay = $this->buildSlidesToDisplay($configuration, $allImages, $omitTags);
         return $slidesToDisplay;
     }
 
