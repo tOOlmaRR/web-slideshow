@@ -17,15 +17,14 @@ window.addEventListener('DOMContentLoaded', function() {
     //const tagSlideshowTypeSelection = document.getElementById("tagSlideshowSelection");
     //const staticSlideshowTypeSelection = document.getElementById("staticSlideshowSelection");
     if (slideshowTagsSelectionDiv !== null) {
-        // load available tags
+        // load and render available tags
         loadAvailableTagsFromDb();
-
-        // load available static slideshows
-        loadAvailableStaticSlideshowNames();
-
-        // render the tags available for the slideshow
         renderSlideshowTagsSelection();
-        
+
+        // load and render available static slideshows
+        loadAvailableStaticSlideshowNames();
+        renderStaticSlideshowSelection();
+
         // listen for, and handle, slideshow generation requests
         const slideshowForm = document.getElementById("slideshowForm");
         slideshowForm.addEventListener('submit', function(e) {
@@ -51,30 +50,6 @@ window.addEventListener('DOMContentLoaded', function() {
     }
 })
 
-// Loads all available static slideshow names from the database via AJAX call to a service
-function loadAvailableStaticSlideshowNames() {
-    console.log('Retrieving static slideshows names from database');
-   
-    // determine if user has private access
-    const secretValue = determineSecretValue();
-    const allowPrivate = isPrivateAccessGranted(secretValue)
-    let url = 'services/loadStaticSlideshows.php?in=' + allowPrivate;
-
-    var httpRequest = new XMLHttpRequest();
-    httpRequest.open('GET', url, false);
-    httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    httpRequest.send();
-    console.log('Received response from Load Static Slideshows service');
-    allStaticSlideshows = JSON.parse(httpRequest.responseText);
-    
-    // if we made this call asynchronousely, we'd need to handle the completion with an event handler like this:
-    // httpRequest.onload = function() {
-    //     console.log('Received response from Load Tags service');
-    //     allTags = JSON.parse(httpRequest.responseText);
-    // }
-    // But rendering the tags must happen only after we have handled the AJAX response
-}
-
 // Loads all available tags from the database via AJAX call to a service
 function loadAvailableTagsFromDb() {
     console.log('Retrieving tags from database');
@@ -90,6 +65,30 @@ function loadAvailableTagsFromDb() {
     httpRequest.send();
     console.log('Received response from Load Tags service');
     allTags = JSON.parse(httpRequest.responseText);
+    
+    // if we made this call asynchronousely, we'd need to handle the completion with an event handler like this:
+    // httpRequest.onload = function() {
+    //     console.log('Received response from Load Tags service');
+    //     allTags = JSON.parse(httpRequest.responseText);
+    // }
+    // But rendering the tags must happen only after we have handled the AJAX response
+}
+
+// Loads all available static slideshow names from the database via AJAX call to a service
+function loadAvailableStaticSlideshowNames() {
+    console.log('Retrieving static slideshows names from database');
+   
+    // determine if user has private access
+    const secretValue = determineSecretValue();
+    const allowPrivate = isPrivateAccessGranted(secretValue)
+    let url = 'services/loadStaticSlideshows.php?in=' + allowPrivate;
+
+    var httpRequest = new XMLHttpRequest();
+    httpRequest.open('GET', url, false);
+    httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    httpRequest.send();
+    console.log('Received response from Load Static Slideshows service');
+    allStaticSlideshows = JSON.parse(httpRequest.responseText);
     
     // if we made this call asynchronousely, we'd need to handle the completion with an event handler like this:
     // httpRequest.onload = function() {
@@ -157,16 +156,6 @@ function loadSlideshowFromDb(chosenTags, mode) {
             slidePlaceholder.innerHTML = '';
         }
     }
-}
-
-// Move forward or backward in the slideshow by the specified number of slides
-function plusSlides(n)
-{
-    clearInterval(slideShowIntervalID);
-    if (allSlides != null && allSlides.length > 0) {
-        console.log('show next slide from data');
-    }
-    showSlides(slideIndex += n);
 }
 
 // Show a slide and it's info panels: either the next one in the current slideshow, or a specific slide if requested
@@ -315,6 +304,29 @@ function renderSlideshowTagsSelection()
     // But we need to wait until this response is handled in order to attach the event handle to the submit button
 }
 
+// render the dropdown that allows user to select a static slideshow to run
+function renderStaticSlideshowSelection()
+{
+    console.log('render static slideshow options from data');
+
+    var httpRequest = new XMLHttpRequest();
+    httpRequest.open('POST', 'services/renderStaticSlideshowNames.php', false);
+    httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    const data = {
+        'staticSlideshows' : JSON.stringify(allStaticSlideshows),
+    }
+    var params = Object.keys(data).map(
+        function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) }
+    ).join('&');
+
+    httpRequest.send(params);
+    console.log('Received response from Render Static Slideshow Names service');
+
+    const jsonResponse = JSON.parse(httpRequest.responseText);
+    const staticSlideshowSelectionHTML = jsonResponse['HTML'];
+    var staticSlideshowSelectionPlaceholder = document.getElementById('staticSlideshowOptionsContainer');
+    staticSlideshowSelectionPlaceholder.innerHTML = staticSlideshowSelectionHTML; // replace all content of the placeholder
+}
 
 // render the HTML needed to display a slide via AJAX call to a service
 function renderSlideFromData()
@@ -394,6 +406,16 @@ function renderSlideTagInfoFromData()
         var slideInfoPlaceholder = document.getElementById('slideInfoTagsContainer');
         slideInfoPlaceholder.innerHTML = slideInfoHTML; // replace all content of the placeholder
     }
+}
+
+// Move forward or backward in the slideshow by the specified number of slides
+function plusSlides(n)
+{
+    clearInterval(slideShowIntervalID);
+    if (allSlides != null && allSlides.length > 0) {
+        console.log('show next slide from data');
+    }
+    showSlides(slideIndex += n);
 }
 
 // Helper method to determine which slide to show

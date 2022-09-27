@@ -45,7 +45,6 @@
                         <span id="show_collapsible_label" class="legendLabel">Slideshow Options:</span>
                     </legend>
                     
-                    
                     <!-- Collapsible: Full Left Menu -->
                     <div id="show_collapsible_div">
                         

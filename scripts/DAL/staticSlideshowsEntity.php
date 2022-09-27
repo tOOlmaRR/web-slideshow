@@ -6,7 +6,7 @@ use toolmarr\WebSlideshow\DAL\IEntity;
 class StaticSlideshowsEntity extends BaseEntity implements IEntity
 {
     // properties - inputs
-    public $includeSecureSlideshows = 0;
+    public $includeSecureSlideshows;
     
     // properties - outputs
     public $staticSlideshows = [];
@@ -38,10 +38,10 @@ class StaticSlideshowsEntity extends BaseEntity implements IEntity
             $slideshow = new StaticSlideshowEntity($this->getDB(), true);
             $slideshow->staticSlideshowID = $row["StaticSlideshowID"];
             $slideshow->staticSlideshowName = $row["Name"];
-            $slideshow->includeSecureImages = $row["Secure"];
-            $this->staticSlideshows[$row["Name"]] = $slideshow;
-            return true;
-        }    
+            $slideshow->includeSecureSlideshows = $row["Secure"];
+            $this->staticSlideshows[$row["Name"]] = $slideshow;            
+        }
+        return true;
     }
 
     public function insert() : int

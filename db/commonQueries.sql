@@ -5,6 +5,7 @@ GO
 select * from Images
 select * from Tags
 select * from TaggedImages
+select * from StaticSlideshows
 
 select Images.ImageID, Images.FullFilePath, Images.FileName, Images.width, Images.height, images.Secure, Tags.Tag, Tags.Secure
 from Images
