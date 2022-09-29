@@ -9,10 +9,7 @@ if (isset($_POST['staticSlideshows'])) {
     $staticSlideshows = json_decode($_POST['staticSlideshows'], true);
     
     // Build dropdown list of static slideshows to choose from
-    $slideshowDropdownHtml = "<form id=\"staticSlideshowForm\" action=\"\" method=\"POST\">";
-    $staticSlideshowOptionsHTML .= "  <div class=\"staticSlideshowSelection\">";
-
-    // Build the dropdown
+    $staticSlideshowOptionsHTML .= "<div class=\"staticSlideshowSelection\">";
     $staticSlideshowOptionsHTML .= "  <label for=\"staticSlideshowDropdown\">";
     $staticSlideshowOptionsHTML .= "  <select name=\"staticSlideshowSelection\" id=\"staticSlideshowDropdown\">";
 
@@ -23,10 +20,9 @@ if (isset($_POST['staticSlideshows'])) {
         $staticSlideshowOptionsHTML .= "    <option value=\"$sSlideshowID\">$sSlideshowName</option>";
     }
     
-    // close off the drop down
+    // close off the drop down and enclosing div
     $staticSlideshowOptionsHTML .= "  </select>";
-    $staticSlideshowOptionsHTML .= "  <div id=\"staticSlideshowSubmit\"><input type=\"Submit\" value=\"Begin\"></div>";
-    $staticSlideshowOptionsHTML .= "</form>";
+    $staticSlideshowOptionsHTML .= "</div>";
 }
 
 // prepare the response

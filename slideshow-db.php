@@ -60,15 +60,19 @@
                         <div id="tagSlideshowOptions">
                             <fieldset>
                                 <legend>Tag Slideshow Options:</legend>
-                                <fieldset>
-                                    <legend>Tags to Include:</legend>
+                                <form id="tagSlideshowForm" action="" method="POST">
+                                    <fieldset>
+                                        <legend>Tags to Include:</legend>
+                                        <!-- render the options dynamically into the following container -->
                                         <div id="slideshowTagSelection"></div>
-                                    </legend>
-                                </fieldset>
-                                <div class="randomizeToggle">
-                                    <?php echo $dbSlideshow->buildRandomizeToggleHtml() ?>
-                                </div>
-                                </legend>
+                                        <div id="tagSelectionSubmit">
+                                            <input type="submit" value="Generate Slideshow">
+                                        </div>
+                                    </fieldset>
+                                    <div class="randomizeToggle">
+                                        <?php echo $dbSlideshow->buildRandomizeToggleHtml() ?>
+                                    </div>
+                                </form>
                             </fieldset>
                         </div>
 
@@ -76,8 +80,13 @@
                         <div id="staticSlideshowOptions">
                             <fieldset>
                                 <legend>Static Slideshow Options:</legend>
+                                <form id="staticSlideshowForm" action="" method="POST">
+                                    <!-- render the options dynamically into the following container -->
                                     <div id="staticSlideshowOptionsContainer"></div>
-                                </legend>
+                                    <div id="staticSlideshowSubmit">
+                                        <input type="Submit" value="Begin">
+                                    </div>
+                                </form>
                             </fieldset>
                         </div>
 

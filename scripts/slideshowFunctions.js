@@ -25,12 +25,12 @@ window.addEventListener('DOMContentLoaded', function() {
         loadAvailableStaticSlideshowNames();
         renderStaticSlideshowSelection();
 
-        // listen for, and handle, slideshow generation requests
-        const slideshowForm = document.getElementById("slideshowForm");
-        slideshowForm.addEventListener('submit', function(e) {
+        // listen for, and handle, TAG slideshow generation requests
+        const tagSlideshowForm = document.getElementById("tagSlideshowForm");
+        tagSlideshowForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            console.log('Retrieve slideshow data from database');
-
+            console.log('Received request to generate a TAG slideshow');
+            
             // determine slideshow mode from the state of the radio buttons
             let mode = determineSlideshowMode();
 
@@ -38,14 +38,26 @@ window.addEventListener('DOMContentLoaded', function() {
             applySlideshowModeToUI(mode)
 
             // get checked tags
-            var inputElements = slideshowForm.getElementsByTagName('input');
+            var inputElements = tagSlideshowForm.getElementsByTagName('input');
             var chosenTags = [];
             for (var i=0; inputElements[i]; ++i) {
                 if (inputElements[i].checked) {
                     chosenTags.push(inputElements[i].value);
                 }
             }
+            
+            // load, render and start the slideshow
             loadSlideshowFromDb(chosenTags, mode);
+        });
+
+        // listen for, and handle, TAG slideshow generation requests
+        const staticSlideshowForm = document.getElementById("staticSlideshowForm");
+        staticSlideshowForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('Received request to generate a STATIC slideshow');
+
+            // load, render and start the slideshow
+            //
         });
     }
 })
