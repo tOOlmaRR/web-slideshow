@@ -8,7 +8,7 @@ $alSlides = [];
 if (isset($_POST['maxHeight']) && isset($_POST['chosenTags'])) {
     // gather inputs from the request
     $privateAccessGranted = $_GET['in'] ?? false;
-    $maxHeight = $_POST['maxHeight'];
+    $maxHeight = $_POST['maxHeight'] ?? 300;
     $chosenTags = explode(",", $_POST['chosenTags']);
     $tagsToOmit =  isset($_POST['tagsToOmit']) ? explode(",", $_POST['tagsToOmit']) : array();
 

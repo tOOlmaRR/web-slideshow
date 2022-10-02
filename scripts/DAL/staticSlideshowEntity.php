@@ -46,10 +46,10 @@ class StaticSlideshowEntity extends BaseEntity implements IEntity
             $image->width = $row["width"];
             $image->height = $row["height"];
             $image->secure = $row["Secure"] === '1' ? true : false;
+            $image->displayOrder = $row["DisplayOrder"];
             $this->images[$row["ImageID"]] = $image;
-            $this->displayOrder = $row["DisplayOrder"];
-            return true;
         }
+        return true;
     }
 
     public function insert() : int
