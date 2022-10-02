@@ -8,7 +8,7 @@ class StaticSlideshowEntity extends BaseEntity implements IEntity
     // properties - inputs
     public $staticSlideshowID;
     public $staticSlideshowName;
-    public $includeSecureImages = 0;
+    public $includeSecureImages;
     
     // properties - outputs
     public $images = [];
@@ -25,7 +25,7 @@ class StaticSlideshowEntity extends BaseEntity implements IEntity
             $sproc = $this->getSPROCs()["select"]["staticSlideshow"];
             $sql = "EXEC [$sproc] @ID=:id, @secureImages=:secure";
             $sqlParams = [
-                ":id" => $this->imageID >= 0 ? $this->staticSlideshowID : null,
+                ":id" => $this->staticSlideshowID >= 0 ? $this->staticSlideshowID : 0,
                 ":secure" => $this->includeSecureImages
             ];
         } else {

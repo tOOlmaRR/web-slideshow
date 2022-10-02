@@ -47,7 +47,7 @@ window.addEventListener('DOMContentLoaded', function() {
             }
             
             // load, render and start the slideshow
-            loadSlideshowFromDb(chosenTags, mode);
+            loadTagSlideshowFromDb(chosenTags, mode);
         });
 
         // listen for, and handle, TAG slideshow generation requests
@@ -56,8 +56,11 @@ window.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             console.log('Received request to generate a STATIC slideshow');
 
+            var staticSlideshowDropdown = document.getElementById("staticSlideshowDropdown");
+            var chosenStaticSlideshowID = staticSlideshowDropdown.value;
+            
             // load, render and start the slideshow
-            //
+            loadStaticSlideshowFromDb(chosenStaticSlideshowID);
         });
     }
 })
@@ -111,8 +114,8 @@ function loadAvailableStaticSlideshowNames() {
 }
 
 // Load all slides for the chosen tags via AJAX call to a service, then start the slidehow if slides have been loaded
-function loadSlideshowFromDb(chosenTags, mode) {
-    console.log('Retrieving slideshow data from database');
+function loadTagSlideshowFromDb(chosenTags, mode) {
+    console.log('Retrieving tag slideshow slides data from database');
     
     // halt existing slideshow and reset some info    
     clearInterval(slideShowIntervalID);
@@ -156,6 +159,57 @@ function loadSlideshowFromDb(chosenTags, mode) {
     httpRequest.send(params);
     httpRequest.onload = function() {
         console.log('Received response from Load Slides service');
+        allSlides = JSON.parse(httpRequest.responseText);
+        // if we have slides start the slideshow from the beginning
+        if (allSlides != null && allSlides.length > 0) {
+            slideIndex = 0;
+            showSlides(0);
+        }
+        // if we don't, clear the slide placeholder
+        else {
+            var slidePlaceholder = document.getElementById('slideContainer');
+            slidePlaceholder.innerHTML = '';
+        }
+    }
+}
+
+// Load all slides for the chosen static slideshow via AJAX call to a service, then start the slideshow if slides have been loaded
+function loadStaticSlideshowFromDb(chosenStaticSlideshowID)
+{
+    console.log('Retrieving static slideshow sides data from database');
+    
+    // halt existing slideshow and reset some info    
+    clearInterval(slideShowIntervalID);
+    slideIndex = 0;
+    slideIndexes = undefined;
+    allSlides = null;
+    const randomizeCheckbox = document.getElementById("randomizeToggle");
+    randomizeCheckbox.checked = false;
+    
+    // determine maximum height based on the query string, or the client if there is no QS parameter
+    const currentURL = window.location;
+    const queryString = new URLSearchParams(currentURL.search);
+    let maxHeight = queryString.get('height') ?? Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+    
+    // determine if user has private access
+    const secretValue = determineSecretValue();
+    const allowPrivate = isPrivateAccessGranted(secretValue)
+    let url = 'services/loadStaticSlideshowSlides.php?in=' + allowPrivate;
+
+    // retrieve slide data from the database
+    var httpRequest = new XMLHttpRequest();
+    httpRequest.open('POST', url);
+    httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    const data = {
+        'staticSlideshowID': chosenStaticSlideshowID,
+    }
+    var params = Object.keys(data).map(
+        function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) }
+    ).join('&');
+
+    httpRequest.send(params);
+    httpRequest.onload = function() {
+        console.log('Received response from Load Static Slideshow Slides service');
         allSlides = JSON.parse(httpRequest.responseText);
         // if we have slides start the slideshow from the beginning
         if (allSlides != null && allSlides.length > 0) {

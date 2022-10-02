@@ -7,12 +7,13 @@ require_once('../scripts/dbMainConfig.php');
 $allStaticSlideShowSlides = [];
 // gather inputs from the request
 $privateAccessGranted = $_GET['in'] ?? false;
-$staticSlideshowID = $_GET['ssID'] ?? false;
+$staticSlideshowIDString = $_POST['staticSlideshowID'] ?? 0;
+$staticSlideshowID = intval($staticSlideshowIDString);
 
 // instantiate the slidehow, determine if private access is granted and get slideshow slides
 $dbSlideshow = new DbWebSlideshow(0);
 $dbSlideshow->privateAcessGranted = $privateAccessGranted == 'true' ? true : false;
-$allStaticSlideShowSlides = $dbSlideshow->getStaticSlideshowSlides($configuration);
+$allStaticSlideShowSlides = $dbSlideshow->getStaticSlideshowSlides($configuration, $staticSlideshowID);
 
 // prepare the response
 header('Content-Type: application/json; charset=utf-8');

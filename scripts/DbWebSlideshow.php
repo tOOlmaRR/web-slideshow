@@ -55,7 +55,7 @@ class DbWebSlideshow
         return $allStaticSlideshows;
     }
 
-    public function getStaticSlideshowSlides($chosenStaticSlideshowID) : array
+    public function getStaticSlideshowSlides($config, $chosenStaticSlideshowID) : array
     {
         $entityFactory = new EntityFactory($config['database']);
         $staticSlideshowEntity = $entityFactory->getEntity("staticSlideshow");
@@ -64,14 +64,14 @@ class DbWebSlideshow
 
         if ($staticSlideshowEntity->get())
         {
-            $allStaticSlideshowImages = $staticSlideshowsEntity->images;
+            $allStaticSlideshowImages = $staticSlideshowEntity->images;
         } else {
             $allStaticSlideshowImages = [];
             // TODO: consider outputting an error to the UI
         }
         
         // Build a list of slides to include in the slideshow
-        $slidesToDisplay = buildSlidesToDisplay($configuration, $allStaticSlideshowImages, []);
+        $slidesToDisplay = $this->buildSlidesToDisplay($config, $allStaticSlideshowImages, []);
         return $slidesToDisplay;
     }
 
