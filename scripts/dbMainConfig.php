@@ -21,6 +21,8 @@ $database['useSPROCS'] = true;
     $database['SPROCS']['select']['image'] = 'Image.Select';
     $database['SPROCS']['select']['tags'] = 'Tags.Select';
     $database['SPROCS']['select']['tag'] = 'Tag.Select';
+    $database['SPROCS']['select']['staticSlideshow'] = 'StaticSlideshow.Select';
+    $database['SPROCS']['select']['staticSlideshows'] = 'StaticSlideshows.Select';
 
     $database['SPROCS']['delete']['taggedImage'] = 'TaggedImage.Delete';
 

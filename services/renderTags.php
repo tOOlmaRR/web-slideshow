@@ -19,9 +19,6 @@ if (isset($_POST['allTags'])) {
     $availableTags = json_decode($_POST['allTags'], true);
     
     // Build list of tags to render
-    if ($mode == "slideshowTags") {
-        $slideInfoHtml .= "<form id=\"slideshowForm\" action=\"\" method=\"POST\">";
-    }
     $slideInfoHtml .= "    <div class=\"tagSelection\">";
     foreach ($availableTags as $tag) {
         // determine the CSS class to set for the tag itself
@@ -49,7 +46,6 @@ if (isset($_POST['allTags'])) {
     $slideInfoHtml .= "    </div>";
 
     // in 'slideTags' mode: show messages area to indicate what is going on
-    // in 'slideshowTags' mode: show submit button
     if ($mode == "slideTags") {            
         $slideInfoHtml .= "    <div id=\"slideTagsSubmitMessages\"></div>";
     } else if ($mode == "slideshowTags") {
@@ -61,8 +57,6 @@ if (isset($_POST['allTags'])) {
         $slideInfoHtml .= "        <input type=\"radio\" name=\"slideshowMode\" value=\"maximize\" id=\"maximize\">";
         $slideInfoHtml .= "        <label for=\"maximize\">maximize</label>";
         $slideInfoHtml .= "    </div>";
-        $slideInfoHtml .= "    <div id=\"tagSelectionSubmit\"><input type=\"submit\" value=\"Generate Slideshow\"></div>";
-        $slideInfoHtml .= "</form";
     }
 }
 

@@ -44,15 +44,52 @@
                         <span><a id="slideshowOptionsPaneToggle" class="show_collapse" title="Slideshow Options" onclick="toggleOptionsPane(this);">&laquo;&laquo;&laquo;</a></span>    
                         <span id="show_collapsible_label" class="legendLabel">Slideshow Options:</span>
                     </legend>
+                    
+                    <!-- Collapsible: Full Left Menu -->
                     <div id="show_collapsible_div">
-                        <fieldset>
-                            <legend>Tags to Include:</legend>
-                                <div id="slideshowTagSelection"></div>
-                            </legend>
-                        </fieldset>
-                        <div class="randomizeToggle">
-                            <?php echo $dbSlideshow->buildRandomizeToggleHtml() ?>
+                        
+                        <div id="slideshowTypeSelection">
+                            <input type="radio" name="slideshowType" value="tags" id="tagSlideshowSelection" checked onclick="toggleSlideshowTypeOptionsPane();">
+                            <label for="tagSlideshowSelection">Tag-Based Slideshows</label>
+                            <br />
+                            <input type="radio" name="slideshowType" value="static" id="staticSlideshowSelection" onclick="toggleSlideshowTypeOptionsPane();">
+                            <label for="staticSlideshowSelection">Static Slideshows</label>
                         </div>
+
+                        <!-- Collapsible: Tag Slideshow Options -->
+                        <div id="tagSlideshowOptions">
+                            <fieldset>
+                                <legend>Tag Slideshow Options:</legend>
+                                <form id="tagSlideshowForm" action="" method="POST">
+                                    <fieldset>
+                                        <legend>Tags to Include:</legend>
+                                        <!-- render the options dynamically into the following container -->
+                                        <div id="slideshowTagSelection"></div>
+                                        <div id="tagSelectionSubmit">
+                                            <input type="submit" value="Generate Slideshow">
+                                        </div>
+                                    </fieldset>
+                                    <div class="randomizeToggle">
+                                        <?php echo $dbSlideshow->buildRandomizeToggleHtml() ?>
+                                    </div>
+                                </form>
+                            </fieldset>
+                        </div>
+
+                        <!-- Collapsible: Static Slideshow Options -->
+                        <div id="staticSlideshowOptions">
+                            <fieldset>
+                                <legend>Static Slideshow Options:</legend>
+                                <form id="staticSlideshowForm" action="" method="POST">
+                                    <!-- render the options dynamically into the following container -->
+                                    <div id="staticSlideshowOptionsContainer"></div>
+                                    <div id="staticSlideshowSubmit">
+                                        <input type="Submit" value="Begin">
+                                    </div>
+                                </form>
+                            </fieldset>
+                        </div>
+
                         <div class="slideshowSpeed">
                             <?php echo $dbSlideshow->buildSlideshowSpeedHtml() ?>
                         </div>

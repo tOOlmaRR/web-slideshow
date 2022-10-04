@@ -1,8 +1,9 @@
 # Web Slideshow
 ## Summary
-This is a web application that can display custom slideshows in a browser for locally-stored photos.
+This is a web application that can display custom slideshows in a browser for locally-stored photos. There are 3 pages in total: one for the *file system slideshow*, a second for the *data-driven slideshows*, and a third *folder scanner* admin page to import photos into the database for the data-driven slideshows. Each page's features are listed below.
 
-## Features
+## File-Based Slideshow
+This is available on the **/slideshow.php** page. This slideshow has no dependency on a database, so it is the easiest to set up and get running; however, many features going forward will not be developed for this page. The following features are available on this page:
 1. **Photo Resizing** - automatically resizes photos and slides based on the client's current viewport height. This is accomplished by a redirect and via query string paramaters.
 1. **Manual Controls** - at any time you can move forward or backward in the current slideshow. This does not halt the slideshow in progress, but it does restart the timer.
 1. **Slideshow Speed** - a slider control in the UI controls how long each slide will be displayed for. Changes take effect after transitioning to the next slide.
@@ -12,24 +13,8 @@ This is a web application that can display custom slideshows in a browser for lo
 1. **Private Slideshows** - via slideshow configuration, you can limit access to selected slideshows. These slideshows only appear in the dropdown if you include a special query string parameter and value in your web request. Private slideshows appear in a red font, whereas public slideshows appear in green.
 1. **Multiple Folders** - via slideshow configuration, you can specify either a single folder or mutliple folders to include in a slideshow. In each case, the assumption is that there are only valid images in those folders
 1. **Recursive Folders** - via slideshow configuration, you can also choose to include all subfolders of each folder configured for a slideshow.
-### Features Under Development
-1. **Folder Scanner** - via the /scan.php page. This page allows you to scan a folder, with or without it's subfolders, into a database. Data retrieved and added includes the full file path, the file name, the width and height of images, and a bit indicating whether or not the image should be considered secured (to be used for private slideshows). This scanner also includes the option to create and associate tags (comma-delimited set) to each image scanned. Tags are associated to images and tags can also be marked as secured. **Note**: The slideshow page does not load images from the database yet, and there are no admin options to modify the data in the web UI yet either.
-1. **Database-Driven Slideshow** - via the /slideshow-db.php page. This page has very similar features to the main slideshow.php page, except that it is driven off of the database and by tags rather than physical folders of photos/images. The UI has also been redesigned slightly. For the moment, this page has the following features, but should be considered as a beta version for the moment:   
-    - **Available Tags** - determines all tags that are available to you and allows you to create a slideshow by combining all photos in the database associated to the chosen tags. Photos will only be added once if a photo has more than one of the chosen tags.
-    - **Private Tags** - tags can be defined as 'secure' in the database, and secure tags will only be displayed if you are authorized to view them.
-    - **Private Images** - images stored in the database can also be marked as 'secure'. These images will only be included in slideshows if you are authorized to view them.
-    - **Manual Controls** - at any time you can move forward or backward in the current slideshow. This does not halt the slideshow in progress, but it does restart the timer.
-    - **Slideshow Speed** - a slider control in the UI controls how long each slide will be displayed for. Changes take effect after transitioning to the next slide.
-    - **Randomize Option** - allows you to randomize the slides in the current slideshow. Changes take effect immediately. Halting randomization will stop at the current slide.
-    - **Halt** - allows you to stop the slidehow on the current slide and pick up where you left off afterwards.
-    - **See Slide Details** - see details of the slide including size and filename
-    - **Update a Slide's Tags** - see and update which tags are associated to the current slide, and reset the slideshow interval when adding/removing tags.
-    - **Slideshow Modes** - presets for viewing a slideshow including:
-        - **Normal** - standard UI and slideshow settings
-        - **Tagging** - only display slides that are not tagged with the "fully tagged" tag, minimizes the slideshow settings pane at the far left and increases the width of the slideshow info pane to make tagging slides a bit easier
-        - **Maximize** - puts the focus on the slideshow by minimizing the other two panes    
 
-## Slideshow Configuration
+### **Configuration**
 All configuration elements are defined in the */mainConfig.php* file. There is an overlying $configuration array which is designed to contain all configuration elements, and then within, there are separate arrays that contain all slideshow configurations as well as the root physical and virtual folders to use for both private and public slideshows.
 
 This file also contains some logic to determine the default slideshow to run if there are multiple slideshows defined and available, and determines the currently chosen slideshow - either the desired default or the chosen one from the dropdown and subsequent form submission.
@@ -79,9 +64,51 @@ $physicalRoots["private"] = "E:\\MyPhotos\\Private\\";
 $configuration["physicalRoots"] = $physicalRoots;
 ```
 
+## Folder Scanner
+This is available on the **/scan.php** page. This page allows you to scan the images within a folder into the database. You can also choose to scan all sub-folders as well. Data retrieved and added includes:
+- full file path
+- file name
+- the dimensions (width and height) of the image
+- a bit indicating whether or not the image should be considered secured
+- tags you would like associated to the images being loaded from the requested folder
+    - if a tag doesn't exist, it'll be created
+    - for multiple tags, separate each tag with a comma - just be careful to not include commas within a tag itself
+    - tags can also be marked as secure
+    
+## Data-Driven Slideshows
+This is found on the **/slideshow-db.php** page. This page has similar features to the file-based slideshow page, except that it is driven off of a database rather than physical folders of images in the file system. The UI has also been redesigned. Most features being built going forward will be built for this page. This page has the following features:
+
+### **Static Slideshows**
+This feature is still in **BETA**. These slideshows are pre-defined in the database. The slides are displayed in a specific order. These slideshows have the following features:
+- **Photo Resizing** - automatically resizes photos and slides based on the client's current viewport height. This is accomplished by a redirect and via query string paramaters.
+- **Private Slideshows** - static slideshows stored in the database can be marked as 'secure'. These slideshows will only be available if you are authorized to view them.
+- **Private Images** - images stored in the database can also be marked as 'secure'. These images will only be included in slideshows if you are authorized to view them, even if the slideshow is a publicly available one.
+- **Manual Controls** - at any time you can move forward or backward in the current slideshow. This does not halt the slideshow in progress, but it does restart the timer.
+- **Slideshow Speed** - a slider control in the UI controls how long each slide will be displayed for. Changes take effect after transitioning to the next slide.
+- **Halt** - allows you to stop the slidehow on the current slide and pick up where you left off afterwards.
+- **See Slide Details** - see details of the slide including size and filename.
+- **Update a Slide's Tags** - see and update which tags are associated to the current slide, and reset the slideshow interval when adding/removing tags.
+
+### **Tag-Based Slideshows**
+This feature is mature. These slideshows are based off of tags, and thus, are dynamic in nature. These slideshows include the following features:
+- **Photo Resizing** - automatically resizes photos and slides based on the client's current viewport height. This is accomplished by a redirect and via query string paramaters.
+- **Available Tags** - determines all tags that are available to you and allows you to create a slideshow by combining all photos in the database associated to the chosen tags. Photos will only be added once if a photo has more than one of the chosen tags.
+- **Private Tags** - tags can be defined as 'secure' in the database, and secure tags will only be displayed if you are authorized to view them.
+- **Private Images** - images stored in the database can also be marked as 'secure'. These images will only be included in slideshows if you are authorized to view them.
+- **Manual Controls** - at any time you can move forward or backward in the current slideshow. This does not halt the slideshow in progress, but it does restart the timer.
+- **Slideshow Speed** - a slider control in the UI controls how long each slide will be displayed for. Changes take effect after transitioning to the next slide.
+- **Randomize Option** - allows you to randomize the slides in the current slideshow. Changes take effect immediately. Halting randomization will stop at the current slide.
+- **Halt** - allows you to stop the slidehow on the current slide and pick up where you left off afterwards.
+- **See Slide Details** - see details of the slide including size and filename.
+- **Update a Slide's Tags** - see and update which tags are associated to the current slide, and reset the slideshow interval when adding/removing tags.
+- **Slideshow Modes** - presets for viewing a slideshow including:
+    - **Normal** - standard UI and slideshow settings.
+    - **Tagging** - only display slides that are not tagged with the "fully tagged" tag, minimizes the slideshow settings pane at the far left and increases the width of the slideshow info pane to make tagging slides a bit easier.
+    - **Maximize** - puts the focus on the slideshow by minimizing the other two panes.
+
 ## Currently Known Bugs and Limitations
-### Root Folders and Virtual Paths are Hardcoded
-This web application supports separate root folders and virtual paths for public and private slideshows. These values are defined in the mainConfig.php file, and out-of-the-box are set to:
+### **Root Folders and Virtual Paths are Hardcoded**
+This web application supports separate root folders and virtual paths for public and private slideshows. These values are defined in the config files, and out-of-the-box are set to:
 - **Public**
     - Virtual Path: /myphotos/private/
     - Physical Path: E:\\MyPhotos\\
@@ -104,23 +131,23 @@ You will need to bind these virtual folders to their associated physical paths i
     </Directory>
 ```
 
-### Memory Consumption Issues for Large Slideshows in File-Based Slideshow
-A block of HTML is added to the webpage for every single file within each of the configured folders for a slideshow. This means that the page source can grow uncontrollably if your slideshow simply contains too many images. In addition, all images are loaded in at load time, compounding the issue. In addition, length and width of images aren't specificed in the HTML, so all images are loaded in their original form.<br>
-So how many images are too many you ask? A test run containing 470 images lower resolution images (most were under 1MB) loaded in 23 seconds and loaded 141MB. Another test run with 693 higher quality images (averaging about 5MB per photo) from multiple folders was not so fun, loading 1614MB in just under 5 minutes, and only about half of the images were loaded in memory at this point. So it's safe to say that size matters!
+### **Memory Consumption Issues for Large Slideshows in File-Based Slideshow**
+A block of HTML is added to the webpage for every single file within each of the configured folders for a slideshow. This means that the page source can grow uncontrollably if your slideshow simply contains too many images. In addition, all images are loaded in at load time, compounding the issue. In addition, length and width of images aren't specificed in the HTML, so all images are loaded in their original form.<br /><br />
+So how many images are too many you ask? A test run containing 470 lower resolution images (most were under 1MB) loaded in 23 seconds and loaded 141MB. Another test run with 693 higher quality images (averaging about 5 MB per photo) from multiple folders was not so fun, loading 161 4MB in just under 5 minutes, and only about half of the images were loaded in memory at this point. So it's safe to say that size matters!
 
 **Note: This no longer applies to the DB-Driven Slideshow (slideshow-db.php)!** This page will only render one slide at a time, along with it's metadata, using AJAX calls to server-side services.
 
-### No Exclusion Option
+### **No Exclusion Option**
 In the case that you've configured a slideshow to include subfolders, you cannot exclude certain folders from the resulting directory tree.
 
 ## Technical Notes
-### Running Unit Tests
+### **Running Unit Tests**
 In the terminal / command window, navigate to the root folder and type the following command to run all unit tests:
 ```
 vendor/bin/phpunit tests --configuration ./tests --coverage-clover ./tests/results/coverage.xml --debug --log-junit ./tests/results/testResults.xml --verbose
 ```
 
-### Setting up Apache Web Server to Allow Requests from LAN
+### **Setting up Apache Web Server to Allow Requests from LAN**
 1. Set the "ServerName" value in the Apache httpd.conf file to your IP (if you connect to the LAN using DHCP, this will change from time to time) on port 80.
     ```
     ServerName 192.168.0.29:80
@@ -150,6 +177,9 @@ vendor/bin/phpunit tests --configuration ./tests --coverage-clover ./tests/resul
 ## History
 ### v5.2.0
 - UX Enhancement : display entire image path instead of just the filename. In the DB-based slideshow, this means adding an extra field in the slide info panel
+
+### v5.2
+- Added static slideshows, including UI enhancements to allow you to choose either static or tag-based slideshows and hide anything that does not apply to your select.
 
 ### v5.1.1
 - UX enhancement : instead of halting the slideshow when adding tags to, or removing tags from, the current slide, the slideshow interval is now restarted.

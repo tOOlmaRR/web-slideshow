@@ -3,15 +3,17 @@ namespace toolmarr\WebSlideshow\DAL;
 
 use toolmarr\WebSlideshow\DAL\IEntity;
 
-class ImagesEntity extends BaseEntity implements IEntity
+class StaticSlideshowEntity extends BaseEntity implements IEntity
 {
     // properties - inputs
-    public $tag;
-    public $includeSecureImages = 0;
+    public $staticSlideshowID;
+    public $staticSlideshowName;
+    public $includeSecureImages;
     
-    // properties - output
+    // properties - outputs
     public $images = [];
-    
+    public $displayOrder = 0;
+
 
     
     // methods
@@ -20,10 +22,10 @@ class ImagesEntity extends BaseEntity implements IEntity
         // set up the query
         $db = $this->getDB();
         if ($this->getUseSPROCs()) {
-            $sproc = $this->getSPROCs()["select"]["images"];
-            $sql = "EXEC [$sproc] @tag=:tag, @secureImages=:secure";
+            $sproc = $this->getSPROCs()["select"]["staticSlideshow"];
+            $sql = "EXEC [$sproc] @ID=:id, @secureImages=:secure";
             $sqlParams = [
-                ":tag" => $this->tag,
+                ":id" => $this->staticSlideshowID >= 0 ? $this->staticSlideshowID : 0,
                 ":secure" => $this->includeSecureImages
             ];
         } else {
@@ -44,11 +46,12 @@ class ImagesEntity extends BaseEntity implements IEntity
             $image->width = $row["width"];
             $image->height = $row["height"];
             $image->secure = $row["Secure"] === '1' ? true : false;
+            $image->displayOrder = $row["DisplayOrder"];
             $this->images[$row["ImageID"]] = $image;
         }
         return true;
     }
-    
+
     public function insert() : int
     {
         throw new \Exception("This has not been implemented yet");

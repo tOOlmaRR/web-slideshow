@@ -1,10 +1,6 @@
 <?php
 namespace toolmarr\WebSlideshow\DAL;
 
-use toolmarr\WebSlideshow\DAL\ImageEntity;
-use toolmarr\WebSlideshow\DAL\TagEntity;
-use toolmarr\WebSlideshow\DAL\TaggedImageEntity;
-
 use PDO;
 
 class EntityFactory
@@ -87,6 +83,12 @@ class EntityFactory
                 
             case "taggedImage":
                 return new TaggedImageEntity($this->getDatabaseConnection(), $this->useSPROCs, $this->SPROCS);
+
+            case "staticSlideshow":
+                return new StaticSlideshowEntity($this->getDatabaseConnection(), $this->useSPROCs, $this->SPROCS);
+
+            case "staticSlideshows":
+                return new StaticSlideshowsEntity($this->getDatabaseConnection(), $this->useSPROCs, $this->SPROCS);
 
             default:
                 return null;

@@ -3,28 +3,26 @@ namespace toolmarr\WebSlideshow\DAL;
 
 use toolmarr\WebSlideshow\DAL\IEntity;
 
-class ImagesEntity extends BaseEntity implements IEntity
+class StaticSlideshowsEntity extends BaseEntity implements IEntity
 {
     // properties - inputs
-    public $tag;
-    public $includeSecureImages = 0;
+    public $includeSecureSlideshows;
     
-    // properties - output
-    public $images = [];
-    
+    // properties - outputs
+    public $staticSlideshows = [];
 
-    
+
+
     // methods
     public function get()
     {
         // set up the query
         $db = $this->getDB();
         if ($this->getUseSPROCs()) {
-            $sproc = $this->getSPROCs()["select"]["images"];
-            $sql = "EXEC [$sproc] @tag=:tag, @secureImages=:secure";
+            $sproc = $this->getSPROCs()["select"]["staticSlideshows"];
+            $sql = "EXEC [$sproc] @secureSlideshows=:secure";
             $sqlParams = [
-                ":tag" => $this->tag,
-                ":secure" => $this->includeSecureImages
+                ":secure" => $this->includeSecureSlideshows
             ];
         } else {
             throw new \Exception("This application only supports the use of SPROCs for database queries!");
@@ -34,21 +32,18 @@ class ImagesEntity extends BaseEntity implements IEntity
         // perform the select and retrieve the data
         $getStatement->execute($sqlParams);
         $rows = $getStatement->fetchAll();
-        
+    
         // build/return a list of business objects based on the returned data
         foreach ($rows as $row) {
-            $image = new ImageEntity($this->getDB(), true);
-            $image->imageID = $row["ImageID"];
-            $image->fullFilePath = $row["FullFilePath"];
-            $image->fileName = $row["FileName"];
-            $image->width = $row["width"];
-            $image->height = $row["height"];
-            $image->secure = $row["Secure"] === '1' ? true : false;
-            $this->images[$row["ImageID"]] = $image;
+            $slideshow = new StaticSlideshowEntity($this->getDB(), true);
+            $slideshow->staticSlideshowID = $row["StaticSlideshowID"];
+            $slideshow->staticSlideshowName = $row["Name"];
+            $slideshow->includeSecureSlideshows = $row["Secure"];
+            $this->staticSlideshows[$row["Name"]] = $slideshow;            
         }
         return true;
     }
-    
+
     public function insert() : int
     {
         throw new \Exception("This has not been implemented yet");
