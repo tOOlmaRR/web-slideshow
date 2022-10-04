@@ -133,7 +133,7 @@ You will need to bind these virtual folders to their associated physical paths i
 
 ### **Memory Consumption Issues for Large Slideshows in File-Based Slideshow**
 A block of HTML is added to the webpage for every single file within each of the configured folders for a slideshow. This means that the page source can grow uncontrollably if your slideshow simply contains too many images. In addition, all images are loaded in at load time, compounding the issue. In addition, length and width of images aren't specificed in the HTML, so all images are loaded in their original form.<br /><br />
-So how many images are too many you ask? A test run containing 470 lower resolution images (most were under 1MB) loaded in 23 seconds and loaded 141MB. Another test run with 693 higher quality images (averaging about 5 MB per photo) from multiple folders was not so fun, loading 161 4MB in just under 5 minutes, and only about half of the images were loaded in memory at this point. So it's safe to say that size matters!
+So how many images are too many you ask? A test run containing 470 lower resolution images (most were under 1MB) loaded in 23 seconds and loaded 141 MB. Another test run with 693 higher quality images (averaging about 5 MB per photo) from multiple folders was not so fun, loading 1614 MB in just under 5 minutes, and only about half of the images were loaded in memory at this point. So it's safe to say that size matters!
 
 **Note: This no longer applies to the DB-Driven Slideshow (slideshow-db.php)!** This page will only render one slide at a time, along with it's metadata, using AJAX calls to server-side services.
 
@@ -176,10 +176,8 @@ vendor/bin/phpunit tests --configuration ./tests --coverage-clover ./tests/resul
 
 ## History
 ### v5.2.0
-- UX Enhancement : display entire image path instead of just the filename. In the DB-based slideshow, this means adding an extra field in the slide info panel
-
-### v5.2
 - Added static slideshows, including UI enhancements to allow you to choose either static or tag-based slideshows and hide anything that does not apply to your select.
+- UX Enhancement : display entire image path instead of just the filename. In the DB-based slideshow, this means adding an extra field in the slide info panel
 
 ### v5.1.1
 - UX enhancement : instead of halting the slideshow when adding tags to, or removing tags from, the current slide, the slideshow interval is now restarted.
