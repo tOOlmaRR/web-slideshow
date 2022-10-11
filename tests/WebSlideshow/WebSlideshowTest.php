@@ -131,7 +131,7 @@ final class WebSlideshowTest extends TestCase
      * @test
      * @group buildSlidesHtml
      * @testdox When a single valid photo is received by the buildSlidesHtml method, a non-empty string should be returned, and it should contain an HTML image tag with the specified virtual path
-     * @testWith [[{"filename":"someFilename.jpg", "virtualLocation":"/some/virtual/location", "height":"500", "width":"500", "originalHeight":"250", "originalWidth":"250"}]]
+     * @testWith [[{"filepath":"/some/filepath/", "filename":"someFilename.jpg", "virtualLocation":"/some/virtual/location", "height":"500", "width":"500", "originalHeight":"250", "originalWidth":"250"}]]
      */
     public function buildSlidesHtml_singleValidPhoto(array $photosToDisplay): void
     {
@@ -215,7 +215,7 @@ final class WebSlideshowTest extends TestCase
      * @test
      * @group buildSlidesHtml
      * @testDox When the buildSlidesHtml method receives an invalid slide before a valid one, it should still continue processing after the invalid slide and return HTML for the valid one
-     * @testWith [[{"filename":"someFilename.jpg", "virtualLocation":""}, {"filename":"someFilename.jpg", "virtualLocation":"/some/virtual/location", "height":"500", "width":"500", "originalHeight":"250", "originalWidth":"250"}]]
+     * @testWith [[{"filepath":"", "filename":"someFilename.jpg", "virtualLocation":""}, {"filepath":"/some/filepath/", "filename":"someFilename.jpg", "virtualLocation":"/some/virtual/location", "height":"500", "width":"500", "originalHeight":"250", "originalWidth":"250"}]]
      */
     public function buildSlidesHtml_invalidSlideDoesNotAbortHtmlBuilding(array $photosToDisplay): void
     {
