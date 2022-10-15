@@ -41,7 +41,9 @@
             <div id="slideshowOptions">
                 <fieldset>
                     <legend class="title">
-                        <span><a id="slideshowOptionsPaneToggle" class="show_collapse" title="Slideshow Options" onclick="toggleOptionsPane(this);">&laquo;&laquo;&laquo;</a></span>    
+                        <span>
+                            <a id="slideshowOptionsPaneToggle" class="show_collapse" title="Slideshow Options" onclick="toggleOptionsPane(this);">&laquo;&laquo;&laquo;</a>
+                        </span>    
                         <span id="show_collapsible_label" class="legendLabel">Slideshow Options:</span>
                     </legend>
                     

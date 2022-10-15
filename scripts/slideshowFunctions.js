@@ -35,9 +35,9 @@ window.addEventListener('DOMContentLoaded', function() {
             applySlideshowModeToUI(mode)
 
             // get checked tags
-            var inputElements = tagSlideshowForm.getElementsByTagName('input');
-            var chosenTags = [];
-            for (var i=0; inputElements[i]; ++i) {
+            let inputElements = tagSlideshowForm.getElementsByTagName('input');
+            let chosenTags = [];
+            for (let i=0; inputElements[i]; ++i) {
                 if (inputElements[i].checked) {
                     chosenTags.push(inputElements[i].value);
                 }
@@ -53,8 +53,8 @@ window.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             console.log('Received request to generate a STATIC slideshow');
 
-            var staticSlideshowDropdown = document.getElementById("staticSlideshowDropdown");
-            var chosenStaticSlideshowID = staticSlideshowDropdown.value;
+            const staticSlideshowDropdown = document.getElementById("staticSlideshowDropdown");
+            const chosenStaticSlideshowID = staticSlideshowDropdown.value;
             
             // load, render and start the slideshow
             loadStaticSlideshowFromDb(chosenStaticSlideshowID);
@@ -72,7 +72,7 @@ function loadAvailableTagsFromDb() {
     const allowPrivate = isPrivateAccessGranted(secretValue)
     let url = 'services/loadTags.php?in=' + allowPrivate;
 
-    var httpRequest = new XMLHttpRequest();
+    let httpRequest = new XMLHttpRequest();
     httpRequest.open('GET', url, false);
     httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     httpRequest.send();
@@ -117,8 +117,8 @@ function loadTagSlideshowFromDb(chosenTags, mode) {
     const allowPrivate = isPrivateAccessGranted(secretValue)
     
     // retrieve slide data from the database
-    let url = 'services/loadSlides.php?in=' + allowPrivate;
-    var httpRequest = new XMLHttpRequest();
+    const url = 'services/loadSlides.php?in=' + allowPrivate;
+    let httpRequest = new XMLHttpRequest();
     httpRequest.open('POST', url);
     httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     const data = {
@@ -126,7 +126,7 @@ function loadTagSlideshowFromDb(chosenTags, mode) {
         'chosenTags': chosenTags,
         'tagsToOmit' : omitTags
     }
-    var params = Object.keys(data).map(
+    const params = Object.keys(data).map(
         function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) }
     ).join('&');
 
@@ -141,7 +141,7 @@ function loadTagSlideshowFromDb(chosenTags, mode) {
         }
         // if we don't, clear the slide placeholder
         else {
-            var slidePlaceholder = document.getElementById('slideContainer');
+            let slidePlaceholder = document.getElementById('slideContainer');
             slidePlaceholder.innerHTML = '';
         }
     }
@@ -156,7 +156,7 @@ function loadAvailableStaticSlideshowNames() {
     const allowPrivate = isPrivateAccessGranted(secretValue)
     let url = 'services/loadStaticSlideshows.php?in=' + allowPrivate;
 
-    var httpRequest = new XMLHttpRequest();
+    let httpRequest = new XMLHttpRequest();
     httpRequest.open('GET', url, false);
     httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     httpRequest.send();
@@ -194,15 +194,15 @@ function loadStaticSlideshowFromDb(chosenStaticSlideshowID)
     const allowPrivate = isPrivateAccessGranted(secretValue)
     
     // retrieve slide data from the database
-    let url = 'services/loadStaticSlideshowSlides.php?in=' + allowPrivate;
-    var httpRequest = new XMLHttpRequest();
+    const url = 'services/loadStaticSlideshowSlides.php?in=' + allowPrivate;
+    let httpRequest = new XMLHttpRequest();
     httpRequest.open('POST', url);
     httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     const data = {
         'maxHeight': maxHeight,
         'staticSlideshowID': chosenStaticSlideshowID
     }
-    var params = Object.keys(data).map(
+    const params = Object.keys(data).map(
         function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) }
     ).join('&');
 
@@ -217,7 +217,7 @@ function loadStaticSlideshowFromDb(chosenStaticSlideshowID)
         }
         // if we don't, clear the slide placeholder
         else {
-            var slidePlaceholder = document.getElementById('slideContainer');
+            let slidePlaceholder = document.getElementById('slideContainer');
             slidePlaceholder.innerHTML = '';
         }
     }
@@ -228,13 +228,13 @@ function renderSlideshowTagsSelection(allAvailableTags)
 {
     console.log('render slideshow tag selection from data');
 
-    var httpRequest = new XMLHttpRequest();
+    let httpRequest = new XMLHttpRequest();
     httpRequest.open('POST', 'services/renderTags.php', false);
     httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     const data = {
         'allTags' : JSON.stringify(allAvailableTags),
     }
-    var params = Object.keys(data).map(
+    const params = Object.keys(data).map(
         function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) }
     ).join('&');
 
@@ -243,7 +243,7 @@ function renderSlideshowTagsSelection(allAvailableTags)
 
     const jsonResponse = JSON.parse(httpRequest.responseText);
     const slideInfoHTML = jsonResponse['HTML'];
-    var slideInfoPlaceholder = document.getElementById('slideshowTagSelection');
+    let slideInfoPlaceholder = document.getElementById('slideshowTagSelection');
     slideInfoPlaceholder.innerHTML = slideInfoHTML; // replace all content of the placeholder
     
     // if we made this call asynchronousely, we'd need to handle the completion with an event handler like this:
@@ -261,13 +261,13 @@ function renderSlideshowTagsSelection(allAvailableTags)
 function renderStaticSlideshowSelection(availableStaticSlideshows)
 {
     console.log('render static slideshow options from data');
-    var httpRequest = new XMLHttpRequest();
+    let httpRequest = new XMLHttpRequest();
     httpRequest.open('POST', 'services/renderStaticSlideshowNames.php', false);
     httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     const data = {
         'staticSlideshows' : JSON.stringify(availableStaticSlideshows),
     }
-    var params = Object.keys(data).map(
+    const params = Object.keys(data).map(
         function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) }
     ).join('&');
 
@@ -275,7 +275,7 @@ function renderStaticSlideshowSelection(availableStaticSlideshows)
     console.log('Received response from Render Static Slideshow Names service');
     const jsonResponse = JSON.parse(httpRequest.responseText);
     const staticSlideshowSelectionHTML = jsonResponse['HTML'];
-    var staticSlideshowSelectionPlaceholder = document.getElementById('staticSlideshowOptionsContainer');
+    let staticSlideshowSelectionPlaceholder = document.getElementById('staticSlideshowOptionsContainer');
     staticSlideshowSelectionPlaceholder.innerHTML = staticSlideshowSelectionHTML; // replace all content of the placeholder
 }
 
@@ -283,7 +283,7 @@ function renderStaticSlideshowSelection(availableStaticSlideshows)
 function renderSlideFromData()
 {
     console.log('render slide with index ' + slideIndexes[slideIndex] + '(' + slideIndex + ') from data');
-    var httpRequest = new XMLHttpRequest();
+    let httpRequest = new XMLHttpRequest();
     httpRequest.open('POST', 'services/renderSlide.php');
     httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     const data = {
@@ -291,7 +291,7 @@ function renderSlideFromData()
         'slideCount': allSlides.length,
         'slideIndex': slideIndexes[slideIndex]
     }
-    var params = Object.keys(data).map(
+    const params = Object.keys(data).map(
         function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) }
     ).join('&');
 
@@ -300,7 +300,7 @@ function renderSlideFromData()
         console.log('Received response from Render Slide service');
         const jsonResponse = JSON.parse(httpRequest.responseText);
         const slideHTML = jsonResponse['HTML'];
-        var slidePlaceholder = document.getElementById('slideContainer');
+        let slidePlaceholder = document.getElementById('slideContainer');
         slidePlaceholder.innerHTML = slideHTML; // replace all content of the placeholder
     }
 }
@@ -310,14 +310,14 @@ function renderSlideInfoFromData()
 {
     console.log('render slide info with index ' + slideIndexes[slideIndex] + '(' + slideIndex + ') from data');
 
-    var httpRequest = new XMLHttpRequest();
+    let httpRequest = new XMLHttpRequest();
     httpRequest.open('POST', 'services/renderSlideInfo.php');
     httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     const data = {
         'slide': JSON.stringify(allSlides[slideIndexes[slideIndex]]),
         'allTags' : JSON.stringify(allTags),
     }
-    var params = Object.keys(data).map(
+    const params = Object.keys(data).map(
         function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) }
     ).join('&');
 
@@ -326,7 +326,7 @@ function renderSlideInfoFromData()
         console.log('Received response from Render Slide Info service');
         const jsonResponse = JSON.parse(httpRequest.responseText);
         const slideInfoHTML = jsonResponse['HTML'];
-        var slideInfoPlaceholder = document.getElementById('slideInfoContainer');
+        let slideInfoPlaceholder = document.getElementById('slideInfoContainer');
         slideInfoPlaceholder.innerHTML = slideInfoHTML; // replace all content of the placeholder
     }
 }
@@ -336,14 +336,14 @@ function renderSlideTagInfoFromData()
 {
     console.log('render slide tag info with index ' + slideIndexes[slideIndex] + '(' + slideIndex + ') from data');
 
-    var httpRequest = new XMLHttpRequest();
+    let httpRequest = new XMLHttpRequest();
     httpRequest.open('POST', 'services/renderTags.php');
     httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     const data = {
         'slide': JSON.stringify(allSlides[slideIndexes[slideIndex]]),
         'allTags' : JSON.stringify(allTags),
     }
-    var params = Object.keys(data).map(
+    const params = Object.keys(data).map(
         function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) }
     ).join('&');
 
@@ -352,7 +352,7 @@ function renderSlideTagInfoFromData()
         console.log('Received response from Render Tags service');
         const jsonResponse = JSON.parse(httpRequest.responseText);
         const slideInfoHTML = jsonResponse['HTML'];
-        var slideInfoPlaceholder = document.getElementById('slideInfoTagsContainer');
+        let slideInfoPlaceholder = document.getElementById('slideInfoTagsContainer');
         slideInfoPlaceholder.innerHTML = slideInfoHTML; // replace all content of the placeholder
     }
 }
@@ -360,11 +360,11 @@ function renderSlideTagInfoFromData()
 // Event handler to update a tag for the current slideshow (to either add or remove the tag based on the state of a checkbox)
 function updateTags(imageID, tagID, tag, checkbox) {
     console.log("update Tag: " + tag);
-    var msgDiv = document.getElementById('slideTagsSubmitMessages');
+    let msgDiv = document.getElementById('slideTagsSubmitMessages');
 
     // halt the slideshow if in progress
-    var haltSlideshowCheckbox = document.getElementById('haltSlideshow');
-    var slideshowInProgress = !haltSlideshowCheckbox.checked;
+    const haltSlideshowCheckbox = document.getElementById('haltSlideshow');
+    const slideshowInProgress = !haltSlideshowCheckbox.checked;
     if (slideshowInProgress) {
         // Reset the interval based on the UI and continue the slideshow
         clearInterval(slideShowIntervalID);
@@ -373,23 +373,23 @@ function updateTags(imageID, tagID, tag, checkbox) {
         slideShowIntervalID = setTimeout(showSlides, configuredInterval);
 
         // add message to the UI
-        var haltedMsgDiv = document.createElement("div");
+        let haltedMsgDiv = document.createElement("div");
         haltedMsgDiv.className = 'inProgress';
         haltedMsgDiv.innerText = 'Slideshow interval reset';
         msgDiv.appendChild(haltedMsgDiv);
     }
 
     // display operation to be performed and indicate operation is in progress
-    var newMsgDiv = document.createElement("div");
+    let newMsgDiv = document.createElement("div");
     newMsgDiv.className = 'inProgress';
-    var newOperation = checkbox.checked === true ? 'adding' : "removing";
-    var newMsg = newOperation + ' "' + tag + '"...';
+    const newOperation = checkbox.checked === true ? 'adding' : "removing";
+    let newMsg = newOperation + ' "' + tag + '"...';
     newMsgDiv.innerText = newMsg;
     msgDiv.appendChild(newMsgDiv);
     
     // perform the operation
     console.log("update DB");
-    var httpRequest = new XMLHttpRequest();
+    let httpRequest = new XMLHttpRequest();
 
     if (!httpRequest) {
         newMsgDiv.className = 'failure';
@@ -399,7 +399,7 @@ function updateTags(imageID, tagID, tag, checkbox) {
 
     httpRequest.open('POST', 'services/taggedimage.php');
     httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    var params = "imageID=" + imageID + "&tagID=" + tagID + "&operation=" + newOperation;
+    const params = "imageID=" + imageID + "&tagID=" + tagID + "&operation=" + newOperation;
     httpRequest.send(params);
 
     httpRequest.onload = function() {
@@ -560,7 +560,7 @@ function determineNextSlideIndex(n)
 function determineSlideshowMode()
 {
     let mode = 'normal';
-    var radioButtons = document.getElementsByName('slideshowMode');
+    const radioButtons = document.getElementsByName('slideshowMode');
     for (let modeOption of radioButtons) {
         if (modeOption.checked) {
             return modeOption.value;
@@ -611,8 +611,8 @@ function isPrivateAccessGranted(secretValue)
  function dateAdd(date, interval, units) {
     if (!(date instanceof Date))
         return undefined;
-    var ret = new Date(date); // don't change original date
-    var checkRollover = function() { if(ret.getDate() != date.getDate()) ret.setDate(0);};
+    let ret = new Date(date); // don't change original date
+    const checkRollover = function() { if(ret.getDate() != date.getDate()) ret.setDate(0);};
     switch(String(interval).toLowerCase()) {
         case 'year'   :  ret.setFullYear(ret.getFullYear() + units); checkRollover();  break;
         case 'quarter':  ret.setMonth(ret.getMonth() + 3*units); checkRollover();  break;
@@ -658,9 +658,9 @@ function randomize_change(checkbox)
 /* Randomize array in-place using Durstenfeld shuffle algorithm */
 /* Source: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array */
 function shuffleArray(array) {
-    for (var i = array.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var temp = array[i];
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const temp = array[i];
         array[i] = array[j];
         array[j] = temp;
     }
@@ -679,8 +679,8 @@ function haltSlideshow(checkbox) {
 
 function toggleSlideshowTypeOptionsPane()
 {
-    var tagSlideshowOptionsPane = document.getElementById('tagSlideshowOptions');
-    var staticSlideshowOptionsPane = document.getElementById('staticSlideshowOptions');
+    let tagSlideshowOptionsPane = document.getElementById('tagSlideshowOptions');
+    let staticSlideshowOptionsPane = document.getElementById('staticSlideshowOptions');
     if (tagSlideshowOptionsPane.style.display == 'none') {
         tagSlideshowOptionsPane.style.display = 'block';
         staticSlideshowOptionsPane.style.display = 'none';
@@ -692,8 +692,8 @@ function toggleSlideshowTypeOptionsPane()
 
 function toggleOptionsPane(caller)
 {
-    var optionsPane = document.getElementById('show_collapsible_div');
-    var optionsLabel = document.getElementById('show_collapsible_label');
+    let optionsPane = document.getElementById('show_collapsible_div');
+    let optionsLabel = document.getElementById('show_collapsible_label');
     if (caller.className == "show_collapse") {
         optionsPane.style.display = 'none';
         optionsLabel.style.display = 'none';
@@ -710,8 +710,8 @@ function toggleOptionsPane(caller)
 
 function toggleInfoPane(caller)
 {
-    var infoPane = document.getElementById('info_collapsible_div');
-    var infoLabel = document.getElementById('info_collapsible_label');
+    let infoPane = document.getElementById('info_collapsible_div');
+    let infoLabel = document.getElementById('info_collapsible_label');
     if (caller.className == "info_collapse") {
         infoPane.style.display = 'none';
         infoLabel.style.display = 'none';

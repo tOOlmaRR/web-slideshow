@@ -79,7 +79,8 @@ class DbWebSlideshow
     {
         $slideshowRandomizeToggleHtml = "<fieldset>";
         $slideshowRandomizeToggleHtml = $slideshowRandomizeToggleHtml . "<legend>Randomize:</legend>";
-        $slideshowRandomizeToggleHtml = $slideshowRandomizeToggleHtml . "<input type=\"checkbox\" id=\"randomizeToggle\" name=\"randomizeToggle\" value=\"randomize\" onclick=\"randomize_change(this)\" />";
+        $slideshowRandomizeToggleHtml = $slideshowRandomizeToggleHtml . 
+            "<input type=\"checkbox\" id=\"randomizeToggle\" name=\"randomizeToggle\" value=\"randomize\" onclick=\"randomize_change(this)\" />";
         $slideshowRandomizeToggleHtml = $slideshowRandomizeToggleHtml . "<label for=\"randomizeToggle\">Randomize!</label>";
         $slideshowRandomizeToggleHtml = $slideshowRandomizeToggleHtml . "</fieldset>";
 
@@ -94,10 +95,11 @@ class DbWebSlideshow
         $slideshowSpeedHtml = $slideshowSpeedHtml . "<span class=\"currentSlideshowSpeed\">";
             $slideshowSpeedHtml = $slideshowSpeedHtml . "<output id=\"currentSlideshowSpeed\" name=\"currentSlideshowSpeed\">30</output><span> seconds</span>";
         $slideshowSpeedHtml = $slideshowSpeedHtml . "</span>";
-        $slideshowSpeedHtml = $slideshowSpeedHtml . "<input type=\"range\" id=\"slideshowSpeed\" name=\"slideshowSpeed\" min=\"5\" max=\"120\" step=\"5\" value=\"30\"
-        oninput=\"currentSlideshowSpeed.value = slideshowSpeed.value\" /><br/>";
+        $slideshowSpeedHtml = $slideshowSpeedHtml . "<input type=\"range\" id=\"slideshowSpeed\" name=\"slideshowSpeed\" min=\"5\" max=\"120\" step=\"5\" value=\"30\"" . 
+            "oninput=\"currentSlideshowSpeed.value = slideshowSpeed.value\" /><br/>";
         $slideshowSpeedHtml = $slideshowSpeedHtml . "</span>";
-            $slideshowSpeedHtml = $slideshowSpeedHtml . "<input type=\"checkbox\" id=\"haltSlideshow\" name=\"haltSlideshowToggle\" value=\"halt\" onclick=\"haltSlideshow(this)\" />";
+            $slideshowSpeedHtml = $slideshowSpeedHtml . 
+                "<input type=\"checkbox\" id=\"haltSlideshow\" name=\"haltSlideshowToggle\" value=\"halt\" onclick=\"haltSlideshow(this)\" />";
             $slideshowSpeedHtml = $slideshowSpeedHtml . "<label for=\"randomizeToggle\">Halt!</label>";
         $slideshowSpeedHtml = $slideshowSpeedHtml . "</span>";
         $slideshowSpeedHtml  = $slideshowSpeedHtml . "</fieldset>";

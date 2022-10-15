@@ -146,6 +146,10 @@ In the terminal / command window, navigate to the root folder and type the follo
 ```
 vendor/bin/phpunit tests --configuration ./tests --coverage-clover ./tests/results/coverage.xml --debug --log-junit ./tests/results/testResults.xml --verbose
 ```
+You can also run a single test, without generating a coverage report, using the following command:
+```
+vendor/bin/phpunit tests --filter buildSlidesHtml_singleValidPhoto ./tests
+```
 
 ### **Setting up Apache Web Server to Allow Requests from LAN**
 1. Set the "ServerName" value in the Apache httpd.conf file to your IP (if you connect to the LAN using DHCP, this will change from time to time) on port 80.

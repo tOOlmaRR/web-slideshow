@@ -190,11 +190,15 @@ class WebSlideshow
                 && !empty($photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY])
                 && !empty($photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY])
             ) {
-                $slideshowHtml = $slideshowHtml . "            <div class=\"mySlides fade c" . $number . "\" style=\"height: " . (intval($photoToDisplay['height'])+100) . "px;\">";
-                $slideshowHtml = $slideshowHtml . "                <div class=\"numbertext\">" . ($number + 1) . " / " . count($photosToDisplay) . "</div>";
-                $slideshowHtml = $slideshowHtml . "                <img width=\"$photoToDisplay[width]\" height=\"$photoToDisplay[height]\" src=\"" . $photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] . "\">";
-                $slideshowHtml = $slideshowHtml . "                <div class=\"text\"><span class=\"filename\">" . $photoToDisplay[WebSlideshow::SLIDE_PHYSICAL_PATH_KEY] . $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY] . "</span><span class=\"dimensions\">$photoToDisplay[originalWidth]x$photoToDisplay[originalHeight] resized to $photoToDisplay[width]x$photoToDisplay[height]<span></div>";
-                $slideshowHtml = $slideshowHtml . "            </div>";
+                
+                $slideshowHtml .= "            <div class=\"mySlides fade c" . $number . "\" style=\"height: " . (intval($photoToDisplay['height'])+100) . "px;\">";
+                $slideshowHtml .= "                <div class=\"numbertext\">" . ($number + 1) . " / " . count($photosToDisplay) . "</div>";
+                $slideshowHtml .= "                <img width=\"$photoToDisplay[width]\" height=\"$photoToDisplay[height]\" src=\"" .
+                    $photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] . "\">";
+                $slideshowHtml .= "                <div class=\"text\"><span class=\"filename\">" . $photoToDisplay[WebSlideshow::SLIDE_PHYSICAL_PATH_KEY] . 
+                    $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY] . "</span><span class=\"dimensions\">$photoToDisplay[originalWidth]x$photoToDisplay[originalHeight]" . 
+                    "resized to $photoToDisplay[width]x$photoToDisplay[height]<span></div>";
+                $slideshowHtml .= "            </div>";
             }
         }
         return $slideshowHtml;
