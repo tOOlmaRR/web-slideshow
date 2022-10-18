@@ -195,8 +195,8 @@ class WebSlideshow
                 $slideshowHtml .= "                <div class=\"numbertext\">" . ($number + 1) . " / " . count($photosToDisplay) . "</div>";
                 $slideshowHtml .= "                <img width=\"$photoToDisplay[width]\" height=\"$photoToDisplay[height]\" src=\"" .
                     $photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] . "\">";
-                $slideshowHtml .= "                <div class=\"text\"><span class=\"filename\">" . $photoToDisplay[WebSlideshow::SLIDE_PHYSICAL_PATH_KEY] . 
-                    $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY] . "</span><span class=\"dimensions\">$photoToDisplay[originalWidth]x$photoToDisplay[originalHeight]" . 
+                $slideshowHtml .= "                <div class=\"text\"><span class=\"filename\">" . $photoToDisplay[WebSlideshow::SLIDE_PHYSICAL_PATH_KEY] .
+                    $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY] . "</span><span class=\"dimensions\">$photoToDisplay[originalWidth]x$photoToDisplay[originalHeight]" .
                     "resized to $photoToDisplay[width]x$photoToDisplay[height]<span></div>";
                 $slideshowHtml .= "            </div>";
             }

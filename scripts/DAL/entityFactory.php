@@ -67,8 +67,7 @@ class EntityFactory
     
     public function getEntity(string $entityType)
     {
-        switch ($entityType)
-        {
+        switch ($entityType) {
             case "image":
                 return new ImageEntity($this->getDatabaseConnection(), $this->useSPROCs, $this->SPROCS);
 

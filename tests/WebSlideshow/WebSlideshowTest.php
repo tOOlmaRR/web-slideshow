@@ -37,7 +37,7 @@ final class WebSlideshowTest extends TestCase
     /**
      * @test
      * @group determinePhotosToDisplayForPath
-     * @testdox When there are no valid photos in the specified location (ie. public folder), 
+     * @testdox When there are no valid photos in the specified location (ie. public folder),
      *      the determinePhotosToDisplayForPath method should return an empty array
      * @testWith ["/myPhotos/", false]
      */
@@ -67,7 +67,7 @@ final class WebSlideshowTest extends TestCase
     /**
      * @test
      * @group determinePhotosToDisplayForPath
-     * @testdox When there is a valid photo in the specified location (ie. public folder), 
+     * @testdox When there is a valid photo in the specified location (ie. public folder),
      *      the determinePhotosToDisplayForPath method should return a non-empty array
      * @testWith ["/myPhotos/", false]
      */
@@ -100,7 +100,7 @@ final class WebSlideshowTest extends TestCase
     /**
      * @test
      * @group buildSlidesHtml
-     * @testdox When an empty array (ie. there are no photos to build HTML for) is received by the buildSlidesHtml method, 
+     * @testdox When an empty array (ie. there are no photos to build HTML for) is received by the buildSlidesHtml method,
      *      an empty string should be returned
      * @testWith [[]]
      */
@@ -134,8 +134,8 @@ final class WebSlideshowTest extends TestCase
     /**
      * @test
      * @group buildSlidesHtml
-     * @testdox When a single valid photo is received by the buildSlidesHtml method, 
-     *      a non-empty string should be returned, 
+     * @testdox When a single valid photo is received by the buildSlidesHtml method,
+     *      a non-empty string should be returned,
      *      and it should contain an HTML image tag with the specified virtual path
      * @testWith [[{"filepath":"/some/filepath/", "filename":"someFilename.jpg", "virtualLocation":"/some/virtual/location", "height":"500", "width":"500", "originalHeight":"250", "originalWidth":"250"}]]
      */
@@ -156,7 +156,7 @@ final class WebSlideshowTest extends TestCase
     /**
      * @test
      * @group buildSlidesHtml
-     * @testdox When the buildSlidesHtml method receives an array that does not contain the 'virtualLocation' index, 
+     * @testdox When the buildSlidesHtml method receives an array that does not contain the 'virtualLocation' index,
      *      an empty string should be returned
      * @testWith [[{"filename":"someFilename.jpg"}]]
      */
@@ -173,7 +173,7 @@ final class WebSlideshowTest extends TestCase
     /**
      * @test
      * @group buildSlidesHtml
-     * @testdox When the buildSlidesHtml method receives an array that does not contain the 'filename' index, 
+     * @testdox When the buildSlidesHtml method receives an array that does not contain the 'filename' index,
      *      an empty string should be returned
      * @testWith [[{"virtualLocation":"/some/virtual/location"}]]
      */
@@ -190,7 +190,7 @@ final class WebSlideshowTest extends TestCase
     /**
      * @test
      * @group buildSlidesHtml
-     * @testDox When the buildSlidesHtml method receives a properly formed array, 
+     * @testDox When the buildSlidesHtml method receives a properly formed array,
      *      but the 'virtualLocation' index is empty,
      *      an empty string should be returned
      * @testWith [[{"filename":"someFilename.jpg", "virtualLocation":""}]]

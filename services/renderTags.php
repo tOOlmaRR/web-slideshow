@@ -11,8 +11,7 @@ $mode = "slideshowTags";
 $slideInfoHtml = '';
 if (isset($_POST['allTags'])) {
     // gather inputs from the request and choose which 'mode' we are in
-    if (isset($_POST['slide']))
-    {
+    if (isset($_POST['slide'])) {
         $slide = json_decode($_POST['slide'], true);
         $mode = "slideTags";
     }
@@ -28,7 +27,7 @@ if (isset($_POST['allTags'])) {
         $tagCheckedAttribute = "";
         if ($mode == "slideshowTags") {
             $tagCheckedAttribute = in_array($tag['tag'], $configuration['chosenTags']) ? 'checked' : '';
-        } else if ($mode == "slideTags" && array_key_exists($tag['tag'], $slide['tags'])) {
+        } elseif ($mode == "slideTags" && array_key_exists($tag['tag'], $slide['tags'])) {
             $tagCheckedAttribute = "checked";
         }
 
@@ -36,7 +35,7 @@ if (isset($_POST['allTags'])) {
         $slideInfoHtml .= "    <span>";
         $slideInfoHtml .= "        <input type=\"checkbox\" name=\"chosenTags[]\" value=\"" . $tag['tag'] . "\" id=\"" . $tag['tag'] . "\" $tagCheckedAttribute ";
         // only trigger the onclick event handler in 'slideTags' mode: in 'slideshowTags' mode, there is a form and a server-side postback
-        if ($mode == "slideTags") {            
+        if ($mode == "slideTags") {
             $slideInfoHtml .= "onclick=\"updateTags(" . $slide['ID'] . ", " . $tag['tagID'] . ", '" . $tag['tag'] . "', this);\"";
         }
         $slideInfoHtml .= "/>";
@@ -46,9 +45,9 @@ if (isset($_POST['allTags'])) {
     $slideInfoHtml .= "    </div>";
 
     // in 'slideTags' mode: show messages area to indicate what is going on
-    if ($mode == "slideTags") {            
+    if ($mode == "slideTags") {
         $slideInfoHtml .= "    <div id=\"slideTagsSubmitMessages\"></div>";
-    } else if ($mode == "slideshowTags") {
+    } elseif ($mode == "slideshowTags") {
         $slideInfoHtml .= "    <div id=\"modeSelection\">";
         $slideInfoHtml .= "        <input type=\"radio\" name=\"slideshowMode\" value=\"normal\" id=\"normal\" checked>";
         $slideInfoHtml .= "        <label for=\"normal\">normal</label>";

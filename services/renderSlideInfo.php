@@ -19,7 +19,7 @@ if (isset($_POST['slide'])) {
     $slideInfoHtml .= "        </div>";
     $slideInfoHtml .= "        <div>";
     $slideInfoHtml .= "            <span class=\"title\">Original Size: </span><br />";
-    $slideInfoHtml .= "            <input class=\"slide-o-size\" type=\"text\" disabled=\"disabled\" value=\"" . 
+    $slideInfoHtml .= "            <input class=\"slide-o-size\" type=\"text\" disabled=\"disabled\" value=\"" .
         $slide['originalWidth'] . "x" . $slide['originalHeight'] . "\" />";
     $slideInfoHtml .= "        </div>";
     $slideInfoHtml .= "        <div>";
@@ -27,7 +27,7 @@ if (isset($_POST['slide'])) {
     $slideInfoHtml .= "            <input class=\"slide-n-size\" type=\"text\" disabled=\"disabled\" value=\"" . $slide['width'] . "x" . $slide['height'] . "\" />";
     $slideInfoHtml .= "        </div>";
     $slideInfoHtml .= "        <div>";
-    $slideInfoHtml .= "            <input class=\"slide-secured\" type=\"checkbox\" disabled=\"disabled\" name=\"secureImage\" $slideCheckedAttribute/>" . 
+    $slideInfoHtml .= "            <input class=\"slide-secured\" type=\"checkbox\" disabled=\"disabled\" name=\"secureImage\" $slideCheckedAttribute/>" .
         "<label for=\"secureImage\">Secured Image</label>";
     $slideInfoHtml .= "        </div>";
     $slideInfoHtml .= "    </div>";

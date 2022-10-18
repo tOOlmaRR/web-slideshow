@@ -9,8 +9,7 @@
         document.location=\"$_SERVER[PHP_SELF]?r=1&height=\" + maxHeight;
         //-->
         </script>";
-    }
-    else {
+    } else {
         // Code to be displayed if resolution is detected
         if (isset($_GET['height'])) {
             // Resolution detected
@@ -43,7 +42,7 @@
                     <legend class="title">
                         <span>
                             <a id="slideshowOptionsPaneToggle" class="show_collapse" title="Slideshow Options" onclick="toggleOptionsPane(this);">&laquo;&laquo;&laquo;</a>
-                        </span>    
+                        </span>
                         <span id="show_collapsible_label" class="legendLabel">Slideshow Options:</span>
                     </legend>
                     
@@ -117,7 +116,7 @@
                         </fieldset>
                     <div>
                 </fieldset>
-            </div>    
+            </div>
         </div>
 
         <!-- Slideshow Container -->

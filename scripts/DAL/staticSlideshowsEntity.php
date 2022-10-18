@@ -39,7 +39,7 @@ class StaticSlideshowsEntity extends BaseEntity implements IEntity
             $slideshow->staticSlideshowID = $row["StaticSlideshowID"];
             $slideshow->staticSlideshowName = $row["Name"];
             $slideshow->includeSecureSlideshows = $row["Secure"];
-            $this->staticSlideshows[$row["Name"]] = $slideshow;            
+            $this->staticSlideshows[$row["Name"]] = $slideshow;
         }
         return true;
     }
