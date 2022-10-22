@@ -21,6 +21,8 @@ $database['useSPROCS'] = true;
     $database['SPROCS']['select']['image'] = 'Image.Select';
     $database['SPROCS']['select']['tags'] = 'Tags.Select';
     $database['SPROCS']['select']['tag'] = 'Tag.Select';
+    $database['SPROCS']['select']['staticSlideshow'] = 'StaticSlideshow.Select';
+    $database['SPROCS']['select']['staticSlideshows'] = 'StaticSlideshows.Select';
 
     $database['SPROCS']['delete']['taggedImage'] = 'TaggedImage.Delete';
 
@@ -51,7 +53,7 @@ if (isset($_POST) && isset($_POST["chosenTags"])) {
 //   tagging: hide the slideshow options pane, increase the width of the slide info pane, and only include slides that are not 'fully tagged'
 //   maximize: hide both slideshow options and slide info panes and increase the max height to approximately line up with full screen mode in the browser
 if (isset($_POST) && isset($_POST["slideshowMode"])) {
-    $configuration["slideshowMode"] = $_POST["slideshowMode"];    
+    $configuration["slideshowMode"] = $_POST["slideshowMode"];
 } else {
     $configuration["slideshowMode"] = [];
 }

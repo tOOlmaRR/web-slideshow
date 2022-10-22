@@ -14,7 +14,7 @@ class DbWebSlideshow
 
     public int $maxHeight;
     public bool $privateAcessGranted = false;
-    public array $allSlides;
+    //public array $allSlides; // I think this is no longer used
 
     public function __construct(int $viewportHeight)
     {
@@ -29,8 +29,7 @@ class DbWebSlideshow
         $tagsEntity->imageID = null;
         $tagsEntity->includeSecureTags = $this->privateAcessGranted ? 1 : 0;
 
-        if ($tagsEntity->get())
-        {
+        if ($tagsEntity->get()) {
             $allTags = $tagsEntity->tags;
         } else {
             $allTags = [];
@@ -39,11 +38,46 @@ class DbWebSlideshow
         return $allTags;
     }
 
+    public function getStaticSlideshows($config) : array
+    {
+        $entityFactory = new EntityFactory($config['database']);
+        $staticSlideshowsEntity = $entityFactory->getEntity("staticSlideshows");
+        $staticSlideshowsEntity->includeSecureSlideshows = $this->privateAcessGranted ? 1 : 0;
+
+        if ($staticSlideshowsEntity->get())
+        {
+            $allStaticSlideshows = $staticSlideshowsEntity->staticSlideshows;
+        } else {
+            $allStaticSlideshows = [];
+            // TODO: consider outputting an error to the UI
+        }
+        return $allStaticSlideshows;
+    }
+
+    public function getStaticSlideshowSlides($config, $chosenStaticSlideshowID) : array
+    {
+        $entityFactory = new EntityFactory($config['database']);
+        $staticSlideshowEntity = $entityFactory->getEntity("staticSlideshow");
+        $staticSlideshowEntity->includeSecureImages = $this->privateAcessGranted ? 1 : 0;
+        $staticSlideshowEntity->staticSlideshowID = $chosenStaticSlideshowID;
+
+        if ($staticSlideshowEntity->get()) {
+            $allStaticSlideshowImages = $staticSlideshowEntity->images;
+        } else {
+            $allStaticSlideshowImages = [];
+            // TODO: consider outputting an error to the UI
+        }
+        
+        // Build and return a list of slides to include in the slideshow
+        return $this->buildSlidesToDisplay($config, $allStaticSlideshowImages, []);
+    }
+
     public function buildRandomizeToggleHtml() : string
     {
         $slideshowRandomizeToggleHtml = "<fieldset>";
         $slideshowRandomizeToggleHtml = $slideshowRandomizeToggleHtml . "<legend>Randomize:</legend>";
-        $slideshowRandomizeToggleHtml = $slideshowRandomizeToggleHtml . "<input type=\"checkbox\" id=\"randomizeToggle\" name=\"randomizeToggle\" value=\"randomize\" onclick=\"randomize_change(this)\" />";
+        $slideshowRandomizeToggleHtml = $slideshowRandomizeToggleHtml . 
+            "<input type=\"checkbox\" id=\"randomizeToggle\" name=\"randomizeToggle\" value=\"randomize\" onclick=\"randomize_change(this)\" />";
         $slideshowRandomizeToggleHtml = $slideshowRandomizeToggleHtml . "<label for=\"randomizeToggle\">Randomize!</label>";
         $slideshowRandomizeToggleHtml = $slideshowRandomizeToggleHtml . "</fieldset>";
 
@@ -58,10 +92,11 @@ class DbWebSlideshow
         $slideshowSpeedHtml = $slideshowSpeedHtml . "<span class=\"currentSlideshowSpeed\">";
             $slideshowSpeedHtml = $slideshowSpeedHtml . "<output id=\"currentSlideshowSpeed\" name=\"currentSlideshowSpeed\">30</output><span> seconds</span>";
         $slideshowSpeedHtml = $slideshowSpeedHtml . "</span>";
-        $slideshowSpeedHtml = $slideshowSpeedHtml . "<input type=\"range\" id=\"slideshowSpeed\" name=\"slideshowSpeed\" min=\"5\" max=\"120\" step=\"5\" value=\"30\"
-        oninput=\"currentSlideshowSpeed.value = slideshowSpeed.value\" /><br/>";
+        $slideshowSpeedHtml = $slideshowSpeedHtml . "<input type=\"range\" id=\"slideshowSpeed\" name=\"slideshowSpeed\" min=\"5\" max=\"120\" step=\"5\" value=\"30\"" .
+            "oninput=\"currentSlideshowSpeed.value = slideshowSpeed.value\" /><br/>";
         $slideshowSpeedHtml = $slideshowSpeedHtml . "</span>";
-            $slideshowSpeedHtml = $slideshowSpeedHtml . "<input type=\"checkbox\" id=\"haltSlideshow\" name=\"haltSlideshowToggle\" value=\"halt\" onclick=\"haltSlideshow(this)\" />";
+            $slideshowSpeedHtml = $slideshowSpeedHtml .
+                "<input type=\"checkbox\" id=\"haltSlideshow\" name=\"haltSlideshowToggle\" value=\"halt\" onclick=\"haltSlideshow(this)\" />";
             $slideshowSpeedHtml = $slideshowSpeedHtml . "<label for=\"randomizeToggle\">Halt!</label>";
         $slideshowSpeedHtml = $slideshowSpeedHtml . "</span>";
         $slideshowSpeedHtml  = $slideshowSpeedHtml . "</fieldset>";
@@ -70,42 +105,49 @@ class DbWebSlideshow
         return $slideshowSpeedHtml;
     }
 
-    public function retrieveSlideshowData($configuration, $chosenTags, array $omitTags) : array
+    public function retrieveTagSlideshowData($configuration, $chosenTags, array $omitTags) : array
     {
-        /* Retrieve images from database and build the slides */
+        // Retrieve images from database and build the slides
         $entityFactory = new EntityFactory($configuration['database']);
         $allImages = $this->getAllImagesWithChosenTags($chosenTags, $entityFactory);
         
-        $photosToDisplay = [];
+        // Build and return a list of slides to include in the slideshow
+        return $this->buildSlidesToDisplay($configuration, $allImages, $omitTags);
+    }
+
+    private function buildSlidesToDisplay($configuration, array $allImages, array $omitTags) : array
+    {
+        $slidesToDisplay  = [];
         foreach ($allImages as $image) {
+            
             // build the slide object and add it to the list
-            $photoToDisplay = $this->buildSlide($image, $entityFactory);
+            $entityFactory = new EntityFactory($configuration['database']);
+            $slideToDisplay = $this->buildSlide($image, $entityFactory);
 
             // apply filters to remove the photo if it contains a tag in the omit list
-            if ($this->filterPhoto($photoToDisplay, $omitTags)) {
+            if ($this->filterPhoto($slideToDisplay, $omitTags)) {
                 continue;
             }
 
             // build the image's virtual location based on it's path and the configured physical and virtual roots
             $physicalRoot = $image->secure ? $configuration["physicalRoots"]["private"] : $configuration["physicalRoots"]["public"];
             $virtualRoot = $image->secure ? $configuration["virtualRoots"]["private"] : $configuration["virtualRoots"]["public"];
-            $photoToDisplay[DbWebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] = $this->buildImageVirtualLocation($physicalRoot, $virtualRoot, $image);
+            $slideToDisplay[DbWebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] = $this->buildImageVirtualLocation($physicalRoot, $virtualRoot, $image);
             
             // add it to the collection
-            $photosToDisplay[] = $photoToDisplay;
+            $slidesToDisplay[] = $slideToDisplay;
         }
-        return $photosToDisplay;
+        return $slidesToDisplay;
     }
 
     private function getAllImagesWithChosenTags(array $chosenTags, EntityFactory $entityFactory) : array
     {
-        $allImages = [];        
+        $allImages = [];
         foreach ($chosenTags as $tag) {
             $imagesEntity = $entityFactory->getEntity("images");
             $imagesEntity->tag = $tag;
             $imagesEntity->includeSecureImages = $this->privateAcessGranted ? 1 : 0;
-            if ($imagesEntity->get())
-            {
+            if ($imagesEntity->get()) {
                 $newImages = $imagesEntity->images;
                 foreach ($newImages as $image) {
                     if (!array_key_exists($image->imageID, $allImages)) {
@@ -137,8 +179,7 @@ class DbWebSlideshow
         $tagsEntity = $entityFactory->getEntity("tags");
         $tagsEntity->imageID = $slide['ID'];
         $tagsEntity->includeSecureTags = $this->privateAcessGranted ? 1 : 0;
-        if ($tagsEntity->get())
-        {
+        if ($tagsEntity->get()) {
             $imageTags = $tagsEntity->tags;
             foreach ($imageTags as $tag) {
                 $slide['tags'][$tag->tag] = $tag;

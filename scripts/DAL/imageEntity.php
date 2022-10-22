@@ -13,6 +13,7 @@ class ImageEntity extends BaseEntity implements IEntity
     public $width;
     public $height;
     public $secure;
+    public $displayOrder;
     
     
     

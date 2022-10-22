@@ -4,6 +4,7 @@ namespace toolmarr\WebSlideshow;
 class WebSlideshow
 {
     const SLIDE_VIRTUAL_LOCATION_KEY = "virtualLocation";
+    const SLIDE_PHYSICAL_PATH_KEY = "filepath";
     const SLIDE_FILENAME_KEY = "filename";
     
     const CONFIG_SLIDESHOW_VISIBILITY_PUBLIC_KEY = "public";
@@ -118,7 +119,7 @@ class WebSlideshow
                 $virtualLocation = $virtualFolderLocation . substr($object->getPathName(), strpos($object->getPathName(), $physicalPath) + strlen($physicalPath));
                 $virtualLocation = str_replace("\\", "/", $virtualLocation);
                 $photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] = $virtualLocation;
-                
+                $photoToDisplay[WebSlideshow::SLIDE_PHYSICAL_PATH_KEY] = $physicalFolderLocation;
                 // determine current image properties; ignore anything that doesn't appear to be an image, but also handle test images for unit testing
                 if ($object->getFilename() == WebSlideshow::TEST_PUBLIC_PHOTO) {
                     $width = 250;
@@ -147,6 +148,7 @@ class WebSlideshow
                 // build the virtual location
                 $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY] = $allPhotos[$i];
                 $photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] = $virtualFolderLocation . $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY];
+                $photoToDisplay[WebSlideshow::SLIDE_PHYSICAL_PATH_KEY] = $physicalFolderLocation;
 
                 // determine current image properties; ignore anything that doesn't appear to be an image, but also handle test images for unit testing
                 if ($allPhotos[$i] == WebSlideshow::TEST_PUBLIC_PHOTO) {
@@ -188,11 +190,15 @@ class WebSlideshow
                 && !empty($photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY])
                 && !empty($photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY])
             ) {
-                $slideshowHtml = $slideshowHtml . "            <div class=\"mySlides fade c" . $number . "\" style=\"height: " . (intval($photoToDisplay['height'])+100) . "px;\">";
-                $slideshowHtml = $slideshowHtml . "                <div class=\"numbertext\">" . ($number + 1) . " / " . count($photosToDisplay) . "</div>";
-                $slideshowHtml = $slideshowHtml . "                <img width=\"$photoToDisplay[width]\" height=\"$photoToDisplay[height]\" src=\"" . $photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] . "\">";
-                $slideshowHtml = $slideshowHtml . "                <div class=\"text\"><span class=\"filename\">" . $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY] . "</span><span class=\"dimensions\">$photoToDisplay[originalWidth]x$photoToDisplay[originalHeight] resized to $photoToDisplay[width]x$photoToDisplay[height]<span></div>";
-                $slideshowHtml = $slideshowHtml . "            </div>";
+                
+                $slideshowHtml .= "            <div class=\"mySlides fade c" . $number . "\" style=\"height: " . (intval($photoToDisplay['height'])+100) . "px;\">";
+                $slideshowHtml .= "                <div class=\"numbertext\">" . ($number + 1) . " / " . count($photosToDisplay) . "</div>";
+                $slideshowHtml .= "                <img width=\"$photoToDisplay[width]\" height=\"$photoToDisplay[height]\" src=\"" .
+                    $photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] . "\">";
+                $slideshowHtml .= "                <div class=\"text\"><span class=\"filename\">" . $photoToDisplay[WebSlideshow::SLIDE_PHYSICAL_PATH_KEY] .
+                    $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY] . "</span><span class=\"dimensions\">$photoToDisplay[originalWidth]x$photoToDisplay[originalHeight]" .
+                    "resized to $photoToDisplay[width]x$photoToDisplay[height]<span></div>";
+                $slideshowHtml .= "            </div>";
             }
         }
         return $slideshowHtml;

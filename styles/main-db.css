@@ -32,7 +32,23 @@ legend {
 }
 
 #slideshowOptions {
-    margin-bottom: 25px;
+    margin-bottom: 10px;
+}
+
+#slideshowTypeSelection {
+    margin-bottom: 10px;
+}
+
+/* Display by default; Toggles to hidden */
+#tagSlideshowOptions {
+    display: block;
+    margin-bottom: 10px;
+}
+
+/* Hide by default; Toggles to be displayed */
+#staticSlideshowOptions {
+    display: none;
+    margin-bottom: 10px;
 }
 
 #slideshowOptions fieldset
@@ -43,6 +59,10 @@ legend {
 #slideshowOptions fieldset legend.title
 {
     font-weight: bold;
+}
+
+#staticSlideshowSubmit {
+    padding-top: 5px;
 }
 
 .publicOption {
