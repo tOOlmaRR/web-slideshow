@@ -1,4 +1,5 @@
 <?php
+ini_set('max_execution_time', '45');
 use toolmarr\WebSlideshow\DbWebSlideshow;
 
 require_once('../vendor/autoload.php');
