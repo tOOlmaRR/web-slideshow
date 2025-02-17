@@ -42,7 +42,7 @@ class EntityFactory
             if ($this->dbType == "mysql") {
                 $this->dbDSN = "mysql:host=" . $this->dbInfo['host'] . ";dbname=" . $this->dbInfo['name'];
             } elseif ($this->dbType == "mssql") {
-                $this->dbDSN = "odbc:Driver={SQL Server Native Client 11.0};Server=" . $this->dbInfo['host'] . ";Database=" . $this->dbInfo['name'];
+                $this->dbDSN = "odbc:Driver={ODBC Driver 17 for SQL Server};Server=" . $this->dbInfo['host'] . ";Database=" . $this->dbInfo['name'];
             } else {
                 throw new \Exception("Database Type Configuration Error");
             }

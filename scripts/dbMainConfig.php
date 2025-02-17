@@ -4,7 +4,7 @@ $configuration = array();
 // Configure database connection
 $database = array();
 $database['type'] = 'mssql';
-$database['host'] = "MARR2\\GMARRMSSQL1";
+$database['host'] = "GMARR-NITRO";
 $database['name'] = "WebSlideshow-DEV";
 $database['user'] = "Urgele1";
 $database['password'] = "goldmOOn78!";
