@@ -197,7 +197,7 @@ class WebSlideshow
                     $photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] . "\">";
                 $slideshowHtml .= "                <div class=\"text\"><span class=\"filename\">" . $photoToDisplay[WebSlideshow::SLIDE_PHYSICAL_PATH_KEY] .
                     $photoToDisplay[WebSlideshow::SLIDE_FILENAME_KEY] . "</span><span class=\"dimensions\">$photoToDisplay[originalWidth]x$photoToDisplay[originalHeight]" .
-                    "resized to $photoToDisplay[width]x$photoToDisplay[height]<span></div>";
+                    " resized to $photoToDisplay[width]x$photoToDisplay[height]<span></div>";
                 $slideshowHtml .= "            </div>";
             }
         }
