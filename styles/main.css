@@ -25,22 +25,26 @@ form {
 }
 
 .randomizeToggle {
-    margin-left: 50px;
+    margin-left: 20px;
     text-align: left;
-}
-
-#slideshowSpeed {
-    margin-left: 10px;
-    width: 250px;
-}
-
-.slideshowSpeed {
-    text-align: right;
-    margin-left: 30px;
 }
 
 .haltSlideshow {
     margin-left: 10px;
+}
+
+#slideshowSpeed {
+    margin-left: 10px;
+    width: 300px;
+}
+
+.slideshowSpeed {
+    text-align: right;
+    margin-left: 20px;
+}
+
+.currentSlideshowSpeed {
+    margin-left: 5px;
 }
 
 /* Slideshow container */
