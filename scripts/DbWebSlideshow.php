@@ -90,11 +90,12 @@ class DbWebSlideshow
         $slideshowSpeedHtml = "<fieldset>";
         $slideshowSpeedHtml = $slideshowSpeedHtml . "<legend>Slideshow Speed:</legend>";
         $slideshowSpeedHtml = $slideshowSpeedHtml . "<span class=\"currentSlideshowSpeed\">";
-            $slideshowSpeedHtml = $slideshowSpeedHtml . "<output id=\"currentSlideshowSpeed\" name=\"currentSlideshowSpeed\">30</output><span> seconds</span>";
+            $slideshowSpeedHtml = $slideshowSpeedHtml . "<input type=\"range\" id=\"slideshowSpeed\" name=\"slideshowSpeed\" min=\"5\" max=\"300\" step=\"5\" value=\"30\"" .
+                "oninput=\"currentSlideshowSpeed.value = slideshowSpeed.value\" />";    
+            $slideshowSpeedHtml = $slideshowSpeedHtml . "<output id=\"currentSlideshowSpeed\" name=\"currentSlideshowSpeed\">30</output><span>s</span>";
         $slideshowSpeedHtml = $slideshowSpeedHtml . "</span>";
-        $slideshowSpeedHtml = $slideshowSpeedHtml . "<input type=\"range\" id=\"slideshowSpeed\" name=\"slideshowSpeed\" min=\"5\" max=\"120\" step=\"5\" value=\"30\"" .
-            "oninput=\"currentSlideshowSpeed.value = slideshowSpeed.value\" /><br/>";
-        $slideshowSpeedHtml = $slideshowSpeedHtml . "</span>";
+        
+        $slideshowSpeedHtml = $slideshowSpeedHtml . "</span><br/>";
             $slideshowSpeedHtml = $slideshowSpeedHtml .
                 "<input type=\"checkbox\" id=\"haltSlideshow\" name=\"haltSlideshowToggle\" value=\"halt\" onclick=\"haltSlideshow(this)\" />";
             $slideshowSpeedHtml = $slideshowSpeedHtml . "<label for=\"randomizeToggle\">Halt!</label>";
