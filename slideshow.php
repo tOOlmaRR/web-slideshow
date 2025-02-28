@@ -41,18 +41,19 @@
                 <input type="checkbox" id="randomizeToggle" name="randomizeToggle" value="randomize" onclick="randomize_change(this)" />
                 <label for="randomizeToggle">Randomize!</label>
             </span>
+
+            <span class="haltSlideshow">
+                <input type="checkbox" name="haltSlideshowToggle" value="halt" onclick="haltSlideshow(this)" />
+                <label for="randomizeToggle">Halt!</label>
+            </span>
+
             <span class="slideshowSpeed">
                 <label for="slideshowSpeed">Slideshow Speed: </label>
+                <input type="range" id="slideshowSpeed" name="slideshowSpeed" min="5" max="300" step="5" value="30"
+                    oninput="currentSlideshowSpeed.value = slideshowSpeed.value" />
                 <span class="currentSlideshowSpeed">
                     <output id="currentSlideshowSpeed" name="currentSlideshowSpeed">30</output><span> seconds</span>
                 </span>
-                <input type="range" id="slideshowSpeed" name="slideshowSpeed" min="5" max="120" step="5" value="30"
-                    oninput="currentSlideshowSpeed.value = slideshowSpeed.value" />
-                <span>
-                    <input type="checkbox" id="haltSlideshow" name="haltSlideshowToggle" value="halt" onclick="haltSlideshow(this)" />
-                    <label for="randomizeToggle">Halt!</label>
-                </span>
-
             </span>
         </div>
         <!-- Slideshow container -->

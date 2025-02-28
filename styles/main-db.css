@@ -95,13 +95,14 @@ legend {
 
 #slideshowSpeed {
     margin-left: 10px;
+    width: 80%;
 }
 
-.slideshowSpeed {
-    text-align: right;
+#currentSlideshowSpeed {
+    margin-left: 3px;
 }
 
-.haltSlideshow {
+#haltSlideshow {
     margin-left: 10px;
 }
 
