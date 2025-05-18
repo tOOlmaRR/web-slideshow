@@ -59,7 +59,7 @@ $configuration["allSlideshows"] = $allSlideshows;
 
 
 
-// determine chosen slideshow - use the first valid available slidehow by default
+// determine chosen slideshow - use the first valid available slideshow by default
 $currentHourAndMinutes = date('Gi');
 if (isset($_GET) && isset($_GET["in"]) && ($_GET["in"] >= $currentHourAndMinutes - 1) && ($_GET["in"] <= $currentHourAndMinutes + 1)) {
     foreach ($allSlideshows as $slideshow) {
