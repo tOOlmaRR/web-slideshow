@@ -1,10 +1,10 @@
 # Web Slideshow
 ## Introduction
-This web application can display pre-defined or dynamic slideshows in a browser for locally-stored photos. There are two different slideshow applications on 2 separate pages: a *file system slideshow* page that displays images directly from the file system configured using folder paths, and a *data-driven slideshows* page which includes database-driven slideshows, including statically defined slideshows as well as dynamic slideshows based on tag selection. There is also an admin page for the database-driven slideshows used to import photos into the database. Each page's features are listed below.
+This web application can display pre-defined or dynamic slideshows in a browser for locally-stored photos. There are two different slideshow applications on 2 separate pages: a *file system slideshows* page that displays images directly from the file system configured using folder paths, and a *data-driven slideshows* page which includes database-driven slideshows, including statically defined slideshows as well as dynamic slideshows based on tag selection. There is also an admin page for the database-driven slideshows used to import photos into the database. Each page's features are listed below.
 
-## File-Based Slideshow
+## File-Based Slideshows
 ### Summary
-This is available on the **/slideshow.php** page. This slideshow has no dependency on a database, so it is the easiest to set up and get running; however, many features going forward will not be developed for this page.
+This is available on the **/slideshow.php** page. These slideshows has no dependency on a database, so they are the easiest to set up and get running; however, many features going forward will not be developed for this page.
 ### Features
 1. **Slideshow Selection** - if multiple slideshows have been configured, you can choose which slideshow to watch via a dropdown selection.
 1. **Photo Resizing** - automatically resizes photos and slides based on the client's current viewport height. This is accomplished by a redirect and query string paramaters.
@@ -50,7 +50,7 @@ Each slideshow configuration element is documented below (keep in mind that the 
 - **name**: The name of the slideshow that appears in the dropdown selection on the page.
 - **public**: A value that indicates if the slideshow is public (*true*) or private (*false*).
 - **physicalPath**: The physical path, relative to the root folder, including the folder in which the images are located. This path is appended to the hardcoded *$rootFolder* value to build the full physical path. Use this key if you want to include only one folder of images, or if the other folders in your slideshow are subfolders of a single parent folder.
-- **physicalPaths**: Overrides the older *physicalPath* element and is used to define multiple folders for your slideshow using a array of values (paths). 
+- **physicalPaths**: Overrides the older *physicalPath* element and is used to define multiple folders for your slideshow using an array of values (paths). 
 - **includeSubfolders**: Defines whether subfolders should be included in the slideshow (*true*) or not (*false*).
 
 Also, here's an example of how to define the virtual and private roots to use:
@@ -68,22 +68,22 @@ $configuration["physicalRoots"] = $physicalRoots;
 
 ### Technical Details
 #### Summary
-The file-based slideshow will look at the configured folder(s), retrieve a list of images, and build an HTML DIV for each image in the slideshow. The slideshow engine works by loading all DIVs into an array, hiding all slides by default, and only showing the current slide. This means that the page load times can be long because the page will get large with all of the HTML code, and all of the images are rendered on page load.
+File-based slideshows will look at the configured folder(s), retrieve a list of images, and build an HTML DIV for each image in the slideshow. The slideshow engine works by loading all DIVs into an array, hiding all slides by default, and only showing the current slide. This means that the page load times can be long because the page will get large with all of the HTML code, and all of the images are rendered on page load.
 #### /slideshow.php
 - the webpage that displays the file-based slideshow
 - includes some javascript to detect the screen height and redirect to itself with the height in the query string, which allows PHP on the backend to resize the slides
 #### /scripts/mainConfig.php
 - configuration file including paths to the images
-- includes a security feature to only allow access to private slideshows if you add a "in" query string parameter with a value that matches the current hour and minute in 24 hour time plus-or-minus 1 minute (which no longer appears to work)
+- includes a security feature to only allow access to private slideshows if you add an "in" query string parameter with a value that matches the current hour and minute in 24 hour time plus-or-minus 1 minute (which no longer appears to work)
 - determines the currently chosen slideshow based on selection and submission from the webpage
 #### /scripts/slideshowFunctions.js
  - note that this includes a script that runs once the basic page has loaded
  - includes the original javascript slideshow library that this web app was built from and essentially acts as the 'engine' of the slideshow
- - uses methods shared between the File-based and DB-driven slideshows
+ - uses methods shared between the file-based and DB-driven slideshows:
     - **showSlides** - the entry point into the slideshow engine used by both file-based and DB-driven slideshows, but there is a fairly clear divide between the two
     - **plusSlides** - hides the current slide and shows the slide with the given index
-    - **haltSlideshow** - an event handler that toggles the resets timer that controls the slideshow and restarts it if the checkbox in the UI is checked
-    - **randomizeChange** - an event handler that randomizes the slideshow by shuffling the index values of the array of slides
+    - **haltSlideshow** - an event handler that toggles the timer that controls the slideshow, controlled by the checkbox in the UI (ie. stops the timer if checked and restarts it if unchecked)
+    - **randomizeChange** - an event handler that toggles the randomization of the slideshow. When checked, the index values of the array of slides is shuffled, and when it is not, they are returned to the order in which they are retrieved from the database
 #### /scripts/WebSlideshow.php
 - server-side class that represents a file-based slideshow
 - builds many of the UI elements such as the slideshow drop-down and the slides themselves, and retrieves the images from the file system
@@ -92,11 +92,11 @@ The file-based slideshow will look at the configured folder(s), retrieve a list 
 
 ### Known Bugs and Limitations
 1. **Memory Consumption Issues for Large Slideshows**
-  A block of HTML is added to the webpage for every single file within each of the configured folders for a slideshow. This means that the page source can grow uncontrollably if your slideshow simply contains too many images. In addition, all images are loaded in at load time, compounding the issue. In addition, length and width of images aren't specificed in the HTML, so all images are loaded in their original form.<br />
-  So how many images are too many you ask? A test run containing 470 lower resolution images (most were under 1MB) loaded in 23 seconds and loaded 141 MB. Another test run with 693 higher quality images (averaging about 5 MB per photo) from multiple folders was not so fun, loading 1614 MB in just under 5 minutes, and only about half of the images were loaded in memory at this point. So it's safe to say that size matters!
+A block of HTML is added to the webpage for every single file within each of the configured folders for a slideshow. This means that the page source can grow uncontrollably if your slideshow contains too many images. All images are retrieved at load time, and image dimaensions aren't specificed in the HTML, so all images are loaded in their original form, which compounds the issue.<br />
+So how many images are too many you ask? A test run containing 470 lower resolution images (most were under 1MB) loaded in 23 seconds and loaded 141 MB. Another test run with 693 higher quality images (averaging about 5 MB per photo) from multiple folders was not so fun, loading 1614 MB in just under 5 minutes, and only about half of the images were loaded in memory at this point. So it's safe to say that size matters!
 1. **No Exclusion Option**
-In the case that you've configured a slideshow to include subfolders, you cannot exclude certain folders from the resulting directory tree.\
-#### Private Slideshows Not Available
+In the case that you've configured a slideshow to include subfolders, you cannot exclude certain folders from the resulting directory tree.
+1. **Private Slideshows Not Available**
 At some point, private slideshows broke so they are currently not available
 <hr />
 
@@ -104,7 +104,7 @@ At some point, private slideshows broke so they are currently not available
 
 ## Data-Driven Slideshows
 ### Summary
-This is found on the **/slideshow-db.php** page. This page has similar features to the file-based slideshow page, except that it is driven off of a database rather than physical folders of images in the file system, though the images still have to live on a local storage device. The UI has also been redesigned. Most features being built going forward will be built for this page. This page has the following features:
+This is found on the **/slideshow-db.php** page. This page has similar features to the file-based slideshow page, except that it is driven off of a database rather than physical folders of images in the file system, though the images still have to live on a local storage device. The UI has also been redesigned. Going forward, most features will be built for this page. This page has the following features:
 
 ### Features
 #### Static Slideshows
@@ -114,8 +114,8 @@ This feature is still in **BETA**. These slideshows are pre-defined in the datab
 - **Manual Controls** - at any time you can move forward or backward in the current slideshow. This does not halt the slideshow in progress, but it does restart the timer.
 - **Slideshow Speed** - a slider control in the UI controls how long each slide will be displayed for. Changes take effect after transitioning to the next slide.
 - **Halt** - allows you to stop the slidehow on the current slide and pick up where you left off afterwards.
-- **Private Slideshows** - via DB configuration, you can limit access to selected slideshows. These slideshows only appear in the dropdown if you include a special query string parameter and value in your web request. Private slideshows appear in a red font, whereas public slideshows appear in green.
-- **Private Images** - you can limit access to specific images via DB configuration'. These images will only be included in slideshows if you are authorized to view them, even if the slideshow is a publicly available one.
+- **Private Slideshows** - via DB configuration, you can limit access to selected static slideshows. These slideshows only appear in the dropdown if you include a special query string parameter and value in your web request.
+- **Private Images** - you can limit access to specific images via DB configuration. These images will only be included in slideshows if you are authorized to view them, even if the slideshow is a publicly available one.
 - **See Slide Details** - see details of the slide including size and filename.
 - **Update a Slide's Tags** - see and update which tags are associated to the current slide. Note that the slideshow interval is reset after adding/removing tags.
 
@@ -126,7 +126,7 @@ This feature is mature. These slideshows are based off of tags, and thus, are dy
 - **Slideshow Speed** - a slider control in the UI controls how long each slide will be displayed for. Changes take effect after transitioning to the next slide.
 - **Randomize Option** - allows you to randomize the slides in the current slideshow. Changes take effect immediately. Halting randomization will stop at the current slide.
 - **Halt** - allows you to stop the slidehow on the current slide and pick up where you left off afterwards.
-- **Private Images** - you can limit access to specific images via DB configuration'. These images will only be included in slideshows if you are authorized to view them, even if the slideshow is a publicly available one.
+- **Private Images** - you can limit access to specific images via DB configuration. These images will only be included in slideshows if you are authorized to view them, even if the slideshow is a publicly available one.
 - **Available Tags** - determines all tags that are available to you and allows you to create a slideshow by combining all photos in the database associated to the chosen tags. Photos will only be added once if a photo has more than one of the chosen tags.
 - **Private Tags** - via DB configuration, tags can be marked as private. These tags will only be displayed if you are authorized to view them.
 - **See Slide Details** - see details of the slide including size and filename.
@@ -137,14 +137,14 @@ This feature is mature. These slideshows are based off of tags, and thus, are dy
     - **Maximize** - puts the focus on the slideshow by minimizing the other two panes.
 
 ### Configuration
-All configuration elements are defined in the *scripts/dbMainConfig.php* file. This builds an overlying *$configuration* array which is designed to contain all configuration elements. including:
+All configuration elements are defined in the *scripts/dbMainConfig.php* file. This builds an overlying *$configuration* array which is designed to contain all configuration elements including:
 - a *$database* array that database connection configuration and the names of stored procedures in the configured DB used by this web application
 - *$virtualRoots* and *$physicalRoots* arrays that define the root paths, both public and private, in the URLs and in the file-system respectively, for displaying and loading images
-- hooks to retrieve the list of chosen tags and the selected slidehow mode from the query string
+- hooks to retrieve the list of chosen tags and the selected slideshow mode from the query string
 
 ### Technical Details
 #### Summary
-The database-driven slideshow are a bit more inteligent that the file-based slideshow.
+Database-driven slideshows are a bit more intelligent that the file-based slideshows.
 #### /slideshow-db.php
 - the webpage that displays the database-driven slideshows including tag-based and statically-configured slideshows
 - includes some javascript to detect the screen height and redirect to itself with the height in the query string, which allows PHP on the backend to resize the slides
@@ -154,23 +154,23 @@ The database-driven slideshow are a bit more inteligent that the file-based slid
 #### /scripts/slideshowFunctions.js
  - note that this includes a script that runs once the basic page has loaded
  - includes the original javascript slideshow library that this web app was built from and essentially acts as the 'engine' of the slideshow
- - uses methods shared between the File-based and DB-driven slideshows
+ - uses methods shared between the file-based and DB-driven slideshows
     - **showSlides** - the entry point into the slideshow engine used by both file-based and DB-driven slideshows, but there is a fairly clear divide between the two
     - **plusSlides** - hides the current slide and shows the slide with the given index
-    - **haltSlideshow** - an event handler that toggles the resets timer that controls the slideshow and restarts it if the checkbox in the UI is checked
-    - **randomizeChange** - an event handler that randomizes the slideshow by shuffling the index values of the array of slides
- - includes additional methods and services to add tags to the current slide, retrieve slides to display, load dynamic elements such as tags to be displayed, etc. Many of these are triggered on page load or when a slideshow generation request comes in from the UI.
-    - **loadAvailableTagsFromDb** - loads all available tags from the database via an API endpoint (loadTags.php). Includes logic to only retrieve private tags if authorized to do so. Returns JSON. 
-    - **renderSlideshowTagsSelection** - receives JSON containing all tags and calls an API endpoint (renderTags.php) to build and return HTML to add to the page in order to render the tags. This service is used to populate the tag selection in the options panel as well as the slide info panel. An API parameter is used to add JS event handlers to the HTML to trigger the updateTags method when tags are added or removed.
-    - **loadAvailableStaticSlideshowNames** - loads all static slideshow names from the database via an API endpoint (loadStaticSlideshows.php). Includes logic to only retrieve names if authorized to do so. Returns JSON.
-    - **renderStaticSlideshowSelection** - receives JSON containing all static slideshow namesand calls an API endpoint (renderStaticSlideshowNames.php) to build and return HTML to add to the page. This service is used to populate a list of slideshow names in the options panel.
-    - **determineSlideshowMode** - looks at the 'slideshowMode' radio button element in the UI and sets the visual 'mode' for the slideshow based on the value chosen. This function is called during the initial page load and is later applied via the applySlideshowModeToUI function when a slideshow starts.
-    - **applySlideshowModeToUI** - applies the chosen slideshow 'visual mode' to the UI. This value is used to determine how the UI is going to appear, and in the case of 'tagging' mode, will also filter out slides that have the 'fully tagged' tag.
-    - **loadTagSlideshowFromDb** - one of the main functions called when a slideshow is triggered from the UI. This is the function will halt an existing slideshow, apply some customizations based on the chosen 'visual mode', determine if the user has private access, and then calls an API endpoint (loadSlides.php) to retrieve the relevant slide data based on the selections in the UI. If slides were loaded, this function will then trigger the slideshow to start by calling the showSlides function.
-- also includes some methods to control some behaviour components of the UI such as hiding/showing info panels etc.
-    - **toggleOptionsPane** - collapses or expands the entire options panel that displays all of the slideshow options. When collapsed, a small link is left behind to allow the user to expand it
+    - **haltSlideshow** - an event handler that toggles the timer that controls the slideshow, controlled by the checkbox in the UI (ie. stops the timer if checked and restarts it if unchecked)
+    - **randomizeChange** - an event handler that toggles the randomization of the slideshow. When checked, the index values of the array of slides is shuffled, and when it is not, they are returned to the order in which they are retrieved from the database
+ - includes additional methods and services to add tags to the current slide, retrieve slides to display, load dynamic elements such as tags to be displayed, etc. Many of these are triggered on page load or when a slideshow generation request comes in from the UI
+    - **loadAvailableTagsFromDb** - loads all available tags from the database via an API endpoint (loadTags.php). Includes logic to only retrieve private tags if authorized to do so. Returns JSON
+    - **renderSlideshowTagsSelection** - receives JSON containing all tags and calls an API endpoint (renderTags.php) to build and return HTML to add to the page in order to render the tags. This service is used to populate the tag selection in the options pane as well as the slide info pane. An API parameter is used to add JS event handlers to the HTML to trigger the updateTags method when tags are added or removed
+    - **loadAvailableStaticSlideshowNames** - loads all static slideshow names from the database via an API endpoint (loadStaticSlideshows.php). Includes logic to only retrieve names if authorized to do so. Returns JSON
+    - **renderStaticSlideshowSelection** - receives JSON containing all static slideshow names and calls an API endpoint (renderStaticSlideshowNames.php) to build and return HTML to add to the page. This service is used to populate a list of slideshow names in the options pane
+    - **determineSlideshowMode** - looks at the 'slideshowMode' radio button element in the UI and sets the visual 'mode' for the slideshow based on the value chosen. This function is called during the initial page load and is later applied via the applySlideshowModeToUI function when a slideshow starts
+    - **applySlideshowModeToUI** - applies the chosen slideshow 'visual mode' to the UI. This value is used to determine how the UI is going to appear, and in the case of 'tagging' mode, will also filter out slides that have the 'fully tagged' tag
+    - **loadTagSlideshowFromDb** - one of the main functions called when a slideshow is triggered from the UI. This function halts an existing slideshow, applies some customizations based on the chosen 'visual mode', determines if the user has private access, and then calls an API endpoint (loadSlides.php) to retrieve the relevant slide data based on the selections in the UI. If slides were loaded, this function will then trigger the slideshow to start by calling the showSlides function
+- also includes some methods to control some behavioural components of the UI such as hiding/showing info panes etc
+    - **toggleOptionsPane** - collapses or expands the entire options pane that displays all of the slideshow options. When collapsed, a small link is left behind to allow the user to expand it
     - **toggleSlideshowTypeOptionsPane** - toggles between the options panes for the tag-based slideshow and the static slideshows, hiding the current and showing the other
-    - **toggleInfoPane** - collapses or expands the entire slide information panel that displays information on the current slide including tags. When collapsed, a small link is left behind to allow the user to expand it
+    - **toggleInfoPane** - collapses or expands the entire slide information pane that displays information on the current slide including tags. When collapsed, a small link is left behind to allow the user to expand it
 
 #### /scripts/DbWebSlideshow.php
 - server-side class that represents a tag-based slideshow
@@ -182,69 +182,69 @@ builds many of the UI elements such as the slideshow drop-down and the slides th
 1. **Private Tags Available for Public Images**
 When a public image is displayed during a private slideshow, private tags appear as options for adding tags and there is nothing stopping you from assigning private tags to a public image.
 1. **Public Static Slideshows Can Include Private Images**
-If you accidentally map up a prviate image to a public static slideshow, it will be included and displayed.
+If you accidentally map up a private image to a public static slideshow, it will be included and displayed.
 1. **Slide Info Only Loaded at the Start of a Slideshow**
-When you start a slideshow, all slides and all infor for each slide is loaded as well. Slide information is not loaded reloaded each time a slide is displayed, which means that, if you set tags for a slide, and the slide appears later during the slideshow, the previous updates are not visible
+When you start a slideshow, all slides and all info for each slide is loaded as well. Slide information is not reloaded each time a slide is displayed, which means that, if you set tags for a slide, and the slide appears later during the slideshow, the previous updates are not visible.
 1. **No Constraints Resizing Smaller Images**
-If an image is very small, it may be blown up to a point where it becomes distorted
+If an image is very small, it may be blown up to a point where it becomes distorted.
 1. **Resizing of Larger Images May Cause Wrapping**
-For images that get resized, if it's too wide to it in the display area, it'll 'wrap over' and appear underneath the rest of the site instead of fitting nicely into the frame of the site
+For images that get resized, if it's too wide to fit in the display area, it'll 'wrap over' and appear underneath the rest of the site instead of fitting nicely into the frame of the site.
 1. **Cannot Add a New Tag**
-There is currently no way to add a new tag from the web application. You need to manually add it into the database.
+There is currently no way to add a new tag from the webpage. You need to manually add it into the database.
 1. **Cannot Easily Include All Images in a Slideshow**
-There is easy way to include all available images in a slideshow. You need to manually select every single tag.
+There is no easy way to include all available images in a slideshow. You need to manually select every single tag.
 1. **Video is Not Supported, but Animated GIFs will Render**
 There is no support for including videos in a slideshow.
 1. **Cannot Remove an Image from the Database**
-There is no support for removing an image from the database. Once it's in there, you can only remove it by manually removing entries from the database
+There is no support for removing an image from the database. Once it's in there, you can only remove it by manually removing entries from the database, and you need to be careful to unmap associated tags as well.
 1. **Cannot Remap an Image File**
-There is no support for fixing an image in the database if it physically moves to a different location. If you move or rename a folder or image in the file system, the affected images end up broken and you cannot update the physical image location from within the web application.
+There is no support for fixing an image in the database if it physically moves to a different location. If you move or rename a folder or image in the file system, the affected images end up broken and you cannot update the physical image location from within the web page.
 1. **No Broken Image Detection**
-The web application does not attempt to detect broken image links, so if images have been phycially moved or deleted, the web application still tried to load and display those images during a slideshow
+The slideshow does not attempt to detect broken image links, so if images have been physically moved or deleted, the slideshow still tries to load and display those images.
 1. **Tags Cannot be Nested or Grouped**
-There is no concept existing of grouping tags together, or creating parent/child relationships between tags. The best you can do at the moment is to set up a naming convention so that, if you want to tag images based on the location where they were taken, you can prefix those tage with "Location: "
+There is no existing concept of grouping tags together, or creating parent/child relationships between tags. The best you can do at the moment is to set up a naming convention. For example, if you want to tag images based on the location where they were taken, you can prefix those tags with "Location: ".
 <hr />
 
 
 
 ## Image Scanner
 ### Summary
-This is available on the **/scan.php** page. This page allows you to scan the images within a folder into the database. You can also choose to scan all sub-folders as well. Data retrieved and added includes:
+This is available on the **/scan.php** page. This page allows you to scan the images within a folder into the database. You can also choose to scan all subfolders as well. Data retrieved and added includes:
 - full file path
 - file name
 - the dimensions (width and height) of the image
 - a boolean field indicating whether or not the image should be considered secured
 - tags you would like associated to the images being loaded from the requested folder
     - if a tag doesn't exist, it'll be created
-    - for multiple tags, separate each tag with a comma - just be careful to not include commas within a tag itself
+    - for multiple tags, separate each tag with a comma - just be careful to not include commas within the tags themselves
     - tags can also be marked as secure
 
-The scan process generates and displays a log file to the screen to detail which files it found, which files were added to the database (and which were not), and some details re: the parameters and results of the scan.
+The scan process generates and displays a log file to the screen to detail the files found, which were added to the database (and which were not), and some details re: the parameters and results of the scan.
 
 ### Configuration
 All configuration elements are defined in the *scripts/mainConfig.php* file. This builds an overlying *$configuration* array which is designed to contain all configuration elements, including database connection details and physical and virtual file roots for images.
 
 ### Technical Details
 ### Summary
-The image scanner is a simple form that sumbits the parameters for the scan and the population of the image metadata to the server. Using those parameers, the FileScanner class in PHP takes those parameters, looks for all files in the designiated location, retrives and sets the appropriate metadata, and inserts records into the database to keep track of where the physical images are, what the paths will be, and what metadata is associated to each file.
+The image scanner is a simple form that sumbits the parameters for the scan and population of image metadata to the server. Using those parameers, the FileScanner class in PHP takes those parameters, looks for all files in the designated location, retrieves and sets the appropriate metadata, and inserts records into the database to keep track of where the physical images are, what the paths will be, and what metadata is associated to each file.
 #### /scan.php
-- the webpage that presents the form to the user to collect the image scan parameters and metadata to add to the images, and displays the results after the scan has completed. The form posts back to itself, instatiates a FileScanner object in PHP, gathers the inputs from the form, and passes it, along with the nested array of configuration details generated by the main config file, into a function call
+- the webpage that presents the form to the user to collect the image scan parameters and metadata to add to the images, and displays the results after the scan has completed. The form posts back to itself, instantiates a FileScanner object in PHP, gathers the inputs from the form, and passes them, along with the nested array of configuration details generated by the main config file, into a function call
 #### /scripts/FileScanner.php
 - server-side class that provides the file-scanning feature.
-- one main function to perform the scan and two separate helper functions to scan a single folder with and without sub folders
-- uses a built-in PHP classes (RecursiveDirectoryIterator and RecursiveIteratorIterator) to recursively iterate through the subfolders within the provided folder
+- one main function to perform the scan and two separate helper functions to scan a single folder with and without subfolders
+- uses built-in PHP classes (RecursiveDirectoryIterator and RecursiveIteratorIterator) to recursively iterate through the subfolders within the provided folder
 - builds a list of tags to add to each image assuming that the input is a comma-delimited list
-- retrieves some metadata for each image including it's filename and it's dimensions
+- retrieves some metadata for each image including its filename and its dimensions
 - includes logic and a test photo for unit tests
 - skips any physical images that already exist in the database (based on full physical file path)
-- associates each image to all tags submtted from the UI, creates any that do not already exist, and inserts this data into the database
+- associates each image to all tags submitted from the UI, creates any that do not already exist, and inserts this data into the database
 - populates a scan log variable during the process which the UI reads and displays to the user
 
 
 
 ### Known Bugs and Limitations
 1. **Cannot Select Existing Tags**
-There is no pre-populated list of tags to select from when adding tags to the images being imported; you need to know what tags currently exist and, if you add a tag that does not exist, a new tag is created.
+There is no pre-populated list of tags to select from when adding tags to the images being imported; you need to know which tags currently exist and, if you add a tag that does not exist, a new tag is created.
 1. **Cannot Define Tags For Individual Images or Group of Images**
 When you define tags for the images you are importing, they are applied to all images; you cannot apply them to a single image or a group of images.
 1. **All Tags Are Either Secured or Not**
@@ -324,13 +324,13 @@ vendor/bin/phpunit tests --filter buildSlidesHtml_singleValidPhoto ./tests
 ## History
 ### v5.3.0
 - Significant improvements and additions to the readme documentation including technical details and better separation of documentation between products
-- UI improvements around the slideshow duration (file and DB based slideshows) and image dimensions (file-based slideshows)
+- UI improvements related to the slideshow duration (file-based and DB-based slideshows) and image dimensions (file-based slideshows)
 - (Coming Soon) Technical: enhancements to automated tests
 - (Coming Soon) Technical: connect test and coverage results to SonarCloud
 
 ### v5.2.0
 - Added static slideshows, including UI enhancements to allow you to choose either static or tag-based slideshows and hide anything that does not apply to your select.
-- UX Enhancement : display entire image path instead of just the filename. In the DB-based slideshow, this means adding an extra field in the slide info panel
+- UX Enhancement : display entire image path instead of just the filename. In the DB-based slideshow, this means adding an extra field in the slide info pane
 
 ### v5.1.1
 - UX enhancement : instead of halting the slideshow when adding tags to, or removing tags from, the current slide, the slideshow interval is now restarted.
