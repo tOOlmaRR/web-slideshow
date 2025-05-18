@@ -13,6 +13,8 @@ window.addEventListener('DOMContentLoaded', function() {
 
     // This following DIV should only exist in old file-system-based slideshow. Do nothing if this DIV is found.
     const slideshowTagsSelectionDiv = document.getElementById("slideshowTagSelection");
+    
+    // This code should only execute on /slideshow-db.php
     if (slideshowTagsSelectionDiv !== null) {
         // load and render available tags
         allTags = loadAvailableTagsFromDb();
@@ -87,7 +89,7 @@ function loadAvailableTagsFromDb() {
     // But rendering the tags must happen only after we have handled the AJAX response
 }
 
-// Load all slides for the chosen tags via AJAX call to a service, then start the slidehow if slides have been loaded
+// Load all slides for the chosen tags via AJAX call to a service, then start the slideshow if slides have been loaded
 function loadTagSlideshowFromDb(chosenTags, mode) {
     console.log('Retrieving tag slideshow slides data from database');
     
@@ -448,6 +450,7 @@ function showSlides(n)
     }
 
     // retrieve all slide info panels from the source HTML
+    // TODO: Confirm these no longer exist - this code should only be executed on /slideshow.php which does not have slideshow panels
     if (slideInfoPanels === undefined) {
         slideInfoPanels = document.getElementsByClassName("mySlideInfo");
     }
@@ -469,6 +472,7 @@ function showSlides(n)
         // hide all slides and info panels
         for (let i = 0; i < slides.length; i++) {
             slides[i].style.display = "none";
+            // TODO: Confirm these no longer exist - this code should only be executed on /slideshow.php which does not have slideshow panels
             if (slideInfoPanels.length > 0) {
                 slideInfoPanels[i].style.display = "none"
             }
@@ -484,6 +488,7 @@ function showSlides(n)
         
         // show only the current slide and it's info panel
         slides[slideIndexes[slideIndex-1]].style.display = "block";
+        // TODO: Confirm these no longer exist - this code should only be executed on /slideshow.php which does not have slideshow panels
         if (slideInfoPanels.length > 0) {
             slideInfoPanels[slideIndexes[slideIndex-1]].style.display = "block";
         }
@@ -509,6 +514,7 @@ function showSlides(n)
         // hide all slides and info panels
         for (let i = 0; i < slides.length; i++) {
             slides[slideIndexes[i]].style.display = "none";
+            // TODO: Confirm these no longer exist - this code should only be executed on /slideshow.php which does not have slideshow panels
             if (slideInfoPanels.length > 0) {
                 slideInfoPanels[slideIndexes[i]].style.display = "none";
             }
@@ -516,6 +522,7 @@ function showSlides(n)
         
         // show only the current slide and it's info panel
         slides[slideIndexes[slideIndex-1]].style.display = "block";
+        // TODO: Confirm these no longer exist - this code should only be executed on /slideshow.php which does not have slideshow panels
         if (slideInfoPanels.length > 0) {
             slideInfoPanels[slideIndexes[slideIndex-1]].style.display = "block";
         }
