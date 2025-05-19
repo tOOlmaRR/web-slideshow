@@ -18,7 +18,11 @@ final class WebSlideshowTest extends TestCase
     const TEST_PUBLIC_FOLDER = 'publicPhotosTestFolder' . DIRECTORY_SEPARATOR;
     const TEST_PRIVATE_FOLDER = 'privatePhotosTestFolder' . DIRECTORY_SEPARATOR;
     const TEST_PUBLIC_SUBFOLDER = 'publicSubFolder' . DIRECTORY_SEPARATOR;
-    const TEST_PUBLIC_PHOTO = 'testPhoto.png';
+    const TEST_PUBLIC_PHOTO1 = 'testPhoto1.png';
+    const TEST_PUBLIC_PHOTO2 = 'testPhoto2.png';
+
+
+/********** Constructor Tests **********/
 
     /**
      * @test
@@ -33,6 +37,9 @@ final class WebSlideshowTest extends TestCase
         // assert that the constructor without any parameters will instantiate a WebSlideshow object
         $this->assertInstanceOf(WebSlideshow::class, new WebSlideshow(500));
     }
+
+
+/********** determinePhotosToDisplayForPath Tests **********/
 
     /**
      * @test
@@ -79,8 +86,8 @@ final class WebSlideshowTest extends TestCase
         // create test folders and file
         $testPublicFolder_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_FOLDER;
         $testPrivateFolder_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PRIVATE_FOLDER;
-        $testPhoto_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_FOLDER . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_PHOTO;
-        $this->createTestFilesAndFolders([$testPublicFolder_fullPath, $testPrivateFolder_fullPath], [$testPhoto_fullPath]);
+        $testPhoto1_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_FOLDER . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_PHOTO1;
+        $this->createTestFilesAndFolders([$testPublicFolder_fullPath, $testPrivateFolder_fullPath], [$testPhoto1_fullPath]);
 
         // set up inputs
         $slideshowPath = WebSlideshowTest::TEST_PUBLIC_FOLDER;
@@ -89,14 +96,75 @@ final class WebSlideshowTest extends TestCase
 
         // invoke the function
         $photosReturned = $this->invokeMethod($slideshow, WebSlideshowTest::FUNCTION_NAME_DETERMINEPHOTOSTODISPLAYFORPATH, $inputs);
-        $this->assertNotEmpty($photosReturned);
-
-        // destroy test folders
-        $this->destroyTestFilesAndFolders([$testPublicFolder_fullPath, $testPrivateFolder_fullPath], [$testPhoto_fullPath]);
+        
+        // test assertions, clean up if there are failures
+        try {
+            $this->assertNotEmpty($photosReturned);
+        }
+        catch (\PHPUnit\Framework\ExpectationFailedException $e) {
+            $failures[] = $e->getMessage();
+        }
+        finally {
+            // destroy test folders
+            $this->destroyTestFilesAndFolders([$testPublicFolder_fullPath, $testPrivateFolder_fullPath], [$testPhoto1_fullPath]);
+        }
+        if(!empty($failures))
+        {
+            throw new \PHPUnit\Framework\ExpectationFailedException (
+                count($failures)." assertions failed:\n\t".implode("\n\t", $failures)
+            );
+        }
     }
 
+    /**
+     * @test
+     * @group determinePhotosToDisplayForPath
+     * @testdox When there is are 2 valid photos in the specified location (ie. public folder),
+     *      the determinePhotosToDisplayForPath method should return an array with 2 different elements
+     * @testWith ["/myPhotos/", false]
+     */
+    public function determinePhotosToDisplayForPath_noRecurse_twoPhotos(string $virtualRoot, bool $includeSubFolders): void
+    {
+        // instantiate a slideshow
+        $slideshow = new WebSlideshow(500);
 
+        // create test folders and file
+        $testPublicFolder_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_FOLDER;
+        $testPrivateFolder_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PRIVATE_FOLDER;
+        $testPhoto1_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_FOLDER . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_PHOTO1;
+        $testPhoto2_fullPath = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_FOLDER . DIRECTORY_SEPARATOR . WebSlideshowTest::TEST_PUBLIC_PHOTO2;
+        $this->createTestFilesAndFolders([$testPublicFolder_fullPath, $testPrivateFolder_fullPath], [$testPhoto1_fullPath, $testPhoto2_fullPath]);
+
+        // set up inputs
+        $slideshowPath = WebSlideshowTest::TEST_PUBLIC_FOLDER;
+        $rootFolder = __DIR__ . DIRECTORY_SEPARATOR;
+        $inputs = [$slideshowPath, $rootFolder, $virtualRoot, $includeSubFolders];
+
+        // invoke the function
+        $photosReturned = $this->invokeMethod($slideshow, WebSlideshowTest::FUNCTION_NAME_DETERMINEPHOTOSTODISPLAYFORPATH, $inputs);
+        
+        // test assertions, clean up if there are failures
+        try {
+            $this->assertNotEmpty($photosReturned);
+            $this->assertCount(2, $photosReturned);
+        }
+        catch (\PHPUnit\Framework\ExpectationFailedException $e) {
+            $failures[] = $e->getMessage();
+        }
+        finally {
+            // destroy test folders
+            $this->destroyTestFilesAndFolders([$testPublicFolder_fullPath, $testPrivateFolder_fullPath], [$testPhoto1_fullPath, $testPhoto2_fullPath]);
+        }
+        if(!empty($failures))
+        {
+            throw new \PHPUnit\Framework\ExpectationFailedException (
+                count($failures)." assertions failed:\n\t".implode("\n\t", $failures)
+            );
+        }
+    }
     
+
+
     /**
      * @test
      * @group buildSlidesHtml

@@ -9,8 +9,8 @@ class WebSlideshow
     
     const CONFIG_SLIDESHOW_VISIBILITY_PUBLIC_KEY = "public";
 
-    // for purposes of unit testing (ensure this value is synced up with unit tests)
-    const TEST_PUBLIC_PHOTO = 'testPhoto.png';
+    // for purposes of unit testing (ensure this values are synced up with unit tests)
+    const TEST_PUBLIC_PHOTOS = ['testPhoto1.png', 'testPhoto2.png'];
 
     public int $maxHeight;
 
@@ -121,7 +121,7 @@ class WebSlideshow
                 $photoToDisplay[WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] = $virtualLocation;
                 $photoToDisplay[WebSlideshow::SLIDE_PHYSICAL_PATH_KEY] = $physicalFolderLocation;
                 // determine current image properties; ignore anything that doesn't appear to be an image, but also handle test images for unit testing
-                if ($object->getFilename() == WebSlideshow::TEST_PUBLIC_PHOTO) {
+                if (in_array($object->getFilename(), WebSlideshow::TEST_PUBLIC_PHOTOS)) {
                     $width = 250;
                     $height = 250;
                 } elseif (!@list($width, $height) = getimagesize($name)) {
@@ -151,7 +151,7 @@ class WebSlideshow
                 $photoToDisplay[WebSlideshow::SLIDE_PHYSICAL_PATH_KEY] = $physicalFolderLocation;
 
                 // determine current image properties; ignore anything that doesn't appear to be an image, but also handle test images for unit testing
-                if ($allPhotos[$i] == WebSlideshow::TEST_PUBLIC_PHOTO) {
+                if (in_array($allPhotos[$i], WebSlideshow::TEST_PUBLIC_PHOTOS)) {
                     $width = 250;
                     $height = 250;
                 } elseif (!@list($width, $height) = getimagesize($fullPhysicalLocation)) {
