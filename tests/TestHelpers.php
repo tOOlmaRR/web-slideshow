@@ -22,7 +22,7 @@ trait TestHelpers
         return $method->invokeArgs($object, $parameters);
     }
 
-    public function createTestFilesAndFolders(array $testFolders, array $testPhotos = []) : void
+    public function createTestFilesAndFolders(array $testFolders, array $testPhotos = []) : bool
     {
         foreach ($testFolders as $testFolder) {
             if (!\is_dir($testFolder)) {
@@ -35,6 +35,9 @@ trait TestHelpers
                 fopen($testPhoto, "w");
             }
         }
+        
+        // TODO: catch when these operations fail and return a false
+        return true;
     }
 
     public function destroyTestFilesAndFolders(array $testFolders, array $testPhotos = []) : void
@@ -50,5 +53,26 @@ trait TestHelpers
                 rmdir($testFolder);
             }
         }
+    }
+
+    public function destroyFolders(array $testFolders) : bool
+    {
+        $success = true;
+        foreach ($testFolders as $testFolder) {
+            
+            if (!is_dir($testFolder)) {
+                $success = false; // Not a directory
+                break;
+            }
+
+            $testFiles = array_diff(scandir($testFolder), ['.', '..']); // Exclude '.' and '..'
+            foreach ($testFiles as $testFile) {
+                $testFileWithPath = $testFolder . DIRECTORY_SEPARATOR . $testFile;
+                is_dir($testFileWithPath) ? $this->destroyFolders([$testFileWithPath]) : unlink($testFileWithPath); // Recursively delete
+            }
+
+            $success = rmdir($testFolder); // Remove the now-empty directory
+        }
+        return $success;
     }
 }
