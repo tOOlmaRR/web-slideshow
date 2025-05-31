@@ -24,35 +24,42 @@ trait TestHelpers
 
     public function createTestFilesAndFolders(array $testFolders, array $testPhotos = []) : bool
     {
+        $allSuccess = true;
         foreach ($testFolders as $testFolder) {
-            if (!\is_dir($testFolder)) {
-                mkdir($testFolder);
+            if (!is_dir($testFolder)) {
+                $success = mkdir($testFolder);
             }
+            if ($allSuccess) $allSuccess = $success;
         }
 
         foreach ($testPhotos as $testPhoto) {
-            if (!\file_exists($testPhoto)) {
-                fopen($testPhoto, "w");
+            if (!file_exists($testPhoto)) {
+                $success = fopen($testPhoto, "w");
             }
+            if ($allSuccess && !$success) $allSuccess = false;
         }
         
         // TODO: catch when these operations fail and return a false
         return true;
     }
 
-    public function destroyTestFilesAndFolders(array $testFolders, array $testPhotos = []) : void
+    public function destroyTestFilesAndFolders(array $testFolders, array $testPhotos = []) : bool
     {
+        $allSuccess = true;
         foreach ($testPhotos as $testPhoto) {
-            if (\file_exists($testPhoto)) {
-                unlink($testPhoto);
+            if (file_exists($testPhoto)) {
+                $success = unlink($testPhoto);
+                if ($allSuccess) $allSuccess = $success;
             }
         }
 
         foreach ($testFolders as $testFolder) {
-            if (\is_dir($testFolder)) {
-                rmdir($testFolder);
+            if (is_dir($testFolder)) {
+                $success = rmdir($testFolder);
+                if ($allSuccess) $allSuccess = $success;
             }
         }
+        return $allSuccess;
     }
 
     public function destroyFolders(array $testFolders) : bool
