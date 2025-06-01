@@ -14,6 +14,7 @@ final class WebSlideshowTest extends TestCase
 
     const FUNCTION_NAME_BUILDSLIDESHTML = 'buildSlidesHtml';
     const FUNCTION_NAME_DETERMINEPHOTOSTODISPLAYFORPATH = 'determinePhotosToDisplayForPath';
+    const FUNCTION_NAME_RENDERSLIDESHOW = 'renderSlideShow';
 
     const TEMP_TEST_FILES_FOLDER = 'TempTestFiles' . DIRECTORY_SEPARATOR;
     const TEMP_TEST_FILES_PATH = __DIR__ . DIRECTORY_SEPARATOR . WebSlideshowTest::TEMP_TEST_FILES_FOLDER;
@@ -66,11 +67,10 @@ final class WebSlideshowTest extends TestCase
             );
         }
     }
-    
+
 
 
 /********** Constructor Tests **********/
-
     /**
      * @test
      * @group Constructor
@@ -86,8 +86,8 @@ final class WebSlideshowTest extends TestCase
     }
 
 
-/********** determinePhotosToDisplayForPath Tests **********/
 
+    /********** determinePhotosToDisplayForPath Tests **********/
     /**
      * @test
      * @group determinePhotosToDisplayForPath
@@ -232,9 +232,78 @@ final class WebSlideshowTest extends TestCase
         $this->assertDirectoryExists($rootFolder.$slideshowPath);
         $this->assertEmpty($photosReturned);
     }
-    
+
+        /**
+     * @test
+     * @group determinePhotosToDisplayForPath
+     * @testdox A slideshow shoudl never consider folders as files/images, including the system ones "." and ".." as well as 'real' folders
+     * @testWith ["/myPhotos/", false]
+     */
+    public function determinePhotosToDisplayForPath_noRecurse_doesNotRecognizeFoldersAsPhotos(string $virtualRoot, bool $includeSubFolders): void
+    {
+        // instantiate a slideshow
+        $slideshow = new WebSlideshow(500);
+
+        // create test folders and file
+        $testPublicFolder_fullPath = WebSlideshowTest::TEMP_TEST_FILES_PATH . WebSlideshowTest::TEST_PUBLIC_FOLDER;
+        $testPublicSubFolder_fullPath = WebSlideshowTest::TEMP_TEST_FILES_PATH . WebSlideshowTest::TEST_PUBLIC_FOLDER . WebSlideshowTest::TEST_PUBLIC_SUBFOLDER;
+        $testPrivateFolder_fullPath = WebSlideshowTest::TEMP_TEST_FILES_PATH . WebSlideshowTest::TEST_PRIVATE_FOLDER;
+
+        $this->createTestFilesAndFolders([$testPublicFolder_fullPath, $testPublicSubFolder_fullPath, $testPrivateFolder_fullPath], []);
+
+        // set up inputs
+        $slideshowPath = WebSlideshowTest::TEST_PUBLIC_FOLDER;
+        $rootFolder = WebSlideshowTest::TEMP_TEST_FILES_PATH;
+        $inputs = [$slideshowPath, $rootFolder, $virtualRoot, $includeSubFolders];
+
+        // invoke the function
+        $photosReturned = $this->invokeMethod($slideshow, WebSlideshowTest::FUNCTION_NAME_DETERMINEPHOTOSTODISPLAYFORPATH, $inputs);
+        $this->assertDirectoryExists($rootFolder.$slideshowPath);
+        $this->assertEmpty($photosReturned);
+    }
+
+    /**
+     * @test
+     * @group determinePhotosToDisplayForPath
+     * @testdox When a slideshow is configured to recursively scan subfolders, it should pick up images within subfolders
+     * @testWith ["/myPhotos/", true]
+     */
+    public function determinePhotosToDisplayForPath_recurse_doesRecurse(string $virtualRoot, bool $includeSubFolders): void
+    {
+        // instantiate a slideshow
+        $slideshow = new WebSlideshow(500);
+
+        // create test folders and file
+        $testPublicFolder_fullPath = WebSlideshowTest::TEMP_TEST_FILES_PATH . WebSlideshowTest::TEST_PUBLIC_FOLDER;
+        $testPublicSubFolder_fullPath = WebSlideshowTest::TEMP_TEST_FILES_PATH . WebSlideshowTest::TEST_PUBLIC_FOLDER . WebSlideshowTest::TEST_PUBLIC_SUBFOLDER;
+        $testPrivateFolder_fullPath = WebSlideshowTest::TEMP_TEST_FILES_PATH . WebSlideshowTest::TEST_PRIVATE_FOLDER;
+        $testPhoto1_fullPath = WebSlideshowTest::TEMP_TEST_FILES_PATH . WebSlideshowTest::TEST_PUBLIC_FOLDER . WebSlideshowTest::TEST_PUBLIC_PHOTO1;
+        $testPhoto2_fullPath = WebSlideshowTest::TEMP_TEST_FILES_PATH . WebSlideshowTest::TEST_PUBLIC_FOLDER . WebSlideshowTest::TEST_PUBLIC_SUBFOLDER . WebSlideshowTest::TEST_PUBLIC_PHOTO2;
+
+        $this->createTestFilesAndFolders([$testPublicFolder_fullPath, $testPublicSubFolder_fullPath, $testPrivateFolder_fullPath], [$testPhoto1_fullPath, $testPhoto2_fullPath]);
+
+        // set up inputs
+        $slideshowPath = WebSlideshowTest::TEST_PUBLIC_FOLDER;
+        $rootFolder = WebSlideshowTest::TEMP_TEST_FILES_PATH;
+        $inputs = [$slideshowPath, $rootFolder, $virtualRoot, $includeSubFolders];
+
+        // invoke the function
+        $photosReturned = $this->invokeMethod($slideshow, WebSlideshowTest::FUNCTION_NAME_DETERMINEPHOTOSTODISPLAYFORPATH, $inputs);
+        $this->assertDirectoryExists($rootFolder.$slideshowPath);
+        $this->assertNotEmpty($photosReturned);
+        $this->assertCount(2, $photosReturned);
+        
+        $actualFilenames = [
+            $photosReturned[0][WebSlideshow::SLIDE_FILENAME_KEY],
+            $photosReturned[1][WebSlideshow::SLIDE_FILENAME_KEY]
+        ];
+        $this->assertContains(WebSlideshowTest::TEST_PUBLIC_PHOTO1, $actualFilenames);
+        $this->assertContains(WebSlideshowTest::TEST_PUBLIC_PHOTO2, $actualFilenames);
+    }
 
 
+
+/********** buildSlidesHtml Tests **********/
     /**
      * @test
      * @group buildSlidesHtml
@@ -381,4 +450,81 @@ final class WebSlideshowTest extends TestCase
         // assert that the HTML that is being built contains an image tag with the specified virtual location from the second (the valid) slide
         $this->assertStringContainsString("src=\"" . $photosToDisplay[1][WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] . "\"", $htmlReturned);
     }
+
+
+
+/********** renderSlideshow Tests **********/
+    /**
+     * @test
+     * @group renderSlideshow
+     * @testDox When the renderSlideshow method receives no inputs
+     *      it should return HTML with class="error" in it
+     *      and there should be two instances of it (ie. 2 errors)
+     */
+    public function renderSlideshow_noConfigOrChosenSlideshow_shouldReturnErrorHtml(): void
+    {
+        // instantiate a slideshow
+        $slideshow = new WebSlideshow(500);
+
+        // assert that this will not throw an exception and will still return some HTML, but it will contain an "error class"
+        $htmlReturned = $this->invokeMethod($slideshow, WebSlideshowTest::FUNCTION_NAME_RENDERSLIDESHOW, [null, null]);
+        $this->assertNotEmpty($htmlReturned);
+        $this->assertStringContainsString("class=\"error\"", $htmlReturned);
+        $errorCount = substr_count($htmlReturned, "class=\"error\"");
+        $this->assertTrue($errorCount == 2);
+    }
+
+    /**
+     * @test
+     * @group renderSlideshow
+     * @testDox When the renderSlideshow method receives no config, but it receives a chosen slideshow
+     *      it should return HTML with class="error" in it
+     *      and there should be one instance of it (ie. 1 error)
+     */
+    public function renderSlideshow_noConfig_shouldReturnErrorHtml(): void
+    {
+        // instantiate a slideshow
+        $slideshow = new WebSlideshow(500);
+
+        // assert that this will not throw an exception and will still return some HTML, but it will contain an "error class"
+        $htmlReturned = $this->invokeMethod($slideshow, WebSlideshowTest::FUNCTION_NAME_RENDERSLIDESHOW, [null, []]);
+        $this->assertNotEmpty($htmlReturned);
+        $this->assertStringContainsString("class=\"error\"", $htmlReturned);
+        $errorCount = substr_count($htmlReturned, "class=\"error\"");
+        $this->assertTrue($errorCount == 1);
+    }
+
+        /**
+     * @test
+     * @group renderSlideshow
+     * @testDox When the renderSlideshow method receives no chosen slideshow, but it receives config
+     *      it should return HTML with class="error" in it
+     *      and there should be one instance of it (ie. 1 error)
+     */
+    public function renderSlideshow_noChosenSlideshow_shouldReturnErrorHtml(): void
+    {
+        // instantiate a slideshow
+        $slideshow = new WebSlideshow(500);
+
+        // assert that this will not throw an exception and will still return some HTML, but it will contain an "error class"
+        $htmlReturned = $this->invokeMethod($slideshow, WebSlideshowTest::FUNCTION_NAME_RENDERSLIDESHOW, [null, []]);
+        $this->assertNotEmpty($htmlReturned);
+        $this->assertStringContainsString("class=\"error\"", $htmlReturned);
+        $errorCount = substr_count($htmlReturned, "class=\"error\"");
+        $this->assertTrue($errorCount == 1);
+    }
+
+
+    // public function renderSlideshow_basicConfig_ShouldReturnEmptyHtml(array $config, array $chosenSlideshow): void
+    // {
+    //     // instantiate a slideshow
+    //     $slideshow = new WebSlideshow(500);
+
+    //     // assert that this will still return some HTML
+    //     //$htmlReturned = $this->invokeMethod($slideshow, WebSlideshowTest::FUNCTION_NAME_BUILDSLIDESHTML, [$photosToDisplay]);
+    //     //$this->assertNotEmpty($htmlReturned);
+
+    //     // assert that the HTML that is being built contains an image tag with the specified virtual location from the second (the valid) slide
+    //     //$this->assertStringContainsString("src=\"" . $photosToDisplay[1][WebSlideshow::SLIDE_VIRTUAL_LOCATION_KEY] . "\"", $htmlReturned);
+    // }
 }

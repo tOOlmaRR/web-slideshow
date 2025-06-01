@@ -64,6 +64,22 @@ class WebSlideshow
 
     public function renderSlideShow($config, $chosenSlideshow)
     {
+        $htmlToRender = "";
+        // perform some validation
+        if (!is_array($config))
+        {
+            $htmlToRender .= "<p class=\"error\">No configuration found!</p>";
+        }
+        if (!is_array($chosenSlideshow))
+        {
+            $htmlToRender .= "<p class=\"error\">Please choose a slideshow to render</p>";
+        }
+        if (!empty($htmlToRender))
+        {
+            echo $htmlToRender;
+            return $htmlToRender;
+        }
+        
         $slideshowPaths = array();
         if (array_key_exists("physicalPaths", $chosenSlideshow)) {
             $slideshowPaths = $chosenSlideshow["physicalPaths"];
@@ -88,7 +104,9 @@ class WebSlideshow
 
         // render the output for all valid photos
         $slidesHtml = $this->buildSlidesHtml($imagesToDisplay);
-        echo $slidesHtml;
+        $htmlToRender .= $slidesHtml;
+        echo $htmlToRender;
+        return $htmlToRender;
     }
 
 
